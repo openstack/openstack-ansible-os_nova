@@ -397,7 +397,6 @@ nova_pip_packages:
   - python-novaclient
   - keystonemiddleware
   - nova
-  - python-cephlibs
 
 nova_qemu_user: libvirt-qemu
 nova_qemu_group: kvm

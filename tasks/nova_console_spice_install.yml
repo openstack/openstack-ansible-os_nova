@@ -45,6 +45,13 @@
     - nova-apt-packages
     - nova-spice-apt-packages
 
+- name: Remove old git directory
+  file:
+    path: "/usr/share/spice-html5"
+    state: "absent"
+  tags:
+    - nova-spice-git
+
 - name: Get package from git
   git:
     repo: "{{ nova_spicehtml5_git_repo }}"

@@ -20,10 +20,10 @@
   changed_when: false
   failed_when: false
   tags:
-    - nova-cpuinfo-read
+    - always
 
 - name: Register a fact for the nova virt type
   set_fact:
      nova_virt_type: "{{ ((virt_type_value.stdout | int) > 0) | ternary('kvm', 'qemu') }}"
   tags:
-    - nova-virt-type-set
+    - always

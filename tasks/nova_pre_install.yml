@@ -16,7 +16,7 @@
 - name: create the system group
   group:
     name: "{{ nova_system_group_name }}"
-    gid: "{{ nova_system_group_uid|default(omit) }}"
+    gid: "{{ nova_system_group_gid|default(omit) }}"
     state: "present"
     system: "yes"
   tags:

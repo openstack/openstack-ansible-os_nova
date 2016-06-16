@@ -51,8 +51,7 @@
   register: qemu_savedir_stat
 
 - name: Check if qemu save directory is empty
-  shell:
-    cmd: 'ls -1A /var/lib/libvirt/qemu/save'
+  shell: 'ls -1A /var/lib/libvirt/qemu/save'
   register: qemu_savedir_empty
 
 # We force the link creation if our tests passed, this removes the directory as

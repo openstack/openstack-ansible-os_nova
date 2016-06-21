@@ -97,7 +97,7 @@ use_forwarded_for = {{ nova_network_services[nova_network_type]['use_forwarded_f
 my_ip = {{ nova_management_address }}
 default_floating_pool = public
 security_group_api = neutron
-network_api_class = nova.network.neutronv2.api.API
+use_neutron = True
 
 # Authentication
 auth_strategy = keystone

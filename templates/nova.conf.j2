@@ -4,6 +4,8 @@
 {% set api_threads = _api_threads if _api_threads > 0 else 1 %}
 
 [DEFAULT]
+# Disable stderr logging
+use_stderr = False
 # Logs / State
 debug = {{ debug }}
 verbose = {{ verbose }}

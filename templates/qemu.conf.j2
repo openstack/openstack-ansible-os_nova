@@ -1,0 +1,4 @@
+# {{ ansible_managed }}
+{% for key, value in qemu_conf_dict.iteritems() %}
+{{ key }} = {{ value }}
+{% endfor %}

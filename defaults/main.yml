@@ -401,6 +401,10 @@ nova_pip_packages:
 nova_qemu_user: libvirt-qemu
 nova_qemu_group: kvm
 
+# Define the following variable to drop a replacement
+# file for /etc/libvirt/qemu.conf
+#qemu_conf_dict: {}
+
 ## Tunable overrides
 nova_nova_conf_overrides: {}
 nova_rootwrap_conf_overrides: {}

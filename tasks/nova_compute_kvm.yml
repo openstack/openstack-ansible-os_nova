@@ -40,6 +40,19 @@
     - nova-kvm
     - nova-libvirt
 
+- name: Set qemu config
+  template:
+    src: "qemu.conf.j2"
+    dest: "/etc/libvirt/qemu.conf"
+    owner: "root"
+    group: "root"
+    mode: "0600"
+  when: qemu_conf_dict is defined
+  notify: Restart libvirt-bin
+  tags:
+    - nova-kvm
+    - nova-libvirt
+
 - name: Set libvirt runtime options
   lineinfile:
     dest: "/etc/default/libvirt-bin"

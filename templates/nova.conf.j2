@@ -251,12 +251,16 @@ rabbit_use_ssl = {{ nova_rabbitmq_use_ssl }}
 
 {% if nova_virt_type == 'ironic' %}
 [ironic]
-# TODO(mrda): These should be changed to support the Keystone v3 API
-admin_username = {{ ironic_service_name }}
-admin_password = {{ ironic_service_password }}
-admin_tenant_name = {{ ironic_service_project_name }}
-admin_url = {{ keystone_service_adminuri }}/v2.0
+username = {{ ironic_service_name }}
+password = {{ ironic_service_password }}
+project_name = {{ ironic_service_project_name }}
+user_domain_name = {{ ironic_service_domain_name | default("Default") }}
+project_domain_name = {{ ironic_service_domain_name | default("Default") }}
+auth_url = {{ keystone_service_adminurl }}
+insecure = {{ keystone_service_adminuri_insecure | bool }}
 api_endpoint = {{ ironic_service_adminurl }}
+auth_type = {{ ironic_keystone_auth_plugin }}
+
 {% endif %}
 
 {% if nova_virt_type in ['kvm', 'qemu', 'xen'] %}

@@ -245,7 +245,10 @@ nova_image_cache_manager_interval: 0
 nova_resume_guests_state_on_host_boot: False
 nova_dhcp_domain: novalocal
 nova_default_schedule_zone: nova
-glance_api_servers: "{{ glance_host }}:{{ glance_service_port }}"
+
+# Comma separated list of Glance API servers
+# nova_glance_api_servers:
+
 nova_network_type: linuxbridge
 
 nova_network_services:

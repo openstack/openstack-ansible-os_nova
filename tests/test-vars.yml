@@ -87,6 +87,7 @@ nova_developer_mode: true
 nova_galera_address: 10.100.100.101
 nova_galera_database: nova
 nova_git_install_branch: stable/mitaka
+nova_glance_api_servers: "http://{{ glance_host }}:{{ glance_service_port }}"
 nova_keystone_auth_plugin: password
 nova_management_address: "10.100.100.1"
 nova_metadata_port: 8775

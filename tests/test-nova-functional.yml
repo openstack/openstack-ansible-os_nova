@@ -27,4 +27,4 @@
       retries: 3
       delay: 5
   vars_files:
-    - playbooks/test-vars.yml
+    - common/test-vars.yml

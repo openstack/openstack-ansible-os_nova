@@ -54,7 +54,7 @@
 - include: nova_pre_install.yml
 - include: nova_install.yml
 - include: nova_post_install.yml
-- include: nova_init.yml
+- include: nova_init_common.yml
 
 - include: nova_db_setup.yml
   when: inventory_hostname == groups['nova_api_os_compute'][0]

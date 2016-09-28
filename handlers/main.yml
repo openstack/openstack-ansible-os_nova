@@ -1,5 +1,5 @@
 ---
-# Copyright 2014, Rackspace US, Inc.
+# Copyright 2015, Rackspace US, Inc.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -19,10 +19,23 @@
     state: "restarted"
     pattern: "libvirt-bin"
 
+- name: Reload systemd daemon
+  command: "systemctl daemon-reload"
+  notify:
+    - Restart nova services
+
+- name: Reload upstart init scripts
+  shell: |
+    initctl reload-configuration
+  notify:
+    - Restart nova services
+
 - name: Restart nova services
   service:
-    name: "{{ item }}"
-    state: restarted
-    pattern: "{{ item }}"
-  with_items: "{{ nova_service_names }}"
-  failed_when: false
+    name: "{{ item.value.service_name }}"
+    state: "restarted"
+    pattern: "{{ item.value.service_name }}"
+  with_dict: "{{ nova_services }}"
+  when:
+    - inventory_hostname in groups[item.value.group]
+    - "{{ item.value.condition | default(true) }}"

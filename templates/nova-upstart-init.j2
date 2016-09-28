@@ -1,6 +1,7 @@
 # {{ ansible_managed }}
 
-description "{{ program_name }}"
+
+description "{{ item.value.service_name }}"
 author "Kevin Carter <kevin.carter@rackspace.com>"
 
 start on runlevel [2345]
@@ -10,18 +11,18 @@ respawn
 respawn limit 10 5
 
 # Set the RUNBIN environment variable
-env RUNBIN="{{ nova_bin }}/{{ program_name }}"
+env RUNBIN="{{ nova_bin }}/{{ item.value.service_name }}"
 
 # Change directory to service users home
-chdir "{{ service_home }}"
+chdir "{{ nova_system_home_folder }}"
 
 # Pre start actions
 pre-start script
-  mkdir -p "/var/run/{{ program_name }}"
-  chown {{ system_user }}:{{ system_group }} "/var/run/{{ program_name }}"
+  mkdir -p "/var/run/{{ item.value.service_name }}"
+  chown {{ nova_system_user_name }}:{{ nova_system_group_name }} "/var/run/{{ item.value.service_name }}"
 
-  mkdir -p "/var/lock/{{ program_name }}"
-  chown {{ system_user }}:{{ system_group }} "/var/lock/{{ program_name }}"
+  mkdir -p "/var/lock/{{ item.value.service_name }}"
+  chown {{ nova_system_user_name }}:{{ nova_system_group_name }} "/var/lock/{{ item.value.service_name }}"
 
   . {{ nova_bin }}/activate
 
@@ -29,14 +30,15 @@ end script
 
 # Post stop actions
 post-stop script
-  rm "/var/run/{{ program_name }}/{{ program_name }}.pid"
+  rm "/var/run/{{ item.value.service_name }}/{{ item.value.service_name }}.pid"
 end script
 
 # Run the start up job
 exec start-stop-daemon --start \
-                       --chuid {{ system_user }} \
+                       --chuid {{ nova_system_user_name }} \
                        --make-pidfile \
-                       --pidfile /var/run/{{ program_name }}/{{ program_name }}.pid \
+                       --pidfile /var/run/{{ item.value.service_name }}/{{ item.value.service_name }}.pid \
                        --exec "{{ program_override|default('$RUNBIN') }}" \
                        -- {{ program_config_options|default('') }} \
-                       --log-file=/var/log/nova/{{ program_name }}.log
+                       --log-file=/var/log/{{ nova_service_name }}/{{ item.value.service_name }}.log
+

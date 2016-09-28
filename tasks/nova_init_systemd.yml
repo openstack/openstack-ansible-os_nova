@@ -15,19 +15,23 @@
 
 - name: Create TEMP run dir
   file:
-    path: "/var/run/{{ program_name }}"
+    path: "/var/run/{{ item.value.service_name }}"
     state: directory
-    owner: "{{ system_user }}"
-    group: "{{ system_group }}"
+    owner: "{{ nova_system_user_name }}"
+    group: "{{ nova_system_group_name }}"
     mode: "02755"
+  with_dict: "{{ nova_services }}"
+  when: inventory_hostname in groups[item.value.group]
 
 - name: Create TEMP lock dir
   file:
-    path: "/var/lock/{{ program_name }}"
+    path: "/var/lock/{{ item.value.service_name }}"
     state: directory
-    owner: "{{ system_user }}"
-    group: "{{ system_group }}"
+    owner: "{{ nova_system_user_name }}"
+    group: "{{ nova_system_group_name }}"
     mode: "02755"
+  with_dict: "{{ nova_services }}"
+  when: inventory_hostname in groups[item.value.group]
 
 - name: Create tempfile.d entry
   template:
@@ -36,18 +40,17 @@
     mode: "0644"
     owner: "root"
     group: "root"
+  with_dict: "{{ nova_services }}"
+  when: inventory_hostname in groups[item.value.group]
 
 - name: Place the systemd init script
   template:
     src: "nova-systemd-init.j2"
-    dest: "/etc/systemd/system/{{ program_name }}.service"
+    dest: "/etc/systemd/system/{{ item.value.service_name }}.service"
     mode: "0644"
     owner: "root"
     group: "root"
-  register: systemd_init
-
-- name: Reload the systemd daemon
-  command: "systemctl daemon-reload"
-  when: systemd_init | changed
+  with_dict: "{{ nova_services }}"
+  when: inventory_hostname in groups[item.value.group]
   notify:
-    - Restart nova services
+    - Reload systemd daemon

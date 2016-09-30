@@ -24,14 +24,14 @@ debug: False
 nova_package_state: "latest"
 
 nova_git_repo: https://git.openstack.org/openstack/nova
-nova_git_install_branch: master
+nova_git_install_branch: stable/newton
 nova_requirements_git_repo: https://git.openstack.org/openstack/requirements
-nova_requirements_git_install_branch: master
+nova_requirements_git_install_branch: stable/newton
 
 nova_lxd_git_repo: https://git.openstack.org/openstack/nova-lxd
 nova_lxd_git_install_branch: master
 nova_lxd_requirements_git_repo: https://git.openstack.org/openstack/requirements
-nova_lxd_requirements_git_install_branch: master
+nova_lxd_requirements_git_install_branch: stable/newton
 
 nova_developer_mode: false
 nova_developer_constraints:

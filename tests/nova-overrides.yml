@@ -18,3 +18,8 @@
 # libvirt-bin, leading to nova-compute failing to start.
 # TODO(jmccrory) Revisit this at some point
 pip_install_options: "--no-binary libvirt-python"
+
+neutron_provider_networks:
+  network_types: "vxlan,flat"
+  network_mappings: "flat:eth12"
+  network_vxlan_ranges: "1:1000"

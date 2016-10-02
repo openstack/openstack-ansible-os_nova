@@ -101,3 +101,6 @@ nova_compute
 nova_conductor
 nova_console
 nova_scheduler
+
+[utility_all]
+infra1

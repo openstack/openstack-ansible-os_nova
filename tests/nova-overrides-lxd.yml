@@ -23,6 +23,11 @@ tempest_images:
   - url: "http://download.cirros-cloud.net/0.3.4/cirros-0.3.4-x86_64-lxc.tar.gz"
     sha256: "e8172c603fad47f4c95e67bd2751c2977e07164c9ebdfcf3f9c1d7ff598ed217"
 
+neutron_provider_networks:
+  network_types: "vxlan,flat"
+  network_mappings: "flat:eth12"
+  network_vxlan_ranges: "1:1000"
+
 tempest_tempest_conf_overrides:
   'compute-feature-enabled':
     'config_drive': 'false'

@@ -13,12 +13,6 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-# This ensures that libvirt-python is built from source. A pre-built wheel
-# can be missing libvirt capabilities from the installed version of
-# libvirt-bin, leading to nova-compute failing to start.
-# TODO(jmccrory) Revisit this at some point
-pip_install_options: "--no-binary libvirt-python"
-
 neutron_provider_networks:
   network_types: "vxlan,flat"
   network_mappings: "flat:eth12"

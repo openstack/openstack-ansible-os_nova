@@ -14,15 +14,12 @@
 # limitations under the License.
 
 - include: nova_compute_kvm.yml
-  static: no
   when: nova_virt_type == 'kvm' or nova_virt_type == 'qemu'
 
 - include: nova_compute_powervm.yml
-  static: no
   when: nova_virt_type == 'powervm'
 
 - include: nova_compute_lxd.yml
-  static: no
   when: nova_virt_type == 'lxd'
 
 - include: nova_compute_key_populate.yml

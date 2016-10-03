@@ -14,14 +14,12 @@
 # limitations under the License.
 
 - include: nova_init_upstart.yml
-  static: no
   when: pid1_name == "init"
   tags:
     - upstart-init
     - nova-init
 
 - include: nova_init_systemd.yml
-  static: no
   when: pid1_name == "systemd"
   tags:
     - systemd-init

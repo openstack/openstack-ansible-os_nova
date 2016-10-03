@@ -14,7 +14,6 @@
 # limitations under the License.
 
 - include: nova_install_apt.yml
-  static: no
   when: ansible_pkg_mgr == 'apt'
 
 - name: Create developer mode constraint file

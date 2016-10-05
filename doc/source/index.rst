@@ -54,17 +54,19 @@ be used to manage the OpenStack-Ansible management nodes.
 Compute driver compatibility
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-This role supports multiple nova compute driver types.  The following
+This role supports multiple nova compute driver types. The following
 compute drivers are supported:
- - libvirt (default)
- - ironic
- - lxd (via nova-lxd)
- - powervm (via nova-powervm)
+
+- libvirt (default)
+- ironic
+- lxd (via nova-lxd)
+- powervm (via nova-powervm)
 
 The driver type is automatically detected by the OpenStack Ansible Nova role
 for the following compute driver types:
- - libvirt (kvm / qemu)
- - powervm
+
+- libvirt (kvm / qemu)
+- powervm
 
 Any mix and match of compute node types can be used for those platforms,
 except for ironic.

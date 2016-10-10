@@ -195,7 +195,7 @@ nova_program_name: nova-api-os-compute
 nova_cross_az_attach: True
 
 ## Nova spice
-nova_spice_html5proxy_base_proto: http
+nova_spice_html5proxy_base_proto: "{{ openstack_service_publicuri_proto | default('http') }}"
 nova_spice_html5proxy_base_port: 6082
 nova_spice_html5proxy_base_uri: "{{ nova_spice_html5proxy_base_proto }}://{{ external_lb_vip_address }}:{{ nova_spice_html5proxy_base_port }}"
 nova_spice_html5proxy_base_url: "{{ nova_spice_html5proxy_base_uri }}/spice_auto.html"
@@ -206,7 +206,7 @@ nova_spicehtml5_git_repo: https://github.com/SPICE/spice-html5
 nova_spicehtml5_git_install_branch: master
 
 ## Nova novnc
-nova_novncproxy_proto: http
+nova_novncproxy_proto: "{{ openstack_service_publicuri_proto | default('http') }}"
 nova_novncproxy_port: 6080
 nova_novncproxy_base_uri: "{{ nova_novncproxy_proto }}://{{ external_lb_vip_address }}:{{ nova_novncproxy_port }}"
 nova_novncproxy_base_url: "{{ nova_novncproxy_base_uri }}/vnc_auto.html"

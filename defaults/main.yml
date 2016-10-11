@@ -112,7 +112,7 @@ nova_rabbitmq_telemetry_use_ssl: "{{ nova_rabbitmq_use_ssl }}"
 #  have its specific variable requirements set under its short name.
 nova_virt_types:
   ironic:
-    nova_compute_driver: nova.virt.ironic.IronicDriver
+    nova_compute_driver: ironic.IronicDriver
     nova_scheduler_host_manager: ironic_host_manager
     nova_reserved_host_memory_mb: 0
     nova_firewall_driver: nova.virt.firewall.NoopFirewallDriver

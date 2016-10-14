@@ -61,7 +61,6 @@ enable_instance_password = {{ nova_enable_instance_password }}
 compute_driver = {{ nova_compute_driver }}
 instance_name_template = instance-%08x
 instances_path = {{ nova_system_home_folder }}/instances
-api_paste_config = /etc/nova/api-paste.ini
 allow_resize_to_same_host = True
 image_cache_manager_interval = {{ nova_image_cache_manager_interval }}
 resume_guests_state_on_host_boot = {{ nova_resume_guests_state_on_host_boot }}
@@ -288,3 +287,6 @@ live_migration_uri = "qemu+ssh://nova@%s/system?no_verify=1&keyfile={{ nova_syst
 hw_disk_discard = {{ nova_libvirt_hw_disk_discard }}
 disk_cachemodes = {{ nova_libvirt_disk_cachemodes }}
 {% endif %}
+
+[wsgi]
+api_paste_config = /etc/nova/api-paste.ini

@@ -5,7 +5,7 @@
 # you may not use this file except in compliance with the License.
 # You may obtain a copy of the License at
 #
-#     http://www.apache.org/licenses/LICENSE-2.0
+# http://www.apache.org/licenses/LICENSE-2.0
 #
 # Unless required by applicable law or agreed to in writing, software
 # distributed under the License is distributed on an "AS IS" BASIS,
@@ -15,21 +15,15 @@
 
 - include: nova_init_upstart.yml
   when: pid1_name == "init"
-  tags:
-    - upstart-init
-    - nova-init
 
 - include: nova_init_systemd.yml
   when: pid1_name == "systemd"
-  tags:
-    - systemd-init
-    - nova-init
 
 - name: Load service
   service:
-   name: "{{ program_name }}"
+   name: "{{ item.value.service_name }}"
    enabled: "yes"
+  with_dict: "{{ nova_services }}"
+  when: inventory_hostname in groups[item.value.group]
   notify:
     - Restart nova services
-  tags:
-    - nova-init

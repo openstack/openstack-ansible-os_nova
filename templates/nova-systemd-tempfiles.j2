@@ -1,4 +1,4 @@
 # {{ ansible_managed }}
 
-D /var/lock/{{ program_name }} 2755 {{ system_user }} {{ system_group }}
-D /var/run/{{ program_name }} 2755 {{ system_user }} {{ system_group }}
+D /var/lock/{{ item.value.service_name }} 2755 {{ nova_system_user_name }} {{ nova_system_group_name }}
+D /var/run/{{ item.value.service_name }} 2755 {{ nova_system_user_name }} {{ nova_system_group_name }}

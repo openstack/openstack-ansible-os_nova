@@ -404,6 +404,8 @@ nova_requires_pip_packages:
 
 nova_compute_pip_packages:
   - libvirt-python
+
+nova_compute_ironic_pip_packages:
   - python-ironicclient
 
 # Common pip packages

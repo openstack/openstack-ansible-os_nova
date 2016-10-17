@@ -1,5 +1,5 @@
 ---
-# Copyright 2014, Rackspace US, Inc.
+# Copyright 2016, Walmart Stores, Inc.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -13,18 +13,17 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-- include: nova_compute_kvm.yml
-  when: nova_virt_type == 'kvm' or nova_virt_type == 'qemu'
-
-- include: nova_compute_powervm.yml
-  when: nova_virt_type == 'powervm'
-
-- include: nova_compute_lxd.yml
-  when: nova_virt_type == 'lxd'
-
-- include: nova_compute_ironic.yml
-  when: nova_virt_type == 'ironic'
-
-- include: nova_compute_key_populate.yml
-
-- include: nova_compute_key_distribute.yml
+- name: Install pip packages (venv)
+  pip:
+    name: "{{ nova_compute_ironic_pip_packages | join(' ') }}"
+    state: latest
+    virtualenv: "{{ nova_bin | dirname }}"
+    virtualenv_site_packages: "no"
+    extra_args: "{{ pip_install_options_fact|default('') }}"
+  register: install_packages
+  until: install_packages|success
+  retries: 5
+  delay: 2
+  tags:
+    - nova-install
+    - nova-pip-packages

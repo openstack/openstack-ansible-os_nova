@@ -27,6 +27,9 @@
   when: cpuinfo_contents.stdout.find('vmx') != -1
         or cpuinfo_contents.stdout.find('svm') != -1
         or cpuinfo_contents.stdout.find('PowerNV') != -1
+        or (cpuinfo_contents.stdout.find('pSeries') != -1
+            and cpuinfo_contents.stdout.find('qemu') != -1
+            and ansible_architecture == 'ppc64le')
   tags:
     - nova-virt-type-set
 
@@ -36,6 +39,7 @@
   when:
     - cpuinfo_contents.stdout.find('pSeries') != -1
     - ansible_architecture == 'ppc64le'
+    - cpuinfo_contents.stdout.find('qemu') == -1
   tags:
     - nova-virt-type-set
 

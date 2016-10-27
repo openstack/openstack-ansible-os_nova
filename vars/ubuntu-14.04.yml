@@ -89,11 +89,11 @@ nova_compute_powervm_distro_packages:
   - pvm-novalink
 
 novalink_repo:
-  repo: "deb [arch=ppc64el] ftp://public.dhe.ibm.com/systems/virtualization/Novalink/debian/ novalink_1.0.0 non-free"
+  repo: "deb [arch=ppc64el] http://public.dhe.ibm.com/systems/virtualization/Novalink/debian/ novalink_1.0.0 non-free"
   state: "present"
 
 novalink_gpg_keys:
-  - url: "ftp://public.dhe.ibm.com/systems/virtualization/Novalink/debian/novalink-gpg-pub.key"
+  - url: "http://public.dhe.ibm.com/systems/virtualization/Novalink/debian/novalink-gpg-pub.key"
     state: "present"
 
 #lxd-specific variables

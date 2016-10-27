@@ -242,7 +242,7 @@ pool_timeout = {{ nova_api_db_pool_timeout }}
 
 
 [oslo_concurrency]
-lock_path = /var/lock/nova
+lock_path = {{ nova_lock_path }}
 
 
 [oslo_messaging_rabbit]

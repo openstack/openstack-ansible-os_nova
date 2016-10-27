@@ -54,6 +54,8 @@ nova_system_comment: nova system user
 nova_system_home_folder: "/var/lib/{{ nova_system_user_name }}"
 nova_libvirt_save_path: "{{ nova_system_home_folder }}/save"
 
+nova_lock_path: "/var/lock/nova"
+
 ## Manually specified nova UID/GID
 # Deployers can specify a UID for the nova user as well as the GID for the
 # nova group if needed. This is commonly used in environments where shared

@@ -79,4 +79,8 @@
     - nova-kvm
     - nova-libvirt
 
+- include: nova_disable_smt.yml
+  when:
+    - ansible_architecture == 'ppc64le'
+
 - include: nova_compute_kvm_virsh_net_remove.yml

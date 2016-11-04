@@ -23,39 +23,7 @@
       {% for item in nova_developer_constraints %}
       {{ item }}
       {% endfor %}
-  when:
-    - nova_developer_mode | bool
-  tags:
-    - nova-install
-    - nova-pip-packages
-
-- name: Clone requirements git repository
-  git:
-    repo: "{{ nova_requirements_git_repo }}"
-    dest: "/opt/requirements"
-    clone: yes
-    update: yes
-    version: "{{ nova_requirements_git_install_branch }}"
-  when:
-    - nova_developer_mode | bool
-  tags:
-    - nova-install
-    - nova-pip-packages
-
-- name: Add constraints to pip_install_options fact for developer mode
-  set_fact:
-    pip_install_options_fact: "{{ pip_install_options|default('') }} --constraint /opt/developer-pip-constraints.txt --constraint /opt/requirements/upper-constraints.txt"
-  when:
-    - nova_developer_mode | bool
-  tags:
-    - nova-install
-    - nova-pip-packages
-
-- name: Set pip_install_options_fact when not in developer mode
-  set_fact:
-    pip_install_options_fact: "{{ pip_install_options|default('') }}"
-  when:
-    - not nova_developer_mode | bool
+  when: nova_developer_mode | bool
   tags:
     - nova-install
     - nova-pip-packages
@@ -64,7 +32,9 @@
   pip:
     name: "{{ nova_requires_pip_packages | join(' ') }}"
     state: latest
-    extra_args: "{{ pip_install_options_fact }}"
+    extra_args: >-
+      {{ (pip_install_upper_constraints is defined) | ternary('--constraint ' + pip_install_upper_constraints | default(''),'') }}
+      {{ pip_install_options | default('') }}
   register: install_packages
   until: install_packages|success
   retries: 5
@@ -160,7 +130,10 @@
     state: latest
     virtualenv: "{{ nova_bin | dirname }}"
     virtualenv_site_packages: "no"
-    extra_args: "{{ pip_install_options_fact }}"
+    extra_args: >-
+      {{ nova_developer_mode | ternary('--constraint /opt/developer-pip-constraints.txt', '') }}
+      {{ (pip_install_upper_constraints is defined) | ternary('--constraint ' + pip_install_upper_constraints | default(''),'') }}
+      {{ pip_install_options | default('') }}
   register: install_packages
   until: install_packages|success
   retries: 5

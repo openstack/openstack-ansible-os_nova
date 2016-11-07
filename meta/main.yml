@@ -18,7 +18,7 @@ galaxy_info:
   description: Installation and setup of nova
   company: Rackspace
   license: Apache2
-  min_ansible_version: 1.9
+  min_ansible_version: 2.0
   platforms:
     - name: Ubuntu
       versions:

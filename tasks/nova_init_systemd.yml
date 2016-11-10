@@ -33,10 +33,10 @@
   with_dict: "{{ nova_services }}"
   when: inventory_hostname in groups[item.value.group]
 
-- name: Create tempfile.d entry
+- name: Create tmpfiles.d entry
   template:
-    src: "nova-systemd-tempfiles.j2"
-    dest: "/etc/tmpfiles.d/nova.conf"
+    src: "nova-systemd-tmpfiles.j2"
+    dest: "/etc/tmpfiles.d/{{ item.value.service_name }}.conf"
     mode: "0644"
     owner: "root"
     group: "root"

@@ -13,19 +13,6 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-# Detect whether the init system is upstart of systemd.
-- name: Check init system
-  command: cat /proc/1/comm
-  register: _pid1_name
-  tags:
-    - always
-
-- name: Set the name of pid1
-  set_fact:
-    pid1_name: "{{ _pid1_name.stdout }}"
-  tags:
-    - always
-
 - name: Gather variables for each operating system
   include_vars: "{{ item }}"
   with_first_found:

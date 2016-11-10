@@ -27,7 +27,7 @@
     owner: "root"
     group: "root"
   when:
-    - pid1_name == "systemd"
+    - ansible_service_mgr == 'systemd'
   notify:
     - Reload systemd daemon
 
@@ -36,6 +36,6 @@
     src: "smt.conf"
     dest: "/etc/init/smt.conf"
   when:
-    - pid1_name != "systemd"
+    - ansible_service_mgr != 'systemd'
   notify:
     - Reload upstart init scripts

@@ -14,10 +14,12 @@
 # limitations under the License.
 
 - include: nova_init_upstart.yml
-  when: pid1_name == "init"
+  when:
+    - ansible_service_mgr == 'upstart'
 
 - include: nova_init_systemd.yml
-  when: pid1_name == "systemd"
+  when:
+    - ansible_service_mgr == 'systemd'
 
 - name: Load service
   service:

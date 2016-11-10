@@ -15,6 +15,7 @@
 
 - name: Disable SMT
   command: /usr/sbin/ppc64_cpu --smt=off
+  register: smt_disable_result
   failed_when: false
   tags:
     - kvm-disable-smt
@@ -28,6 +29,8 @@
     group: "root"
   when:
     - ansible_service_mgr == 'systemd'
+    - smt_disable_result.rc is defined
+    - smt_disable_result.rc == 0
   notify:
     - Reload systemd daemon
 
@@ -37,5 +40,7 @@
     dest: "/etc/init/smt.conf"
   when:
     - ansible_service_mgr != 'systemd'
+    - smt_disable_result.rc is defined
+    - smt_disable_result.rc == 0
   notify:
     - Reload upstart init scripts

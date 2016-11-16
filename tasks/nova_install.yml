@@ -107,7 +107,7 @@
 
 - name: Update virtualenv path
   command: >
-    virtualenv-tools --update-path=auto {{ nova_bin | dirname }}
+    virtualenv-tools --update-path=auto --reinitialize {{ nova_bin | dirname }}
   when:
     - not nova_developer_mode | bool
     - nova_get_venv | changed or nova_venv_dir | changed

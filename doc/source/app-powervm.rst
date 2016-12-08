@@ -96,3 +96,17 @@ Additionally, you can enable flat network injection by using the
     nova_nova_conf_overrides:
       DEFAULT:
         flat_injected: True
+
+Enabling PowerVM RMC
+~~~~~~~~~~~~~~~~~~~~
+
+To enable PowerVM RMC_, IPv4/IPv6 dual-stack mode must be enabled. To do this,
+you must set ``use_ipv6`` using the ``nova_nova_conf_overrides`` variable:
+
+.. code-block:: yaml
+
+    nova_nova_conf_overrides:
+      DEFAULT:
+        use_ipv6: True
+
+.. _RMC: http://www.ibm.com/support/knowledgecenter/8284-22A/p8eig/p8eig_rmc.htm

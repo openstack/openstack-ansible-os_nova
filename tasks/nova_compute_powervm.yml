@@ -27,3 +27,13 @@
   shell: "udevadm trigger"
   tags:
     - nova-powervm
+
+- name: Template Nova interfaces file
+  template:
+    src: nova-interfaces-template.j2
+    dest: /etc/nova/nova-interfaces-template
+    owner: "root"
+    group: "root"
+    mode: 0644
+  tags:
+    - nova-powervm

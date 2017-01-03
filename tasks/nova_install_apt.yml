@@ -26,6 +26,7 @@
   apt_repository:
     repo: "{{ uca_repo }}"
     state: present
+    filename: "{{ uca_apt_source_list_filename | default(omit) }}"
   register: nova_uca_add_repo
   when: nova_uca_enable
   until: add_repo|success

@@ -71,6 +71,7 @@ nova_compute_lxd_distro_packages:
 uca_openstack_release: newton
 uca_repo_dist: "{{ ansible_lsb.codename }}-updates/{{ uca_openstack_release }}"
 uca_repo: "deb {{ uca_apt_repo_url }} {{ uca_repo_dist }} main"
+#uca_apt_source_list_filename: "ubuntu_cloud_archive_canonical_com_ubuntu"
 
 # nova powervm virt driver
 nova_compute_powervm_distro_packages:
@@ -90,6 +91,7 @@ nova_compute_powervm_distro_packages:
 novalink_repo:
   repo: "deb [arch=ppc64el] http://public.dhe.ibm.com/systems/virtualization/Novalink/debian/ novalink_1.0.0 non-free"
   state: "present"
+  filename: "public_dhe_ibm_com_systems_virtualization_Novalink_debian"
 
 novalink_gpg_keys:
   - url: "http://public.dhe.ibm.com/systems/virtualization/Novalink/debian/novalink-gpg-pub.key"

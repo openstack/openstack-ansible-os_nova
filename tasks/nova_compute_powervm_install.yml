@@ -29,6 +29,8 @@
   apt_repository:
     repo: "{{ novalink_repo.repo }}"
     state: "{{ novalink_repo.state }}"
+    filename:  "{{ novalink_repo.filename | default(omit) }}"
+    update_cache: yes
   register: add_nv_repos
   until: add_nv_repos|success
   retries: 5

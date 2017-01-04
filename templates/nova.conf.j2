@@ -110,6 +110,11 @@ libvirt_vif_type = ethernet
 vif_plugging_timeout = 10
 vif_plugging_is_fatal = False
 
+{% if nova_pci_passthrough_whitelist  %}
+# PCI Passthrough
+pci_passthrough_whitelist = "{{ nova_pci_passthrough_whitelist }}"
+{% endif %}
+
 # Hypervisor
 default_ephemeral_format = ext4
 

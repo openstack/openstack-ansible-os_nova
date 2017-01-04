@@ -443,3 +443,14 @@ lxd_bind_port: 8443
 lxd_storage_backend: dir
 # This needs to be set in the user_secrets.yml file.
 #lxd_trust_password:
+
+# This variable should be used with lxd when using a
+# storage backend that utilizes storage pools
+#lxd_storage_pool:
+
+# PCI devices passthrough to nova
+# For SR-IOV please use:
+#   nova_pci_passthrough_whitelist: '{ "physical_network": "<ml2 network name>", "devname": "<physical nic>" }'
+#   Example:
+#     nova_pci_passthrough_whitelist: '{ "physical_network": "physnet1", "devname": "p1p1" }'
+nova_pci_passthrough_whitelist: {}

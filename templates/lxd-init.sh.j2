@@ -9,4 +9,7 @@
   --network-address={{ lxd_bind_address }} \
   --network-port={{ lxd_bind_port }} \
   --storage-backend={{ lxd_storage_backend }} \
+{% if lxd_storage_pool is defined %}
+  --storage-pool={{ lxd_storage_pool }} \
+{% endif %}
   --trust-password={{ lxd_trust_password }}

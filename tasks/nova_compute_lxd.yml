@@ -14,6 +14,8 @@
 # limitations under the License.
 
 - include: nova_compute_lxd_install.yml
+  tags:
+    - nova-install
 
 - name: Add nova user to lxd group
   user:
@@ -22,6 +24,7 @@
     append: "yes"
   tags:
     - nova-lxd
+    - nova-install
 
 - name: Place lxd config script
   template:
@@ -33,9 +36,11 @@
   register: lxd_init_script
   tags:
     - nova-lxd
+    - nova-config
 
 - name: Configure lxd init
   command: "{{ nova_system_home_folder }}/lxd-init.sh"
   when: lxd_init_script | changed
   tags:
     - nova-lxd
+    - nova-config

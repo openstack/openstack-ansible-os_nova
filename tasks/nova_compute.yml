@@ -24,7 +24,13 @@
 
 - include: nova_compute_ironic.yml
   when: nova_virt_type == 'ironic'
+  tags:
+    - nova-install
 
 - include: nova_compute_key_populate.yml
+  tags:
+    - nova-config
 
 - include: nova_compute_key_distribute.yml
+  tags:
+    - nova-config

@@ -14,6 +14,9 @@
 # limitations under the License.
 
 - include: nova_compute_powervm_install.yml
+  tags:
+    - nova-install
+    - nova-powervm
 
 - name: Add nova user to pvm_admin group
   user:
@@ -21,11 +24,13 @@
     groups: "pvm_admin"
     append: "yes"
   tags:
+    - nova-install
     - nova-powervm
 
 - name: Ensure powervm permissions
   shell: "udevadm trigger"
   tags:
+    - nova-config
     - nova-powervm
 
 - name: Template Nova interfaces file
@@ -36,4 +41,5 @@
     group: "root"
     mode: 0644
   tags:
+    - nova-config
     - nova-powervm

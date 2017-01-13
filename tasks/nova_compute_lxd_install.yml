@@ -28,5 +28,4 @@
   retries: 5
   delay: 2
   tags:
-    - nova-install
     - nova-pip-packages

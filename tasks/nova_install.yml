@@ -25,7 +25,6 @@
       {% endfor %}
   when: nova_developer_mode | bool
   tags:
-    - nova-install
     - nova-pip-packages
 
 - name: Install requires pip packages
@@ -40,7 +39,6 @@
   retries: 5
   delay: 2
   tags:
-    - nova-install
     - nova-pip-packages
 
 - name: Attempt venv download
@@ -51,7 +49,6 @@
   register: nova_get_venv
   when: not nova_developer_mode | bool
   tags:
-    - nova-install
     - nova-pip-packages
 
 - name: Remove existing venv
@@ -60,7 +57,6 @@
     state: absent
   when: nova_get_venv | changed
   tags:
-    - nova-install
     - nova-pip-packages
 
 - name: Create nova venv dir
@@ -69,7 +65,6 @@
     state: directory
   register: nova_venv_dir
   tags:
-    - nova-install
     - nova-pip-packages
 
 - name: Unarchive pre-built venv
@@ -82,7 +77,6 @@
     - nova_get_venv | changed or nova_venv_dir | changed
   notify: Restart nova services
   tags:
-    - nova-install
     - nova-pip-packages
 
 - name: Install pip packages
@@ -102,7 +96,6 @@
   when: nova_developer_mode | bool
   notify: Restart nova services
   tags:
-    - nova-install
     - nova-pip-packages
 
 - name: Update virtualenv path
@@ -112,7 +105,6 @@
     - not nova_developer_mode | bool
     - nova_get_venv | changed or nova_venv_dir | changed
   tags:
-    - nova-install
     - nova-pip-packages
 
 - include: nova_console_spice_install.yml

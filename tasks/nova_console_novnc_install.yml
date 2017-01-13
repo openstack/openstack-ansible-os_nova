@@ -18,7 +18,6 @@
     path: "/usr/share/novnc"
     state: "absent"
   tags:
-    - nova-install
     - nova-novnc-git
 
 - name: Get package from git
@@ -35,7 +34,6 @@
   retries: 5
   delay: 2
   tags:
-    - nova-install
     - nova-novnc-git
 
 - name: Install pip packages
@@ -52,7 +50,6 @@
   when:
     - nova_get_venv | failed or nova_developer_mode | bool
   tags:
-    - nova-install
     - nova-pip-packages
 
 - include: nova_console_novnc_ssl.yml
@@ -63,3 +60,4 @@
   tags:
     - nova-novnc
     - nova-novnc-ssl
+    - nova-config

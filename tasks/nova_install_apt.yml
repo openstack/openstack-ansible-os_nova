@@ -63,7 +63,6 @@
   delay: 2
   with_items: "{{ nova_distro_packages }}"
   tags:
-    - nova-install
     - nova-apt-packages
 
 - name: Remove known problem packages for the Spice console
@@ -79,7 +78,6 @@
     - inventory_hostname in groups['nova_console']
     - nova_console_type == "spice"
   tags:
-    - nova-install
     - nova-apt-packages
     - nova-spice-apt-packages
 
@@ -96,7 +94,6 @@
     - inventory_hostname in groups['nova_console']
     - nova_console_type == "novnc"
   tags:
-    - nova-install
     - nova-apt-packages
     - nova-novnc-apt-packages
 

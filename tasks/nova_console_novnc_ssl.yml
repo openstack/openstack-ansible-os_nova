@@ -24,6 +24,8 @@
 - name: Prepare combined nova-console SSL and CA certs
   local_action: command cat {{ nova_console_user_ssl_cert }} {{ nova_console_user_ssl_ca_cert is defined | ternary(nova_console_user_ssl_ca_cert,'') }}
   register: nova_console_user_ssl_combined
+  tags:
+    - nova-config
 
 - name: Drop user provided ssl cert and key
   copy:
@@ -37,3 +39,5 @@
     - { content: "{{ nova_console_user_ssl_combined.stdout ~ '\n' }}", dest: "{{ nova_console_ssl_cert }}", mode: "0644" }
     - { src: "{{ nova_console_user_ssl_key }}", dest: "{{ nova_console_ssl_key }}", mode: "0640" }
   notify: Restart nova services
+  tags:
+    - nova-config

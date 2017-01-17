@@ -60,7 +60,7 @@
     mode: "{{ item.mode|default('0755') }}"
   with_items:
     - { path: "/openstack", owner: "root", group: "root" }
-    - { path: "/etc/nova" }
+    - { path: "/etc/nova", mode: "0750" }
     - { path: "/etc/nova/rootwrap.d", owner: "root", group: "root" }
     - { path: "/etc/sudoers.d", mode: "0750", owner: "root", group: "root" }
     - { path: "/var/cache/nova" }

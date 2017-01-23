@@ -254,7 +254,7 @@ rabbit_use_ssl = {{ nova_rabbitmq_use_ssl }}
 
 {% if nova_virt_type == 'ironic' %}
 [ironic]
-username = {{ ironic_service_name }}
+username = {{ ironic_service_user_name }}
 password = {{ ironic_service_password }}
 project_name = {{ ironic_service_project_name }}
 user_domain_name = {{ ironic_service_domain_name | default("Default") }}

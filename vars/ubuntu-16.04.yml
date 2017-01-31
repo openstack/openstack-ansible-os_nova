@@ -40,6 +40,7 @@ nova_novnc_distro_packages:
 
 nova_compute_kvm_distro_packages:
   - bridge-utils
+  - "{% if nova_barbican_enabled | bool %}cryptsetup{% endif %}"
   - genisoimage
   - kpartx
   - libvirt-bin
@@ -57,6 +58,7 @@ nova_compute_kvm_distro_packages:
 
 nova_compute_lxd_distro_packages:
   - bridge-utils
+  - "{% if nova_barbican_enabled | bool %}cryptsetup{% endif %}"
   - dosfstools
   - dosfstools-dbg
   - genisoimage
@@ -81,6 +83,7 @@ uca_repo: "deb {{ uca_apt_repo_url }} {{ uca_repo_dist }} main"
 # nova powervm virt driver
 nova_compute_powervm_distro_packages:
   - bridge-utils
+  - "{% if nova_barbican_enabled | bool %}cryptsetup{% endif %}"
   - genisoimage
   - kpartx
   - open-iscsi

@@ -13,6 +13,9 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+
+# Enable/Disable barbican configurations
+nova_barbican_enabled: False
 # Enable/Disable designate configurations
 nova_designate_enabled: False
 # Notification topics for designate.

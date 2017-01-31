@@ -49,6 +49,7 @@
     state: "{{ nova_package_state }}"
   with_items:
     - "{{ nova_packages_list | selectattr('enabled') | sum(attribute='packages', start=[]) }}"
+  when: item != ''
   register: install_nova_role_packages
   async: 600
   poll: 0

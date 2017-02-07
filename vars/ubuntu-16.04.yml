@@ -16,7 +16,7 @@
 ## APT Cache options
 cache_timeout: 600
 
-libvirt_group: libvirtd
+libvirt_group: libvirt
 libvirt_service_name: libvirt-bin
 
 # Common apt packages
@@ -73,7 +73,7 @@ nova_nginx_distro_packages:
   - nginx-full
 
 # Ubuntu Cloud Archive variables
-uca_openstack_release: newton
+uca_openstack_release: ocata
 uca_repo_dist: "{{ ansible_lsb.codename }}-updates/{{ uca_openstack_release }}"
 uca_repo: "deb {{ uca_apt_repo_url }} {{ uca_repo_dist }} main"
 #uca_apt_source_list_filename: "ubuntu_cloud_archive_canonical_com_ubuntu"

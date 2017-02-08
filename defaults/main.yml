@@ -29,8 +29,9 @@ nova_package_state: "latest"
 nova_pip_package_state: "latest"
 
 nova_git_repo: https://git.openstack.org/openstack/nova
-nova_git_install_branch: master
+nova_git_install_branch: stable/ocata
 
+# TODO (andymccr): Update branch for lxd once it is created
 nova_lxd_git_repo: https://git.openstack.org/openstack/nova-lxd
 nova_lxd_git_install_branch: master
 

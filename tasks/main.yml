@@ -80,6 +80,13 @@
 - name: Flush handlers
   meta: flush_handlers
 
+- include: nova_compute_wait.yml
+  when:
+    - "{{ 'nova_compute' in group_names }}"
+    - "{{ nova_service_restart | default(dict(changed=False)) | changed }}"
+  tags:
+    - nova-config
+
 - include: nova_db_post_setup.yml
   when: inventory_hostname == groups['nova_api_os_compute'][0]
   tags:

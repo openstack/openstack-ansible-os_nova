@@ -23,6 +23,7 @@
     name: "{{ item.value.service_name }}"
     state: "restarted"
   with_dict: "{{ nova_services }}"
+  register: nova_service_restart
   when:
     - inventory_hostname in groups[item.value.group]
     - "{{ item.value.condition | default(true) }}"

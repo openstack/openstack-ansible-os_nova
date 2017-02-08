@@ -29,9 +29,9 @@
   config_template:
     src: "{{ item.src }}"
     dest: "{{ item.dest }}"
-    owner: "{{ item.owner|default(nova_system_user_name) }}"
+    owner: "root"
     group: "{{ item.group|default(nova_system_group_name) }}"
-    mode: "0644"
+    mode: "0640"
     config_overrides: "{{ item.config_overrides }}"
     config_type: "{{ item.config_type }}"
   with_items:
@@ -41,8 +41,6 @@
       config_type: "ini"
     - src: "rootwrap.conf.j2"
       dest: "/etc/nova/rootwrap.conf"
-      owner: "root"
-      group: "root"
       config_overrides: "{{ nova_rootwrap_conf_overrides }}"
       config_type: "ini"
     - src: "api-paste.ini.j2"

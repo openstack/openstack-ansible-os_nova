@@ -38,21 +38,6 @@
   tags:
     - novalink-repo
 
-- name: Install apt packages
-  apt:
-    pkg: "{{ item }}"
-    state: "{{ nova_package_state }}"
-    update_cache: yes
-    cache_valid_time: "{{ cache_timeout }}"
-  register: install_packages
-  until: install_packages|success
-  retries: 5
-  delay: 2
-  with_items: "{{ nova_compute_powervm_distro_packages }}"
-  tags:
-    - nova-apt-packages
-    - nova-compute-powervm-apt-packages
-
 - name: Register pypowervm module path (venv)
   command: python -c 'import pypowervm; print pypowervm.__file__'
   changed_when: false

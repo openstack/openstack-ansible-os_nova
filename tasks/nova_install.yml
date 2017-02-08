@@ -13,62 +13,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-- name: Ensure apt cache is up to date
-  apt:
-    update_cache: yes
-    cache_valid_time: "{{ cache_timeout }}"
-  when:
-    - ansible_pkg_mgr == 'apt'
-
-- name: Add Ubuntu Cloud Archive key package
-  package:
-    name: ubuntu-cloud-keyring
-    state: "{{ nova_package_state }}"
-  when:
-    - nova_uca_enable
-    - ansible_pkg_mgr == 'apt'
-  register: nova_uca_add_keys
-  tags:
-    - add-apt-keys
-
-- name: Add Ubuntu Cloud Archive apt repository
-  apt_repository:
-    repo: "{{ uca_repo }}"
-    state: present
-    update_cache: yes
-    filename: "{{ uca_apt_source_list_filename | default(omit) }}"
-  register: nova_uca_add_repo
-  when:
-    - nova_uca_enable
-    - ansible_pkg_mgr == 'apt'
-  until: add_repo|success
-  retries: 5
-  delay: 2
-  tags:
-    - add-uca-repo
-
-- name: Install RDO package
-  package:
-    name: "{{ rdo_package }}"
-    state: "present"
-  register: install_cloud_rdo_package
-  until: install_cloud_rdo_package | success
-  retries: 5
-  delay: 2
-  when:
-    - ansible_pkg_mgr == 'yum'
-
-- name: Install distro packages
-  package:
-    name: "{{ item }}"
-    state: "{{ nova_package_state }}"
-  register: install_packages
-  until: install_packages|success
-  retries: 5
-  delay: 2
-  with_items: "{{ nova_distro_packages }}"
-  tags:
-    - nova-apt-packages
+- include: "nova_install_{{ ansible_pkg_mgr }}.yml"
 
 - name: Remove known problem packages for the Spice console
   package:
@@ -86,54 +31,6 @@
     - nova-apt-packages
     - nova-spice-apt-packages
 
-- name: Install distro packages (novnc console)
-  package:
-    name: "{{ item }}"
-    state: "{{ nova_package_state }}"
-  register: install_packages
-  until: install_packages|success
-  retries: 5
-  delay: 2
-  with_items: "{{ nova_novnc_distro_packages }}"
-  when:
-    - inventory_hostname in groups['nova_console']
-    - nova_console_type == "novnc"
-  tags:
-    - nova-apt-packages
-    - nova-novnc-apt-packages
-
-- name: Install distro packages (compute - KVM)
-  package:
-    name: "{{ item }}"
-    state: "{{ nova_package_state }}"
-  register: install_packages
-  until: install_packages|success
-  retries: 5
-  delay: 2
-  with_items: "{{ nova_compute_kvm_distro_packages }}"
-  when:
-    - inventory_hostname in groups['nova_compute']
-    - nova_virt_type == 'kvm' or nova_virt_type == 'qemu'
-  tags:
-    - nova-apt-packages
-    - nova-compute-kvm-apt-packages
-
-- name: Install distro packages (compute - LXD)
-  package:
-    name: "{{ item }}"
-    state: "{{ nova_package_state }}"
-  register: install_packages
-  until: install_packages|success
-  retries: 5
-  delay: 2
-  with_items: "{{ nova_compute_lxd_distro_packages }}"
-  when:
-    - inventory_hostname in groups['nova_compute']
-    - nova_virt_type == 'lxd'
-  tags:
-    - nova-apt-packages
-    - nova-compute-lxd-apt-packages
-
 - name: Create developer mode constraint file
   copy:
     dest: "/opt/developer-pip-constraints.txt"
@@ -145,7 +42,7 @@
   tags:
     - nova-pip-packages
 
-- name: Install requires pip packages
+- name: Install required pip packages
   pip:
     name: "{{ nova_requires_pip_packages }}"
     state: "{{ nova_pip_package_state }}"
@@ -230,16 +127,18 @@
   tags:
     - nova-pip-packages
 
-- include: nova_console_spice_install.yml
-  when:
-    - inventory_hostname in groups['nova_console']
-    - nova_console_type == "spice"
-  tags:
-    - nova-spice-console
+- name: Ensure distro packages are fully installed on all hosts
+  async_status:
+    jid: "{{ item.ansible_job_id }}"
+  register: install_nova_role_packages_async_job
+  until: install_nova_role_packages_async_job.finished
+  retries: 300
+  with_items:
+    - "{{ install_nova_role_packages.results }}"
 
-- include: nova_console_novnc_install.yml
+- include: "nova_console_{{ nova_console_type }}_install.yml"
   when:
-    - inventory_hostname in groups['nova_console']
-    - nova_console_type == "novnc"
+    - "{{ 'nova_console' in group_names }}"
   tags:
     - nova-novnc-console
+    - nova-spice-console

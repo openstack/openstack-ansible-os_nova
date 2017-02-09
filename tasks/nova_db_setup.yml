@@ -37,7 +37,9 @@
   command: "{{ nova_bin }}/nova-manage cell_v2 create_cell --name {{ nova_cell1_name }} --database_connection mysql+pymysql://{{ nova_galera_user }}:{{ nova_container_mysql_password }}@{{ nova_galera_address }}/{{ nova_galera_database }}?charset=utf8 --transport-url rabbit://{% for host in nova_rabbitmq_servers.split(',') %}{{ nova_rabbitmq_userid }}:{{ nova_rabbitmq_password }}@{{ host }}:{{ nova_rabbitmq_port }}{% if not loop.last %},{% else %}/{{ nova_rabbitmq_vhost }}{% endif %}{% endfor %}"
   become: yes
   become_user: "{{ nova_system_user_name }}"
-  changed_when: false
+  register: nova_cell1_create
+  failed_when: "{{ nova_cell1_create.rc not in [0, 2] }}"
+  changed_when: "{{ nova_cell1_create.rc == 0 }}"
   tags:
     - nova-db-setup
     - nova-setup

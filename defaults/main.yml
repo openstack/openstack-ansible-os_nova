@@ -457,6 +457,7 @@ nova_requires_pip_packages:
   - virtualenv-tools
   - python-keystoneclient # Keystoneclient needed to OSA keystone lib
   - httplib2
+  - python-openstackclient
 
 nova_compute_pip_packages:
   - libvirt-python

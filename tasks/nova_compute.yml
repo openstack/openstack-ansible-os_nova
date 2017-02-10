@@ -13,17 +13,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-- include: nova_compute_kvm.yml
-  when: nova_virt_type == 'kvm' or nova_virt_type == 'qemu'
-
-- include: nova_compute_powervm.yml
-  when: nova_virt_type == 'powervm'
-
-- include: nova_compute_lxd.yml
-  when: nova_virt_type == 'lxd'
-
-- include: nova_compute_ironic.yml
-  when: nova_virt_type == 'ironic'
+- include: "nova_compute_{{ nova_virt_type }}.yml"
   tags:
     - nova-install
 

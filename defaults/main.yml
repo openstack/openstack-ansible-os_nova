@@ -369,6 +369,11 @@ nova_scheduler_driver: filter_scheduler
 nova_scheduler_available_filters: nova.scheduler.filters.all_filters
 nova_scheduler_weight_classes: nova.scheduler.weights.all_weighers
 
+# This should be tuned depending on the number of compute hosts present in the
+# deployment. Large clouds may wish to disable automatic discovery by setting
+# this value to -1.
+nova_discover_hosts_in_cells_interval: "{{ 300 if groups['nova_compute'] | length > 10 else 60 }}"
+
 # If you want to regenerate the nova users SSH keys, on each run, set this var to True
 # Otherwise keys will be generated on the first run and not regenerated each run.
 nova_recreate_keys: False

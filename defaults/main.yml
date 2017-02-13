@@ -248,6 +248,7 @@ nova_force_config_drive: False
 nova_placement_service_enabled: True
 nova_placement_service_user_domain_id: Default
 nova_placement_service_project_domain_id: Default
+nova_placement_service_interface: internal
 nova_placement_service_in_ldap: "{{ nova_service_in_ldap }}"
 nova_placement_service_username: placement
 nova_placement_service_name: placement
@@ -262,9 +263,7 @@ nova_placement_ssl: false
 nova_placement_service_publicuri_proto: "{{ openstack_service_publicuri_proto | default(nova_placement_service_proto) }}"
 nova_placement_service_adminuri_proto: "{{ openstack_service_adminuri_proto | default(nova_placement_service_proto) }}"
 nova_placement_service_internaluri_proto: "{{ openstack_service_internaluri_proto | default(nova_placement_service_proto) }}"
-# TODO(andymccr): A bug in nova forces the compute host to connect to publicURL
-# Pending this patch merging: https://review.openstack.org/#/c/426163/
-nova_placement_service_publicuri: "{{ nova_placement_service_internaluri_proto }}://{{ internal_lb_vip_address }}:{{ nova_placement_service_port }}"
+nova_placement_service_publicuri: "{{ nova_placement_service_publicuri_proto }}://{{ external_lb_vip_address }}:{{ nova_placement_service_port }}"
 nova_placement_service_publicurl: "{{ nova_placement_service_publicuri }}/placement"
 nova_placement_service_adminuri: "{{ nova_placement_service_adminuri_proto }}://{{ internal_lb_vip_address }}:{{ nova_placement_service_port }}"
 nova_placement_service_adminurl: "{{ nova_placement_service_adminuri }}/placement"

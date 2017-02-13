@@ -173,6 +173,7 @@ ovs_bridge = {{ nova_network_services[nova_network_type]['ovs_bridge'] }}
 # Placement
 [placement]
 os_region_name = {{ nova_placement_service_region }}
+os_interface = {{ nova_placement_service_interface }}
 auth_type = "password"
 password = {{ nova_placement_service_password }}
 username = {{ nova_placement_service_username }}

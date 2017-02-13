@@ -74,12 +74,6 @@ nova_compute_lxd_distro_packages:
 nova_nginx_distro_packages:
   - nginx-full
 
-# Ubuntu Cloud Archive variables
-uca_openstack_release: ocata
-uca_repo_dist: "{{ ansible_lsb.codename }}-updates/{{ uca_openstack_release }}"
-uca_repo: "deb {{ uca_apt_repo_url }} {{ uca_repo_dist }} main"
-#uca_apt_source_list_filename: "ubuntu_cloud_archive_canonical_com_ubuntu"
-
 # nova powervm virt driver
 nova_compute_powervm_distro_packages:
   - bridge-utils

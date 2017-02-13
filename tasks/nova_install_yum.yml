@@ -13,17 +13,6 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-- name: Install RDO package
-  package:
-    name: "{{ rdo_package }}"
-    state: "present"
-  register: install_cloud_rdo_package
-  until: install_cloud_rdo_package | success
-  retries: 5
-  delay: 2
-  when:
-    - ansible_pkg_mgr == 'yum'
-
 - name: Install nova role packages (yum)
   yum:
     name: "{{ item }}"

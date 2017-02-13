@@ -13,40 +13,12 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-- name: Ensure apt cache is up to date
-  apt:
-    update_cache: yes
-    cache_valid_time: "{{ cache_timeout }}"
-
-- name: Add Ubuntu Cloud Archive key package
-  package:
-    name: ubuntu-cloud-keyring
-    state: "{{ nova_package_state }}"
-  when:
-    - nova_uca_enable
-  register: nova_uca_add_keys
-  tags:
-    - add-apt-keys
-
-- name: Add Ubuntu Cloud Archive apt repository
-  apt_repository:
-    repo: "{{ uca_repo }}"
-    state: present
-    update_cache: yes
-    filename: "{{ uca_apt_source_list_filename | default(omit) }}"
-  register: nova_uca_add_repo
-  when:
-    - nova_uca_enable
-  until: add_repo|success
-  retries: 5
-  delay: 2
-  tags:
-    - add-uca-repo
-
 - name: Install nova role packages (apt)
   apt:
     name: "{{ item }}"
     state: "{{ nova_package_state }}"
+    update_cache: yes
+    cache_valid_time: "{{ cache_timeout }}"
   with_items:
     - "{{ nova_packages_list | selectattr('enabled') | sum(attribute='packages', start=[]) }}"
   when: item != ''

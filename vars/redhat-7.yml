@@ -64,8 +64,6 @@ nova_compute_powervm_distro_packages: []
 
 novalink_gpg_keys: []
 
-rdo_package: "https://rdoproject.org/repos/rdo-release.rpm"
-
 nova_nginx_distro_packages:
   - nginx
 

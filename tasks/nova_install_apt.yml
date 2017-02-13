@@ -13,28 +13,6 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-- name: Add Ubuntu Cloud Archive key package
-  apt:
-    pkg: ubuntu-cloud-keyring
-    state: "{{ nova_package_state }}"
-  when: nova_uca_enable
-  register: nova_uca_add_keys
-  tags:
-    - add-apt-keys
-
-- name: Add Ubuntu Cloud Archive apt repository
-  apt_repository:
-    repo: "{{ uca_repo }}"
-    state: present
-    filename: "{{ uca_apt_source_list_filename | default(omit) }}"
-  register: nova_uca_add_repo
-  when: nova_uca_enable
-  until: add_repo|success
-  retries: 5
-  delay: 2
-  tags:
-    - add-uca-repo
-
 #TODO(evrardjp): Replace the next 2 tasks by a standard apt with cache
 #when https://github.com/ansible/ansible-modules-core/pull/1517 is merged
 #in 1.9.x or we move to 2.0 (if tested working)

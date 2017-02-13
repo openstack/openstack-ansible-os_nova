@@ -316,11 +316,6 @@ nova_scheduler_weight_classes: nova.scheduler.weights.all_weighers
 # Otherwise keys will be generated on the first run and not regenerated each run.
 nova_recreate_keys: False
 
-# Toggle the use of Ubuntu Cloud Archive
-nova_uca_enable: True
-# Ubuntu Cloud Archive mirror URL
-uca_apt_repo_url: "http://ubuntu-cloud.archive.canonical.com/ubuntu"
-
 # Nova Ceph rbd
 # Enble and define nova_libvirt_images_rbd_pool to use rbd as nova backend
 #nova_libvirt_images_rbd_pool: vms

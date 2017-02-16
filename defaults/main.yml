@@ -275,9 +275,9 @@ nova_placement_nginx_access_log_format_extras: '$request_time $upstream_response
 nova_placement_nginx_extra_conf:
   - keepalive_timeout   70;
 nova_placement_uwsgi_socket_port: 8781
-nova_placement_uwsgi_http_port: 8782
 nova_wsgi_threads: 1
 nova_wsgi_processes: "{{ (ansible_processor_vcpus | int > 0) | ternary (ansible_processor_vcpus, 1) * 2}}"
+nova_wsgi_buffer_size: 65535
 
 ## Nova libvirt
 nova_libvirt_inject_key: False

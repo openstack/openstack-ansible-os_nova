@@ -5,7 +5,6 @@ gid = {{ nova_system_group_name }}
 
 virtualenv = /openstack/venvs/nova-{{ nova_venv_tag }}
 wsgi-file = {{ nova_bin }}/nova-placement-api
-http = :{{ nova_placement_uwsgi_http_port }}
 socket = 127.0.0.1:{{ nova_placement_uwsgi_socket_port }}
 
 master = true
@@ -16,6 +15,6 @@ exit-on-reload = true
 die-on-term = true
 lazy-apps = true
 add-header = Connection: close
-buffer-size = 65535
+buffer-size = {{ nova_wsgi_buffer_size }}
 thunder-lock = true
 logfile-chmod = 644

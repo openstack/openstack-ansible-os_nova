@@ -89,6 +89,7 @@
   when:
     - "{{ 'nova_compute' in group_names }}"
     - "{{ nova_service_restart | default(dict(changed=False)) | changed }}"
+    - "{{ nova_discover_hosts_in_cells_interval < 1 }}"
   tags:
     - nova-config
 

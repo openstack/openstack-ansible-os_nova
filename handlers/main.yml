@@ -19,14 +19,56 @@
     daemon_reload: yes
 
 - name: Restart nova services
+  command: /bin/true
+  notify:
+     - Restart nova conductor
+     - Restart nova API
+     - Restart nova misc services
+     - Restart nova compute
+
+- name: Restart nova conductor
   systemd:
-    name: "{{ item.value.service_name }}"
+    name: "{{ nova_services['nova-conductor']['service_name'] }}"
     state: "restarted"
-  with_dict: "{{ nova_services }}"
-  register: nova_service_restart
+  register: nova_conductor_restart
   when:
-    - inventory_hostname in groups[item.value.group]
-    - "{{ item.value.condition | default(true) }}"
+    - "{{ nova_services['nova-conductor']['group'] in group_names }}"
+    - "{{ nova_services['nova-conductor']['condition'] | default(true) }}"
+
+- name: Restart nova API
+  systemd:
+    name: "{{ nova_services['nova-api-os-compute']['service_name'] }}"
+    state: "restarted"
+  register: nova_api_restart
+  when:
+    - "{{ nova_services['nova-api-os-compute']['group'] in group_names }}"
+    - "{{ nova_services['nova-api-os-compute']['condition'] | default(true) }}"
+
+# Used for services where restart ordering does not matter
+- name: Restart nova misc services
+  systemd:
+    name: "{{ nova_services[item]['service_name'] }}"
+    state: "restarted"
+  register: nova_misc_restart
+  with_items:
+    - nova-api-metadata
+    - nova-consoleauth
+    - nova-novncproxy
+    - nova-scheduler
+    - nova-spicehtml5proxy
+    - nova-placement-api
+  when:
+    - "{{ nova_services[item]['group'] in group_names }}"
+    - "{{ nova_services[item]['condition'] | default(true) }}"
+
+- name: Restart nova compute
+  systemd:
+    name: "{{ nova_services['nova-compute']['service_name'] }}"
+    state: "restarted"
+  register: nova_compute_restart
+  when:
+    - "{{ nova_services['nova-compute']['group'] in group_names }}"
+    - "{{ nova_services['nova-compute']['condition'] | default(true) }}"
 
 - name: Restart Nginx
   systemd:

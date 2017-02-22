@@ -19,7 +19,7 @@
     groups: nova
     append: yes
   notify:
-    - Restart Nginx
+    - Reload Nginx
   tags:
     - nova-install
 
@@ -28,7 +28,7 @@
     path: /etc/nginx/sites-enabled/default
     state: absent
   notify:
-    - Restart Nginx
+    - Reload Nginx
 
 - name: Configure custom nginx log format
   lineinfile:
@@ -36,7 +36,7 @@
     dest: "/etc/nginx/nginx.conf"
     line: "log_format custom '{{ nova_placement_nginx_access_log_format_combined }} {{ nova_placement_nginx_access_log_format_extras }}';"
   notify:
-    - Restart Nginx
+    - Reload Nginx
 
 # Configure app
 - name: Configure virtual hosts
@@ -44,7 +44,7 @@
     src: nova-placement-nginx.conf.j2
     dest: "/etc/nginx/{{ nova_nginx_conf_path }}/nova_placement_api.conf"
   notify:
-    - Restart Nginx
+    - Reload Nginx
 
 - name: Link to enable virtual hosts
   file:
@@ -53,4 +53,4 @@
     state: link
   when: ansible_os_family == "Debian"
   notify:
-    - Restart Nginx
+    - Reload Nginx

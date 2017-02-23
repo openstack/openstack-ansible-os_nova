@@ -1,8 +1,5 @@
 # {{ ansible_managed }}
 
-{% set _api_threads = [ansible_processor_vcpus|default(2) // 2, nova_api_threads_max] | min %}
-{% set api_threads = _api_threads if _api_threads > 0 else 1 %}
-
 [DEFAULT]
 # Disable stderr logging
 use_stderr = False
@@ -39,7 +36,7 @@ key = {{ nova_console_ssl_key }}
 
 # Api's
 enabled_apis = {{ nova_enabled_apis }}
-osapi_compute_workers = {{ nova_osapi_compute_workers | default(api_threads) }}
+osapi_compute_workers = {{ nova_osapi_compute_workers | default(nova_api_threads) }}
 
 # Rpc all
 transport_url = rabbit://{% for host in nova_rabbitmq_servers.split(',') %}{{ nova_rabbitmq_userid }}:{{ nova_rabbitmq_password }}@{{ host }}:{{ nova_rabbitmq_port }}{% if not loop.last %},{% else %}/{{ nova_rabbitmq_vhost }}{% endif %}{% endfor %}
@@ -50,7 +47,7 @@ rpc_response_timeout = {{ nova_rpc_response_timeout }}
 # Metadata
 metadata_host = {{ nova_metadata_host }}
 metadata_port = {{ nova_metadata_port }}
-metadata_workers = {{ nova_metadata_workers | default(api_threads) }}
+metadata_workers = {{ nova_metadata_workers | default(nova_api_threads) }}
 
 # Network
 dhcp_domain = {{ nova_dhcp_domain }}
@@ -185,7 +182,7 @@ insecure = {{ keystone_service_adminuri_insecure | bool }}
 {% endif %}
 
 [conductor]
-workers = {{ nova_conductor_workers | default(api_threads) }}
+workers = {{ nova_conductor_workers | default(nova_api_threads) }}
 
 
 [keystone_authtoken]

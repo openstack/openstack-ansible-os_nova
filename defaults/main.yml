@@ -276,7 +276,9 @@ nova_placement_nginx_extra_conf:
   - keepalive_timeout   70;
 nova_placement_uwsgi_socket_port: 8781
 nova_wsgi_threads: 1
-nova_wsgi_processes: "{{ (ansible_processor_vcpus | int > 0) | ternary (ansible_processor_vcpus, 1) * 2}}"
+## Cap the maximum number of processes when a user value is unspecified.
+nova_wsgi_processes_max: 16
+nova_wsgi_processes: "{{ [[ansible_processor_vcpus|default(1), 1] | max * 2, nova_wsgi_processes_max] | min }}"
 nova_wsgi_buffer_size: 65535
 
 ## Nova libvirt
@@ -398,6 +400,7 @@ nova_ceph_client_uuid: 517a4663-3927-44bc-9ea7-4a90e1cd4c66
 
 ## Cap the maximun number of threads / workers when a user value is unspecified.
 nova_api_threads_max: 16
+nova_api_threads: "{{ [[ansible_processor_vcpus|default(2) // 2, 1] | max, nova_api_threads_max] | min }}"
 
 ## Policy vars
 # Provide a list of access controls to update the default policy.json with. These changes will be merged

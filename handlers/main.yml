@@ -70,10 +70,10 @@
     - "{{ nova_services['nova-compute']['group'] in group_names }}"
     - "{{ nova_services['nova-compute']['condition'] | default(true) }}"
 
-- name: Restart Nginx
+- name: Reload Nginx
   systemd:
     name: nginx
-    state: restarted
+    state: reloaded
   register: nova_nginx_restart
   until: nova_nginx_restart | success
   retries: 5

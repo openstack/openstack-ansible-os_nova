@@ -19,7 +19,7 @@
   register: nova_service_list
   retries: 10
   delay: 5
-  until: "{{ ansible_hostname in (nova_service_list.stdout
+  until: "{{ ansible_nodename in (nova_service_list.stdout
                                   | from_json
                                   | selectattr('Binary', 'equalto', 'nova-compute')
                                   | map(attribute='Host') | list) }}"

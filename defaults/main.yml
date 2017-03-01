@@ -443,6 +443,8 @@ nova_compute_powervm_pip_packages:
   - nova-powervm
   - pyasn1-modules
 
+libvirt_group: libvirtd
+
 lxd_bind_address: 0.0.0.0
 lxd_bind_port: 8443
 lxd_storage_backend: dir

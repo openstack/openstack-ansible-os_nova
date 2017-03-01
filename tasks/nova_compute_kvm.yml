@@ -20,7 +20,7 @@
 - name: Add nova user to libvirtd group
   user:
     name: "{{ nova_system_user_name }}"
-    groups: "libvirtd"
+    groups: "{{ libvirt_group }}"
     append: "yes"
   tags:
     - nova-install

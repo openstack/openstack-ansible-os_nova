@@ -13,11 +13,24 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+- name: Get the api_db version
+  command: "{{ nova_bin }}/nova-manage api_db version"
+  become: yes
+  become_user: "{{ nova_system_user_name }}"
+  register: nova_api_db_version
+  changed_when: false
+  tags:
+    - nova-db-setup
+    - nova-setup
+    - nova-command-bin
+
 - name: Perform a Nova API DB sync
   command: "{{ nova_bin }}/nova-manage --config-file /etc/nova/nova.conf api_db sync"
   become: yes
   become_user: "{{ nova_system_user_name }}"
   changed_when: false
+  when:
+    - nova_api_db_version.stdout == "0"
   tags:
     - nova-db-setup
     - nova-setup
@@ -40,6 +53,16 @@
   register: nova_cell1_create
   failed_when: "{{ nova_cell1_create.rc not in [0, 2] }}"
   changed_when: "{{ nova_cell1_create.rc == 0 }}"
+  tags:
+    - nova-db-setup
+    - nova-setup
+    - nova-command-bin
+
+- name: Perform a Nova API DB sync
+  command: "{{ nova_bin }}/nova-manage --config-file /etc/nova/nova.conf api_db sync"
+  become: yes
+  become_user: "{{ nova_system_user_name }}"
+  changed_when: false
   tags:
     - nova-db-setup
     - nova-setup

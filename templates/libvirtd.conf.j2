@@ -8,7 +8,7 @@ log_outputs="1:file:/var/log/libvirt/libvirtd.log"
 {% endif %}
 listen_tls = {{ nova_libvirtd_listen_tls }}
 listen_tcp = {{ nova_libvirtd_listen_tcp }}
-unix_sock_group = "libvirtd"
+unix_sock_group = "{{ libvirt_group }}"
 unix_sock_ro_perms = "0777"
 unix_sock_rw_perms = "0770"
 auth_unix_ro = "none"

@@ -63,7 +63,7 @@
 
 - name: Set libvirt runtime options when listening on tcp (Ubuntu)
   lineinfile:
-    dest: "/etc/default/libvirt-bin"
+    dest: "/etc/default/{{ libvirt_default_file }}"
     line: 'libvirtd_opts="{% if ansible_service_mgr != "systemd" %}-d{% endif%} -l"'
     regexp: "^libvirtd_opts="
     backup: "yes"
@@ -76,7 +76,7 @@
 
 - name: Set libvirt runtime options when not listening on tcp (Ubuntu)
   lineinfile:
-    dest: "/etc/default/libvirt-bin"
+    dest: "/etc/default/{{ libvirt_default_file }}"
     line: 'libvirtd_opts="{% if ansible_service_mgr != "systemd" %}-d{% endif%}"'
     regexp: "^libvirtd_opts="
     backup: "yes"

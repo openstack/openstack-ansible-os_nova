@@ -64,7 +64,7 @@
 
 - name: Set libvirt runtime options when listening on tcp (Ubuntu)
   lineinfile:
-    dest: "/etc/default/libvirt-bin"
+    dest: "/etc/default/libvirtd"
     line: 'libvirtd_opts="-l"'
     regexp: "^libvirtd_opts="
     backup: "yes"

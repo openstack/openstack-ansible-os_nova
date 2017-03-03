@@ -79,3 +79,8 @@
   tags:
     - sudoers
     - nova-sudoers
+
+- include: nova_selinux.yml
+  when:
+    - ansible_selinux.status is defined
+    - ansible_selinux.status == "enabled"

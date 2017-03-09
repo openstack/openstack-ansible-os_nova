@@ -54,5 +54,6 @@
     - nova-config
 
 - include: nova_placement_service_setup.yml
+  when: inventory_hostname == groups['nova_api_placement'][0]
   tags:
     - nova-config

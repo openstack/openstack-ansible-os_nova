@@ -13,18 +13,6 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-- name: Install distro packages for Nginx
-  package:
-    name: "{{ item }}"
-    state: "{{ nova_package_state }}"
-  register: install_packages
-  until: install_packages|success
-  retries: 5
-  delay: 2
-  with_items: "{{ nova_nginx_distro_packages }}"
-  tags:
-    - nova-install
-
 - name: Install pip packages
   pip:
     name: "{{ nova_placement_pip_packages }}"

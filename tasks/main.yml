@@ -24,11 +24,6 @@
   tags:
     - always
 
-- name: Gather variables that apply to all operating systems
-  include_vars: common.yml
-  tags:
-    - always
-
 - name: Fail when virt type is unsupported
   fail: msg="Unsupported Virt Type Provided {{ nova_supported_virt_types }}"
   when:

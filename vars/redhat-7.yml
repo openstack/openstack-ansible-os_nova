@@ -46,15 +46,15 @@ nova_compute_kvm_distro_packages:
   - kpartx
   - libvirt-daemon-config-nwfilter
   - libvirt-daemon-kvm
+  - libvirt-daemon-driver-qemu
+  - qemu-kvm-ev
   - libvirt-devel
   - libvirt-python
   - nfs-utils
   - openstack-selinux
   - python-libguestfs
-  - qemu
   - qemu-img-ev
   - sysfsutils
-  - vconfig
 
 # TODO: add support for LXD on CentOS at some point.
 nova_compute_lxd_distro_packages: []

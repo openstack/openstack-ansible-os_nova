@@ -37,6 +37,7 @@ export WORKING_DIR=${WORKING_DIR:-$(pwd)}
 export ROLE_NAME=${ROLE_NAME:-''}
 
 export ANSIBLE_PARAMETERS=${ANSIBLE_PARAMETERS:-"-vvv"}
+export ANSIBLE_OVERRIDES=${ANSIBLE_OVERRIDES:-$WORKING_DIR/tests/os_nova-overrides.yml}
 export TEST_PLAYBOOK=${TEST_PLAYBOOK:-$WORKING_DIR/tests/test-upgrade.yml}
 export TEST_CHECK_MODE=${TEST_CHECK_MODE:-false}
 export TEST_IDEMPOTENCE=${TEST_IDEMPOTENCE:-false}

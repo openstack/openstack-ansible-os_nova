@@ -44,12 +44,14 @@
   when: inventory_hostname in groups[item.value.group]
 
 - name: Place the systemd init script
-  template:
+  config_template:
     src: "nova-systemd-init.j2"
     dest: "/etc/systemd/system/{{ item.value.service_name }}.service"
     mode: "0644"
     owner: "root"
     group: "root"
+    config_overrides: "{{ item.value.init_config_overrides }}"
+    config_type: "ini"
   with_dict: "{{ nova_services }}"
   when: inventory_hostname in groups[item.value.group]
   notify:

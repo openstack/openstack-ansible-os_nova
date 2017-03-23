@@ -355,36 +355,55 @@ nova_libvirtd_listen_tcp: 0
 nova_libvirtd_auth_tcp: sasl
 nova_libvirtd_debug_log_filters: "3:remote 4:event 3:json 3:rpc"
 
+nova_api_metadata_init_overrides: {}
+nova_api_os_compute_init_overrides: {}
+nova_cert_init_overrides: {}
+nova_compute_init_overrides: {}
+nova_conductor_init_overrides: {}
+nova_consoleauth_init_overrides: {}
+nova_novncproxy_init_overrides: {}
+nova_scheduler_init_overrides: {}
+nova_spicehtml5proxy_init_overrides: {}
+
 ## Service Name-Group Mapping
 nova_services:
   nova-api-metadata:
     group: nova_api_metadata
     service_name: nova-api-metadata
+    init_config_overrides: "{{ nova_api_metadata_init_overrides }}"
   nova-api-os-compute:
     group: nova_api_os_compute
     service_name: nova-api-os-compute
+    init_config_overrides: "{{ nova_api_os_compute_init_overrides }}"
   nova-cert:
     group: nova_cert
     service_name: nova-cert
+    init_config_overrides: "{{ nova_cert_init_overrides }}"
   nova-compute:
     group: nova_compute
     service_name: nova-compute
+    init_config_overrides: "{{ nova_compute_init_overrides }}"
   nova-conductor:
     group: nova_conductor
     service_name: nova-conductor
+    init_config_overrides: "{{ nova_conductor_init_overrides }}"
   nova-consoleauth:
     group: nova_console
     service_name: nova-consoleauth
+    init_config_overrides: "{{ nova_consoleauth_init_overrides }}"
   nova-novncproxy:
     group: nova_console
     service_name: nova-novncproxy
+    init_config_overrides: "{{ nova_novncproxy_init_overrides }}"
     condition: "{{ nova_console_type == 'novnc' }}"
   nova-scheduler:
     group: nova_scheduler
     service_name: nova-scheduler
+    init_config_overrides: "{{ nova_scheduler_init_overrides }}"
   nova-spicehtml5proxy:
     group: nova_console
     service_name: nova-spicehtml5proxy
+    init_config_overrides: "{{ nova_spicehtml5proxy_init_overrides }}"
     condition: "{{ nova_console_type == 'spice' }}"
 
 

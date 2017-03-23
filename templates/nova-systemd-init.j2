@@ -21,5 +21,14 @@ TimeoutSec=300
 Restart=on-failure
 RestartSec=150
 
+# This creates a specific slice which all nova services will operate from
+#  The accounting options give us the ability to see resource usage through
+#  the `systemd-cgtop` command.
+Slice=nova.slice
+CPUAccounting=true
+BlockIOAccounting=true
+MemoryAccounting=false
+TasksAccounting=true
+
 [Install]
 WantedBy=multi-user.target

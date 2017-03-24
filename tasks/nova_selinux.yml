@@ -19,7 +19,7 @@
   register: openstack_nova_dir
 
 - name: Check for SELinux equivalence for /var/lib/nova
-  shell: "semanage fcontext -l /var/lib/nova | grep ^/var/lib/nova || true"
+  shell: "semanage fcontext -l /var/lib/nova | grep '^/var/lib/nova = /var/log/libvirt$' || true"
   register: fcontext_check
   tags:
     - skip_ansible_lint

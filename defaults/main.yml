@@ -282,6 +282,9 @@ nova_wsgi_processes: "{{ [[ansible_processor_vcpus|default(1), 1] | max * 2, nov
 nova_wsgi_buffer_size: 65535
 
 ## Nova libvirt
+# Warning: If nova_libvirt_inject_key or nova_libvirt_inject_password are enabled for Ubuntu compute hosts
+# then the kernel will be made readable to nova user (a requirement for libguestfs).
+# See Launchpad bugs 1507915 (Nova), 759725 (Ubuntu), and http://libguestfs.org/guestfs-faq.1.html
 nova_libvirt_inject_key: False
 # inject partition options:
 #  -2 => disable, -1 => inspect (libguestfs only), 0 => not partitioned, >0 => partition number

@@ -32,6 +32,12 @@
     - nova-config
     - nova-kvm
 
+- name: Set kernel permissions to enable libguestfs features (Ubuntu)
+  include: nova_kernel_permissions.yml
+  when:
+    - ansible_distribution == 'Ubuntu'
+    - nova_libvirt_inject_key | bool or nova_libvirt_inject_password | bool
+
 - name: Set libvirtd config
   template:
     src: libvirtd.conf.j2

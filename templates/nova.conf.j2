@@ -261,12 +261,10 @@ cpu_mode = {{ nova_cpu_mode }}
 virt_type = {{ nova_virt_type }}
 remove_unused_resized_minimum_age_seconds = {{ nova_remove_unused_resized_minimum_age_seconds }}
 
-{% if cinder_backends_rbd_inuse|bool or nova_libvirt_images_rbd_pool is defined %}
-rbd_user = {{ nova_ceph_client }}
-rbd_secret_uuid = {{ nova_ceph_client_uuid }}
-{% endif %}
 {% if nova_libvirt_images_rbd_pool is defined %}
 # ceph rbd support
+rbd_user = {{ nova_ceph_client }}
+rbd_secret_uuid = {{ nova_ceph_client_uuid }}
 images_type = rbd
 images_rbd_pool = {{ nova_libvirt_images_rbd_pool }}
 images_rbd_ceph_conf = /etc/ceph/ceph.conf

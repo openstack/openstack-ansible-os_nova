@@ -77,6 +77,7 @@
 - name: Reload Nginx
   systemd:
     name: nginx
+    enabled: yes
     state: reloaded
   register: nova_nginx_restart
   until: nova_nginx_restart | success

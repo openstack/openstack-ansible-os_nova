@@ -536,10 +536,14 @@ nova_compute_powervm_pip_packages:
 
 lxd_bind_address: 0.0.0.0
 lxd_bind_port: 8443
+
+# Supported backends are 'zfs', 'dir' and 'btrfs' for now.
+# To use btrfs, a btrfs filesystem must be mounted in /var/lib/lxd
+# during compute node configuration.
 lxd_storage_backend: dir
 # This needs to be set in the user_secrets.yml file.
 #lxd_trust_password:
 # This variable should be used with lxd when using a
-# storage backend that utilizes storage pools
+# storage backend that utilizes storage pools (zfs)
 #lxd_storage_pool:
 

@@ -1,6 +1,8 @@
 #!/bin/bash
 # {{ ansible_managed }}
 
+{% if (lxd_storage_backend == "zfs" or lxd_storage_backend == "dir") %}
+
 # This is a script to configure lxd system settings.
 # "/usr/bin/lxd init"
 
@@ -13,3 +15,14 @@
   --storage-pool={{ lxd_storage_pool }} \
 {% endif %}
   --trust-password={{ lxd_trust_password }}
+
+{% elif (lxd_storage_backend == "btrfs") %}
+
+# Check if filesystem if mounted as btrfs.
+# If not nothing happens and storage will still be set to dir by default
+
+if [ $(findmnt /var/lib/lxd -o FSTYPE -n) == "btrfs" ]; then
+  systemctl restart lxd
+fi
+
+{% endif %}

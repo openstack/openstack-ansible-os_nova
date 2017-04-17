@@ -28,3 +28,13 @@ nova_packages_list:
     enabled: "{{ 'nova_compute' in group_names and nova_virt_type == 'powervm' }}"
   - packages: "{{ nova_nginx_distro_packages }}"
     enabled: "{{ 'nova_api_placement' in group_names }}"
+
+filtered_nova_services: >
+  {%- set services = nova_services.copy() %}
+  {%- for key,value in nova_services.items() %}
+  {%- if value.group not in group_names or
+  (value.condition is defined and not value.condition) %}
+  {%- set _ = services.pop(key) %}
+  {%- endif %}
+  {%- endfor %}
+  {{- services -}}

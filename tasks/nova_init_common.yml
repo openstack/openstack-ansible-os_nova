@@ -22,9 +22,6 @@
    name: "{{ item.value.service_name }}"
    enabled: "yes"
    state: "started"
-  with_dict: "{{ nova_services }}"
-  when:
-    - inventory_hostname in groups[item.value.group]
-    - "{{ item.value.condition | default(true) }}"
+  with_dict: "{{ filtered_nova_services }}"
   notify:
     - Restart nova services

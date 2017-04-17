@@ -20,10 +20,7 @@
     owner: "{{ nova_system_user_name }}"
     group: "{{ nova_system_group_name }}"
     mode: "02755"
-  with_dict: "{{ nova_services }}"
-  when:
-    - inventory_hostname in groups[item.value.group]
-    - "{{ item.value.condition | default(true) }}"
+  with_dict: "{{ filtered_nova_services }}"
 
 - name: Create TEMP lock dir
   file:
@@ -32,10 +29,7 @@
     owner: "{{ nova_system_user_name }}"
     group: "{{ nova_system_group_name }}"
     mode: "02755"
-  with_dict: "{{ nova_services }}"
-  when:
-    - inventory_hostname in groups[item.value.group]
-    - "{{ item.value.condition | default(true) }}"
+  with_dict: "{{ filtered_nova_services }}"
 
 # TODO(mgariepy):
 # Remove this in Pike as it only needed to handle upgrades
@@ -44,10 +38,7 @@
   file:
     path: "/etc/tmpfiles.d/{{ item.value.service_name }}.conf"
     state: absent
-  with_dict: "{{ nova_services }}"
-  when:
-    - inventory_hostname in groups[item.value.group]
-    - "{{ item.value.condition | default(true) }}"
+  with_dict: "{{ filtered_nova_services }}"
 
 - name: Create tmpfiles.d entry
   template:
@@ -56,10 +47,7 @@
     mode: "0644"
     owner: "root"
     group: "root"
-  with_dict: "{{ nova_services }}"
-  when:
-    - inventory_hostname in groups[item.value.group]
-    - "{{ item.value.condition | default(true) }}"
+  with_dict: "{{ filtered_nova_services }}"
 
 - name: Place the systemd init script
   config_template:
@@ -70,9 +58,6 @@
     group: "root"
     config_overrides: "{{ item.value.init_config_overrides }}"
     config_type: "ini"
-  with_dict: "{{ nova_services }}"
-  when:
-    - inventory_hostname in groups[item.value.group]
-    - "{{ item.value.condition | default(true) }}"
+  with_dict: "{{ filtered_nova_services }}"
   notify:
     - Restart nova services

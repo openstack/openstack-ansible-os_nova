@@ -29,22 +29,3 @@
     config_type: ini
   notify:
     - Restart nova services
-
-- include: nova_init_common.yml
-  vars:
-    program_name: "nova-placement-api"
-    service_name: "nova-placement-api"
-    system_user: "{{ nova_system_user_name }}"
-    system_group: "{{ nova_system_group_name }}"
-    service_home: "{{ nova_system_user_home }}"
-  notify:
-    - Restart nova services
-
-- name: Ensure uwsgi service started
-  systemd:
-    name: "nova-placement-api"
-    state: started
-  register: nova_placement_start
-  until: nova_placement_start | success
-  retries: 5
-  delay: 2

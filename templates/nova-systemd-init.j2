@@ -10,10 +10,10 @@ Type=simple
 User={{ nova_system_user_name }}
 Group={{ nova_system_group_name }}
 
-{% if item.value.program_override is defined %}
-ExecStart={{ item.value.program_override }} {{ item.value.program_config_options|default('') }} {{ item.value.log_string|default('--log-file=') }}/var/log/nova/{{ item.value.service_name }}.log
+{% if item.program_override is defined %}
+ExecStart={{ item.program_override }} {{ item.program_config_options | default('') }} {{ item.log_string | default('--log-file=') }}/var/log/nova/{{ item.service_name }}.log
 {% else %}
-ExecStart={{ nova_bin }}/{{ item.value.service_name }} {{ item.value.program_config_options|default('') }} {{ item.value.log_string|default('--log-file=') }}/var/log/nova/{{ item.value.service_name }}.log
+ExecStart={{ nova_bin }}/{{ item.service_name }} {{ item.program_config_options | default('') }} {{ item.log_string | default('--log-file=') }}/var/log/nova/{{ item.service_name }}.log
 {% endif %}
 
 # Give a reasonable amount of time for the server to start up/shut down

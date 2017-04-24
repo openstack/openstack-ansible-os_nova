@@ -12,75 +12,78 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
+
 - name: Restart libvirt-bin
-  systemd:
+  service:
     name: "{{ libvirt_service_name }}"
+    enabled: yes
     state: "restarted"
-    daemon_reload: yes
+    daemon_reload: "{{ (ansible_service_mgr == 'systemd') | ternary('yes', omit) }}"
 
-- name: Restart nova services
-  command: /bin/true
-  notify:
-     - Restart nova conductor
-     - Restart nova API
-     - Restart nova misc services
-     - Restart nova compute
+- name: Stop services
+  service:
+    name: "{{ item.service_name }}"
+    enabled: yes
+    state: "stopped"
+    daemon_reload: "{{ (ansible_service_mgr == 'systemd') | ternary('yes', omit) }}"
+  with_items: "{{ filtered_nova_services }}"
+  register: _stop
+  until: _stop | success
+  retries: 5
+  delay: 2
+  listen: "Restart nova services"
 
-- name: Restart nova conductor
-  systemd:
-    name: "{{ nova_services['nova-conductor']['service_name'] }}"
-    state: "restarted"
-    daemon_reload: yes
-  register: nova_conductor_restart
+# Note (odyssey4me):
+# The policy.json file is currently read continually by the services
+# and is not only read on service start. We therefore cannot template
+# directly to the file read by the service because the new policies
+# may not be valid until the service restarts. This is particularly
+# important during a major upgrade. We therefore only put the policy
+# file in place after the service has been stopped.
+#
+- name: Copy new policy file into place
+  copy:
+    src: "/etc/nova/policy.json-{{ nova_venv_tag }}"
+    dest: "/etc/nova/policy.json"
+    owner: "root"
+    group: "{{ nova_system_group_name }}"
+    mode: "0640"
+    remote_src: yes
+  listen: "Restart nova services"
+
+- name: Start services
+  service:
+    name: "{{ item.service_name }}"
+    enabled: yes
+    state: "started"
+    daemon_reload: "{{ (ansible_service_mgr == 'systemd') | ternary('yes', omit) }}"
+  with_items: "{{ filtered_nova_services }}"
+  register: _start
+  until: _start | success
+  retries: 5
+  delay: 2
+  listen: "Restart nova services"
+
+- name: Wait for the nova-compute service to initialize
+  command: "openstack --os-cloud default compute service list --service nova-compute --format value --column Host"
+  register: _compute_host_list
+  retries: 10
+  delay: 5
+  until: "ansible_nodename in _compute_host_list.stdout_lines"
   when:
-    - "{{ nova_services['nova-conductor']['group'] in group_names }}"
-    - "{{ nova_services['nova-conductor']['condition'] | default(true) }}"
-
-- name: Restart nova API
-  systemd:
-    name: "{{ nova_services['nova-api-os-compute']['service_name'] }}"
-    state: "restarted"
-    daemon_reload: yes
-  register: nova_api_restart
-  when:
-    - "{{ nova_services['nova-api-os-compute']['group'] in group_names }}"
-    - "{{ nova_services['nova-api-os-compute']['condition'] | default(true) }}"
-
-# Used for services where restart ordering does not matter
-- name: Restart nova misc services
-  systemd:
-    name: "{{ nova_services[item]['service_name'] }}"
-    state: "restarted"
-    daemon_reload: yes
-  register: nova_misc_restart
-  with_items:
-    - nova-api-metadata
-    - nova-consoleauth
-    - nova-novncproxy
-    - nova-scheduler
-    - nova-spicehtml5proxy
-    - nova-placement-api
-  when:
-    - "{{ nova_services[item]['group'] in group_names }}"
-    - "{{ nova_services[item]['condition'] | default(true) }}"
-
-- name: Restart nova compute
-  systemd:
-    name: "{{ nova_services['nova-compute']['service_name'] }}"
-    state: "restarted"
-    daemon_reload: yes
-  register: nova_compute_restart
-  when:
-    - "{{ nova_services['nova-compute']['group'] in group_names }}"
-    - "{{ nova_services['nova-compute']['condition'] | default(true) }}"
+    - "'nova_compute' in group_names"
+    - "nova_discover_hosts_in_cells_interval | int < 1"
+  listen: "Restart nova services"
 
 - name: Reload Nginx
-  systemd:
+  service:
     name: nginx
     enabled: yes
     state: reloaded
-  register: nova_nginx_restart
-  until: nova_nginx_restart | success
+    daemon_reload: "{{ (ansible_service_mgr == 'systemd') | ternary('yes', omit) }}"
+  register: _restart
+  until: _restart | success
   retries: 5
   delay: 2
-  when: inventory_hostname in groups['nova_api_placement']
+  when:
+    - inventory_hostname in groups['nova_api_placement']

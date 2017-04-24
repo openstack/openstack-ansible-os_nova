@@ -48,7 +48,7 @@
       config_overrides: "{{ nova_api_paste_ini_overrides }}"
       config_type: "ini"
     - src: "policy.json.j2"
-      dest: "/etc/nova/policy.json"
+      dest: "/etc/nova/policy.json-{{ nova_venv_tag }}"
       config_overrides: "{{ nova_policy_overrides }}"
       config_type: "json"
   notify: Restart nova services

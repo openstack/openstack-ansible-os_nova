@@ -17,9 +17,9 @@ ExecStart={{ nova_bin }}/{{ item.value.service_name }} {{ item.value.program_con
 {% endif %}
 
 # Give a reasonable amount of time for the server to start up/shut down
-TimeoutSec=300
+TimeoutSec=120
 Restart=on-failure
-RestartSec=150
+RestartSec=2
 
 # This creates a specific slice which all nova services will operate from
 #  The accounting options give us the ability to see resource usage through

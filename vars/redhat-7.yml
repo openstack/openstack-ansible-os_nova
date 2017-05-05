@@ -23,7 +23,7 @@ nova_distro_packages:
   - genisoimage
   - git
   - iptables
-  - libpqxx-devel
+  - postgresql-devel
   - which
 
 # Spice console yum packages

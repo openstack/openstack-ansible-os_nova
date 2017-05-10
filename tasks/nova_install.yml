@@ -56,11 +56,20 @@
   tags:
     - nova-pip-packages
 
+- name: Retrieve checksum for venv download
+  uri:
+    url: "{{ nova_venv_download_url | replace('tgz', 'checksum') }}"
+    return_content: yes
+  register: nova_venv_checksum
+  when: nova_venv_download | bool
+  tags:
+    - nova-pip-packages
+
 - name: Attempt venv download
   get_url:
     url: "{{ nova_venv_download_url }}"
     dest: "/var/cache/{{ nova_venv_download_url | basename }}"
-    checksum: "sha1:{{ lookup('url', nova_venv_download_url | replace('tgz', 'checksum')) }}"
+    checksum: "sha1:{{ nova_venv_checksum.content | trim }}"
   register: nova_get_venv
   when: nova_venv_download | bool
   tags:

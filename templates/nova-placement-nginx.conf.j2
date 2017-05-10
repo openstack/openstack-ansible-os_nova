@@ -10,7 +10,7 @@ server {
     access_log  /var/log/nova/nova-placement-api-access.log custom;
     error_log   /var/log/nova/nova-placement-api-error.log info;
 
-    location /placement/ {
+    location /placement {
         try_files   $uri @nova-placement-api;
     }
 

@@ -30,7 +30,8 @@
     - "{{ nova_system_home_folder }}/.ssh/authorized_keys"
     - "{{ nova_system_home_folder }}/.ssh/id_rsa"
     - "{{ nova_system_home_folder }}/.ssh/id_rsa.pub"
-  when: nova_recreate_keys | bool
+  when:
+    - nova_recreate_keys | bool
   tags:
     - nova-key
     - nova-key-create
@@ -96,7 +97,8 @@
     owner: "{{ nova_system_user_name }}"
     group: "{{ nova_system_group_name }}"
     mode: "0755"
-  when: log_dir.rc != 0
+  when:
+    - log_dir.rc != 0
   tags:
     - nova-dirs
     - nova-logs
@@ -116,4 +118,3 @@
   set_fact:
     nova_console_type: "novnc"
   when: ansible_architecture == 'ppc64le'
-

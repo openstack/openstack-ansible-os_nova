@@ -13,6 +13,15 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+# Only PowerVM needs to load a separate file. Skip for the others.
+- include: "{{ item }}"
+  with_first_found:
+    - files:
+        - "nova_install_apt_{{ nova_virt_type }}.yml"
+      skip: true
+  tags:
+    - nova-install
+
 - name: Install nova role packages (apt)
   apt:
     name: "{{ item }}"
@@ -21,7 +30,8 @@
     cache_valid_time: "{{ cache_timeout }}"
   with_items:
     - "{{ nova_packages_list | selectattr('enabled') | sum(attribute='packages', start=[]) }}"
-  when: item != ''
+  when:
+    - item != ''
   register: install_nova_role_packages
   async: 600
   poll: 0

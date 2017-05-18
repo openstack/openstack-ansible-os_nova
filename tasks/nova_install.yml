@@ -38,7 +38,8 @@
       {% for item in nova_developer_constraints %}
       {{ item }}
       {% endfor %}
-  when: nova_developer_mode | bool
+  when:
+    - nova_developer_mode | bool
   tags:
     - nova-pip-packages
 
@@ -61,7 +62,8 @@
     url: "{{ nova_venv_download_url | replace('tgz', 'checksum') }}"
     return_content: yes
   register: nova_venv_checksum
-  when: nova_venv_download | bool
+  when:
+    - nova_venv_download | bool
   tags:
     - nova-pip-packages
 
@@ -71,7 +73,8 @@
     dest: "/var/cache/{{ nova_venv_download_url | basename }}"
     checksum: "sha1:{{ nova_venv_checksum.content | trim }}"
   register: nova_get_venv
-  when: nova_venv_download | bool
+  when:
+    - nova_venv_download | bool
   tags:
     - nova-pip-packages
 
@@ -79,7 +82,8 @@
   file:
     path: "{{ nova_bin | dirname }}"
     state: absent
-  when: nova_get_venv | changed
+  when:
+    - nova_get_venv | changed
   tags:
     - nova-pip-packages
 
@@ -88,7 +92,8 @@
     path: "{{ nova_bin | dirname }}"
     state: directory
   register: nova_venv_dir
-  when: nova_get_venv | changed
+  when:
+    - nova_get_venv | changed
   tags:
     - nova-pip-packages
 
@@ -97,7 +102,8 @@
     src: "/var/cache/{{ nova_venv_download_url | basename }}"
     dest: "{{ nova_bin | dirname }}"
     copy: "no"
-  when: nova_get_venv | changed
+  when:
+    - nova_get_venv | changed
   notify: Restart nova services
   tags:
     - nova-pip-packages
@@ -116,7 +122,8 @@
   until: install_packages|success
   retries: 5
   delay: 2
-  when: nova_get_venv | failed or nova_get_venv | skipped
+  when:
+    - nova_get_venv | failed or nova_get_venv | skipped
   notify: Restart nova services
   tags:
     - nova-pip-packages
@@ -132,7 +139,8 @@
 - name: Update virtualenv path
   command: >
     virtualenv-tools --update-path=auto --reinitialize {{ nova_bin | dirname }}
-  when: nova_get_venv | changed
+  when:
+    - nova_get_venv | changed
   tags:
     - nova-pip-packages
 
@@ -145,10 +153,11 @@
   with_items:
     - "{{ install_nova_role_packages.results }}"
 
-- include: "nova_console_{{ nova_console_type }}_install.yml"
+- include: "consoles/nova_console_{{ nova_console_type }}_install.yml"
   when:
-    - "{{ 'nova_console' in group_names }}"
+    - "'nova_console' in group_names"
   tags:
+    - nova-install
     - nova-novnc-console
     - nova-spice-console
 

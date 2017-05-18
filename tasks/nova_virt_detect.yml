@@ -17,19 +17,25 @@
   command: cat /proc/cpuinfo
   register: cpuinfo_contents
   changed_when: false
-  failed_when: false
+  tags:
+    - always
+
+- name: Register a fact for the nova qemu virt type
+  set_fact:
+    nova_virt_type: "qemu"
   tags:
     - always
 
 - name: Register a fact for the nova kvm virt type
   set_fact:
     nova_virt_type: "kvm"
-  when: cpuinfo_contents.stdout.find('vmx') != -1
-        or cpuinfo_contents.stdout.find('svm') != -1
-        or cpuinfo_contents.stdout.find('PowerNV') != -1
-        or (cpuinfo_contents.stdout.find('pSeries') != -1
-            and cpuinfo_contents.stdout.find('qemu') != -1
-            and ansible_architecture == 'ppc64le')
+  when:
+    - cpuinfo_contents.stdout.find('vmx') != -1
+      or cpuinfo_contents.stdout.find('svm') != -1
+      or cpuinfo_contents.stdout.find('PowerNV') != -1
+      or (cpuinfo_contents.stdout.find('pSeries') != -1
+          and cpuinfo_contents.stdout.find('qemu') != -1
+          and ansible_architecture == 'ppc64le')
   tags:
     - nova-virt-type-set
 
@@ -42,10 +48,3 @@
     - cpuinfo_contents.stdout.find('qemu') == -1
   tags:
     - nova-virt-type-set
-
-- name: Register a fact for the nova qemu virt type
-  set_fact:
-    nova_virt_type: "qemu"
-  when: nova_virt_type is not defined
-  tags:
-    - always

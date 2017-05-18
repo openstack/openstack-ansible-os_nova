@@ -1,5 +1,5 @@
 ---
-# Copyright 2016, Walmart Stores, Inc.
+# Copyright 2016, IBM Corp.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -13,19 +13,44 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-- name: Install pip packages (venv)
+- name: Install pip packages
   pip:
-    name: "{{ nova_compute_lxd_pip_packages }}"
+    name: "{{ nova_compute_powervm_pip_packages }}"
     state: "{{ nova_pip_package_state }}"
     virtualenv: "{{ nova_bin | dirname }}"
     virtualenv_site_packages: "no"
-    extra_args: >-
-      {{ nova_developer_mode | ternary('--constraint /opt/developer-pip-constraints.txt', '') }}
-      {{ (pip_install_upper_constraints is defined) | ternary('--constraint ' + pip_install_upper_constraints | default(''),'') }}
-      {{ pip_install_options | default('') }}
+    extra_args: "{{ pip_install_options|default('') }}"
   register: install_packages
   until: install_packages|success
   retries: 5
   delay: 2
   tags:
+    - nova-install
     - nova-pip-packages
+
+- name: Add nova user to pvm_admin group
+  user:
+    name: "{{ nova_system_user_name }}"
+    groups: "pvm_admin"
+    append: "yes"
+  tags:
+    - nova-install
+    - nova-powervm
+
+- name: Ensure powervm permissions
+  command: "udevadm trigger"
+  changed_when: false
+  tags:
+    - nova-config
+    - nova-powervm
+
+- name: Template Nova interfaces file
+  template:
+    src: nova-interfaces-template.j2
+    dest: /etc/nova/nova-interfaces-template
+    owner: "root"
+    group: "root"
+    mode: 0644
+  tags:
+    - nova-config
+    - nova-powervm

@@ -27,7 +27,8 @@
   until: install_packages|success
   retries: 5
   delay: 2
-  when: nova_get_venv | failed or nova_get_venv | skipped
+  when:
+    - nova_get_venv | failed or nova_get_venv | skipped
   notify: Restart nova services
   tags:
     - nova-pip-packages

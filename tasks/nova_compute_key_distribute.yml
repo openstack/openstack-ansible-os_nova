@@ -29,9 +29,10 @@
     dest: "/var/tmp/openstack-nova-key.sh"
     mode: "0755"
   delegate_to: localhost
-  when: inventory_hostname == first_available_compute
   vars:
     ansible_python_interpreter: "/usr/bin/python"
+  when:
+    - inventory_hostname == first_available_compute
   tags:
     - nova-key
     - nova-key-distribute

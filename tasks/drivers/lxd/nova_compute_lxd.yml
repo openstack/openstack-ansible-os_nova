@@ -13,9 +13,22 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-- include: nova_compute_lxd_install.yml
+- name: Install pip packages (venv)
+  pip:
+    name: "{{ nova_compute_lxd_pip_packages }}"
+    state: "{{ nova_pip_package_state }}"
+    virtualenv: "{{ nova_bin | dirname }}"
+    virtualenv_site_packages: "no"
+    extra_args: >-
+      {{ nova_developer_mode | ternary('--constraint /opt/developer-pip-constraints.txt', '') }}
+      {{ (pip_install_upper_constraints is defined) | ternary('--constraint ' + pip_install_upper_constraints | default(''),'') }}
+      {{ pip_install_options | default('') }}
+  register: install_packages
+  until: install_packages|success
+  retries: 5
+  delay: 2
   tags:
-    - nova-install
+    - nova-pip-packages
 
 - name: Add nova user to lxd group
   user:
@@ -24,7 +37,6 @@
     append: "yes"
   tags:
     - nova-lxd
-    - nova-install
 
 - name: Place lxd config script
   template:
@@ -36,11 +48,9 @@
   register: lxd_init_script
   tags:
     - nova-lxd
-    - nova-config
 
 - name: Configure lxd init
   command: "{{ nova_system_home_folder }}/lxd-init.sh"
   when: lxd_init_script | changed
   tags:
     - nova-lxd
-    - nova-config

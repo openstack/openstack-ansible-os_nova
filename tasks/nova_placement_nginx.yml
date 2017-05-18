@@ -51,6 +51,7 @@
     src: "/etc/nginx/sites-available/nova_placement_api.conf"
     path: "/etc/nginx/sites-enabled/nova_placement_api.conf"
     state: link
-  when: ansible_os_family == "Debian"
+  when:
+    - ansible_os_family == "Debian"
   notify:
     - Reload Nginx

@@ -13,7 +13,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-- include: nova_compute_kvm_install.yml
+- include: drivers/kvm/nova_compute_kvm_install.yml
   tags:
     - nova-config
 
@@ -34,7 +34,7 @@
     - nova-kvm
 
 - name: Set kernel permissions to enable libguestfs features (Ubuntu)
-  include: nova_kernel_permissions.yml
+  include: drivers/kvm/nova_kernel_permissions.yml
   when:
     - ansible_distribution == 'Ubuntu'
     - nova_libvirt_inject_key | bool or nova_libvirt_inject_password | bool
@@ -113,13 +113,13 @@
     - nova-kvm
     - nova-libvirt
 
-- include: nova_disable_smt.yml
+- include: drivers/kvm/nova_disable_smt.yml
   when:
     - ansible_architecture == 'ppc64le'
   tags:
     - nova-config
 
-- include: nova_compute_kvm_virsh_net_remove.yml
+- include: drivers/kvm/nova_compute_kvm_virsh_net_remove.yml
   tags:
     - nova-config
     - nova-kvm

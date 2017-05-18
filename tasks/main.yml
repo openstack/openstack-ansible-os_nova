@@ -25,7 +25,8 @@
     - always
 
 - name: Fail when virt type is unsupported
-  fail: msg="Unsupported Virt Type Provided {{ nova_supported_virt_types }}"
+  fail:
+    msg: "Unsupported Virt Type Provided {{ nova_supported_virt_types }}"
   when:
     - nova_virt_type is defined
     - nova_virt_type not in nova_supported_virt_types
@@ -34,10 +35,11 @@
 
 - include: nova_virt_detect.yml
   static: no
-  when: nova_virt_type is not defined
+  when:
+    - nova_virt_type is not defined
   tags:
     - always
-    - nova-virt-detect
+    - nova-config
 
 - include: nova_pre_install.yml
   tags:
@@ -52,7 +54,8 @@
     - nova-config
 
 - include: nova_db_setup.yml
-  when: inventory_hostname == groups['nova_api_os_compute'][0]
+  when:
+    - inventory_hostname == groups['nova_api_os_compute'][0]
   tags:
     - nova-config
 
@@ -61,7 +64,8 @@
     - nova-config
 
 - include: nova_service_setup.yml
-  when: inventory_hostname == groups['nova_api_os_compute'][0]
+  when:
+    - inventory_hostname == groups['nova_api_os_compute'][0]
   tags:
     - nova-config
 
@@ -73,7 +77,8 @@
     - nova-placement
 
 - include: nova_compute.yml
-  when: inventory_hostname in groups['nova_compute']
+  when:
+    - inventory_hostname in groups['nova_compute']
   tags:
     - nova-compute
 
@@ -82,13 +87,14 @@
 
 - include: nova_compute_wait.yml
   when:
-    - "{{ 'nova_compute' in group_names }}"
-    - "{{ nova_compute_restart | default(dict(changed=False)) | changed }}"
-    - "{{ nova_discover_hosts_in_cells_interval | int < 1 }}"
+    - "'nova_compute' in group_names"
+    - nova_compute_restart | default(dict(changed=False)) | changed
+    - nova_discover_hosts_in_cells_interval | int < 1
   tags:
     - nova-config
 
 - include: nova_db_post_setup.yml
-  when: inventory_hostname == groups['nova_api_os_compute'][0]
+  when:
+    - inventory_hostname == groups['nova_api_os_compute'][0]
   tags:
     - nova-config

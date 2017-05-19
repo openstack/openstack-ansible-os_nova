@@ -120,7 +120,9 @@ os_region_name = {{ nova_service_region }}
 [spice]
 agent_enabled = {{ nova_console_agent_enabled }}
 enabled = {{ nova_console_agent_enabled }}
-keymap = {{ nova_spice_console_keymap }}
+{% if (nova_console_keymap is defined) or (nova_spice_console_keymap is defined) %}
+keymap = {{ nova_spice_console_keymap | default(nova_console_keymap) }}
+{% endif %}
 # Console Url and binds
 html5proxy_base_url = {{ nova_spice_html5proxy_base_url }}
 server_listen = {% if nova_management_address == 'localhost' %}127.0.0.1{% else %}{{ nova_management_address }}{% endif %}
@@ -134,7 +136,9 @@ enabled = False
 {% elif nova_console_type == 'novnc' %}
 [vnc]
 enabled = {{ nova_novncproxy_agent_enabled }}
-keymap = {{ nova_novncproxy_vnc_keymap }}
+{% if (nova_console_keymap is defined) or (nova_novncproxy_vnc_keymap is defined) %}
+keymap = {{ nova_novncproxy_vnc_keymap | default(nova_console_keymap) }}
+{% endif %}
 novncproxy_base_url = {{ nova_novncproxy_base_url }}
 vncserver_listen = {{ nova_novncproxy_vncserver_listen }}
 vncserver_proxyclient_address = {{ nova_novncproxy_vncserver_proxyclient_address }}

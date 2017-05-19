@@ -217,7 +217,6 @@ nova_spice_html5proxy_base_proto: "{{ openstack_service_publicuri_proto | defaul
 nova_spice_html5proxy_base_port: 6082
 nova_spice_html5proxy_base_uri: "{{ nova_spice_html5proxy_base_proto }}://{{ external_lb_vip_address }}:{{ nova_spice_html5proxy_base_port }}"
 nova_spice_html5proxy_base_url: "{{ nova_spice_html5proxy_base_uri }}/spice_auto.html"
-nova_spice_console_keymap: "{{ nova_console_keymap }}"
 nova_spice_console_agent_enabled: True
 nova_spicehtml5_git_repo: https://github.com/SPICE/spice-html5
 nova_spicehtml5_git_install_branch: master
@@ -232,7 +231,6 @@ nova_novncproxy_vncserver_listen: "{{ ansible_host }}"
 nova_novncproxy_agent_enabled: True
 nova_novncproxy_git_repo: https://github.com/kanaka/novnc
 nova_novncproxy_git_install_branch: master
-nova_novncproxy_vnc_keymap: "{{ nova_console_keymap }}"
 
 ## Nova metadata
 nova_metadata_proxy_enabled: "{{ nova_network_services[nova_network_type]['metadata_proxy_enabled'] | bool }}"
@@ -295,7 +293,6 @@ nova_libvirt_hw_disk_discard: '{{ nova_libvirt_images_rbd_pool is defined | tern
 
 ## Nova console
 nova_console_agent_enabled: True
-nova_console_keymap: en-us
 # Set the console type. Presently the only options are ["spice", "novnc"].
 nova_console_type: spice
 

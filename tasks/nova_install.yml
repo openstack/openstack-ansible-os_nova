@@ -151,3 +151,10 @@
   tags:
     - nova-novnc-console
     - nova-spice-console
+
+- name: Record the venv tag deployed
+  ini_file:
+    dest: "/etc/ansible/facts.d/openstack_ansible.fact"
+    section: nova
+    option: venv_tag
+    value: "{{ nova_venv_tag }}"

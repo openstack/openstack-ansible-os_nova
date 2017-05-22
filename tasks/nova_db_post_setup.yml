@@ -24,6 +24,29 @@
     - nova-setup
     - nova-command-bin
 
+# When upgrading we need to map existing instances to the new cell1
+# To do this we need the cell UUID.
+- name: Get UUID of new Nova Cell
+  shell: "{{ nova_bin }}/nova-manage --config-file /etc/nova/nova.conf cell_v2 list_cells | awk '/cell1/ {print $4}'"
+  become: yes
+  become_user: "{{ nova_system_user_name }}"
+  when: "{{ nova_cell1_create.rc == 0 }}"
+  register: cell1_uuid
+  tags:
+    - nova-db-setup
+    - nova-setup
+    - nova-command-bin
+
+- name: Map instances to new Cell1
+  command: "{{ nova_bin }}/nova-manage --config-file /etc/nova/nova.conf cell_v2 map_instances --cell_uuid {{ cell1_uuid.stdout }}"
+  become: yes
+  become_user: "{{ nova_system_user_name }}"
+  when: "{{ nova_cell1_create.rc == 0 }}"
+  tags:
+    - nova-db-setup
+    - nova-setup
+    - nova-command-bin
+
 - name: Perform Nova online data migrations
   command: "{{ nova_bin }}/nova-manage --config-file /etc/nova/nova.conf db online_data_migrations"
   become: yes

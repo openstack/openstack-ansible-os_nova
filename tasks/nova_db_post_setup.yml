@@ -27,7 +27,7 @@
 # When upgrading we need to map existing instances to the new cell1
 # To do this we need the cell UUID.
 - name: Get UUID of new Nova Cell
-  shell: "{{ nova_bin }}/nova-manage --config-file /etc/nova/nova.conf cell_v2 list_cells | awk '/cell1/ {print $4}'"
+  shell: "{{ nova_bin }}/nova-manage --config-file /etc/nova/nova.conf cell_v2 list_cells | awk '/{{ nova_cell1_name }}/ {print $4}'"
   become: yes
   become_user: "{{ nova_system_user_name }}"
   when: "{{ nova_cell1_create.rc == 0 }}"

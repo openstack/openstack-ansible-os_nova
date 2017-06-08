@@ -13,7 +13,19 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-- include: "nova_install_{{ ansible_pkg_mgr }}.yml"
+- name: Setup powervm repository
+  include: nova_install_apt_powervm.yml
+  when:
+    - "'nova_compute' in group_names"
+    - "nova_virt_type == 'powervm'"
+    - "ansible_pkg_mgr == 'apt'"
+
+- name: Install distro packages
+  package:
+    name: "{{ nova_package_list }}"
+    state: "{{ nova_package_state }}"
+    update_cache: "{{ (ansible_pkg_mgr == 'apt') | ternary('yes', omit) }}"
+    cache_valid_time: "{{ (ansible_pkg_mgr == 'apt') | ternary(cache_timeout, omit) }}"
 
 - name: Remove known problem packages for the Spice console
   package:
@@ -143,15 +155,6 @@
     - nova_get_venv | changed
   tags:
     - nova-pip-packages
-
-- name: Ensure distro packages are fully installed on all hosts
-  async_status:
-    jid: "{{ item.ansible_job_id }}"
-  register: install_nova_role_packages_async_job
-  until: install_nova_role_packages_async_job.finished
-  retries: 300
-  with_items:
-    - "{{ install_nova_role_packages.results }}"
 
 - include: "consoles/nova_console_{{ nova_console_type }}_install.yml"
   when:

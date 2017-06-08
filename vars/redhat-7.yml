@@ -36,9 +36,11 @@ nova_novnc_distro_packages:
   - librabbitmq
   - libyaml
 
+nova_compute_barbican_distro_packages:
+  - cryptsetup
+
 nova_compute_kvm_distro_packages:
   - bridge-utils
-  - "{% if nova_barbican_enabled | bool %}cryptsetup{% endif %}"
   - device-mapper-multipath
   - dosfstools
   - genisoimage

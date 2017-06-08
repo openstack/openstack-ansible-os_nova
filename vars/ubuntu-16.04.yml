@@ -38,9 +38,11 @@ nova_novnc_distro_packages:
   - librabbitmq4
   - libyaml-0-2
 
+nova_compute_barbican_distro_packages:
+  - cryptsetup
+
 nova_compute_kvm_distro_packages:
   - bridge-utils
-  - "{% if nova_barbican_enabled | bool %}cryptsetup{% endif %}"
   - genisoimage
   - kpartx
   - libvirt-bin
@@ -58,7 +60,6 @@ nova_compute_kvm_distro_packages:
 
 nova_compute_lxd_distro_packages:
   - bridge-utils
-  - "{% if nova_barbican_enabled | bool %}cryptsetup{% endif %}"
   - dosfstools
   - dosfstools-dbg
   - genisoimage
@@ -77,7 +78,6 @@ nova_nginx_distro_packages:
 # nova powervm virt driver
 nova_compute_powervm_distro_packages:
   - bridge-utils
-  - "{% if nova_barbican_enabled | bool %}cryptsetup{% endif %}"
   - genisoimage
   - kpartx
   - open-iscsi

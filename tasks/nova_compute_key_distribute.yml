@@ -30,6 +30,8 @@
     mode: "0755"
   delegate_to: localhost
   when: inventory_hostname == first_available_compute
+  vars:
+    ansible_python_interpreter: "/usr/bin/python"
   tags:
     - nova-key
     - nova-key-distribute

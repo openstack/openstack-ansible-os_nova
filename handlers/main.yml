@@ -35,7 +35,4 @@
     name: "{{ item.value.service_name }}"
     state: "restarted"
     pattern: "{{ item.value.service_name }}"
-  with_dict: "{{ nova_services }}"
-  when:
-    - inventory_hostname in groups[item.value.group]
-    - "{{ item.value.condition | default(true) }}"
+  with_dict: "{{ filtered_nova_services }}"

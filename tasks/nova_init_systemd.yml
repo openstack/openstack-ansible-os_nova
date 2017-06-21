@@ -20,8 +20,7 @@
     owner: "{{ nova_system_user_name }}"
     group: "{{ nova_system_group_name }}"
     mode: "02755"
-  with_dict: "{{ nova_services }}"
-  when: inventory_hostname in groups[item.value.group]
+  with_dict: "{{ filtered_nova_services }}"
 
 - name: Create TEMP lock dir
   file:
@@ -30,18 +29,27 @@
     owner: "{{ nova_system_user_name }}"
     group: "{{ nova_system_group_name }}"
     mode: "02755"
-  with_dict: "{{ nova_services }}"
-  when: inventory_hostname in groups[item.value.group]
+  with_dict: "{{ filtered_nova_services }}"
+
+# TODO(mgariepy):
+# Remove this in Pike as it only needed to handle upgrades
+# from Newton->Newton and Newton->Ocata
+- name: Cleanup old tmpfiles.d entry
+  file:
+    path: "/etc/tmpfiles.d/{{ item.value.service_name }}.conf"
+    state: absent
+  with_dict: "{{ filtered_nova_services }}"
 
 - name: Create tmpfiles.d entry
   template:
     src: "nova-systemd-tmpfiles.j2"
-    dest: "/etc/tmpfiles.d/{{ item.value.service_name }}.conf"
+    dest: "/etc/tmpfiles.d/openstack-{{ item.value.service_name }}.conf"
     mode: "0644"
     owner: "root"
     group: "root"
-  with_dict: "{{ nova_services }}"
-  when: inventory_hostname in groups[item.value.group]
+  with_dict: "{{ filtered_nova_services }}"
+  notify:
+    - Reload systemd daemon
 
 - name: Place the systemd init script
   config_template:
@@ -52,7 +60,6 @@
     group: "root"
     config_overrides: "{{ item.value.init_config_overrides }}"
     config_type: "ini"
-  with_dict: "{{ nova_services }}"
-  when: inventory_hostname in groups[item.value.group]
+  with_dict: "{{ filtered_nova_services }}"
   notify:
     - Reload systemd daemon

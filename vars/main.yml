@@ -1,5 +1,5 @@
 ---
-# Copyright 2015, Rackspace US, Inc.
+# Copyright 2017, Rackspace US, Inc.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -13,13 +13,12 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-- name: Place the init script
-  template:
-    src: "nova-upstart-init.j2"
-    dest: "/etc/init/{{ item.value.service_name }}.conf"
-    mode: "0644"
-    owner: "root"
-    group: "root"
-  with_dict: "{{ filtered_nova_services }}"
-  notify:
-    - Reload upstart init scripts
+filtered_nova_services: >
+  {%- set services = nova_services.copy() %}
+  {%- for key,value in nova_services.items() %}
+  {%- if value.group not in group_names or
+  (value.condition is defined and not value.condition) %}
+  {%- set _ = services.pop(key) %}
+  {%- endif %}
+  {%- endfor %}
+  {{- services -}}

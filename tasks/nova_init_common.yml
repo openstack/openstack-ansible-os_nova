@@ -13,19 +13,12 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-- include: nova_init_upstart.yml
-  when:
-    - ansible_service_mgr == 'upstart'
+- include: "nova_init_{{ ansible_service_mgr  }}.yml"
 
-- include: nova_init_systemd.yml
-  when:
-    - ansible_service_mgr == 'systemd'
-
-- name: Load service
+- name: Enable service
   service:
    name: "{{ item.value.service_name }}"
    enabled: "yes"
-  with_dict: "{{ nova_services }}"
-  when: inventory_hostname in groups[item.value.group]
+  with_dict: "{{ filtered_nova_services }}"
   notify:
     - Restart nova services

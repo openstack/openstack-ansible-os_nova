@@ -13,6 +13,34 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+#
+# Compile a list of the distro packages to install based on
+# whether the host is in the host group and the service is
+# enabled.
+#
+nova_package_list: |-
+  {% set packages = nova_distro_packages %}
+  {% if 'nova_console' in group_names %}
+  {%   if nova_console_type == 'novnc' %}
+  {%     set _ = packages.extend(nova_novnc_distro_packages) %}
+  {%   endif %}
+  {%   if nova_console_type == 'spice' %}
+  {%     set _ = packages.extend(nova_spice_distro_packages) %}
+  {%   endif %}
+  {% endif %}
+  {% if 'nova_compute' in group_names %}
+  {%   if nova_virt_type in ['kvm', 'qemu'] %}
+  {%     set _ = packages.extend(nova_compute_kvm_distro_packages) %}
+  {%   elif nova_virt_type == 'lxd' %}
+  {%     set _ = packages.extend(nova_compute_lxd_distro_packages) %}
+  {%   endif %}
+  {% endif %}
+  {{ packages }}
+
+#
+# Compile a list of the services on a host based on whether
+# the host is in the host group and the service is enabled.
+#
 filtered_nova_services: >
   {%- set services = nova_services.copy() %}
   {%- for key,value in nova_services.items() %}

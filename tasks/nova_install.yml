@@ -13,8 +13,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-- include: nova_install_apt.yml
-  when: ansible_pkg_mgr == 'apt'
+- include: "nova_install_{{ ansible_pkg_mgr }}.yml"
 
 - name: Create developer mode constraint file
   copy:

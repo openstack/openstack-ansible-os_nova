@@ -31,8 +31,46 @@
     - Restart nova services
 
 - name: Restart nova services
+  command: /bin/true
+  notify:
+    - Stop services
+    - Copy new policy file into place
+    - Start services
+
+- name: Stop services
   service:
-    name: "{{ item.value.service_name }}"
-    state: "restarted"
-    pattern: "{{ item.value.service_name }}"
-  with_dict: "{{ filtered_nova_services }}"
+    name: "{{ item.service_name }}"
+    state: "stopped"
+  with_items: "{{ filtered_nova_services }}"
+  register: _stop
+  until: _stop | success
+  retries: 5
+  delay: 2
+
+# Note (odyssey4me):
+# The policy.json file is currently read continually by the services
+# and is not only read on service start. We therefore cannot template
+# directly to the file read by the service because the new policies
+# may not be valid until the service restarts. This is particularly
+# important during a major upgrade. We therefore only put the policy
+# file in place after the service has been stopped.
+#
+- name: Copy new policy file into place
+  copy:
+    src: "/etc/nova/policy.json-{{ nova_venv_tag }}"
+    dest: "/etc/nova/policy.json"
+    owner: "root"
+    group: "{{ nova_system_group_name }}"
+    mode: "0640"
+    remote_src: yes
+
+- name: Start services
+  service:
+    name: "{{ item.service_name }}"
+    enabled: yes
+    state: "started"
+  with_items: "{{ filtered_nova_services }}"
+  register: _start
+  until: _start | success
+  retries: 5
+  delay: 2

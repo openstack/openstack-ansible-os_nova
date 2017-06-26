@@ -41,12 +41,14 @@ nova_package_list: |-
 # Compile a list of the services on a host based on whether
 # the host is in the host group and the service is enabled.
 #
-filtered_nova_services: >
-  {%- set services = nova_services.copy() %}
-  {%- for key,value in nova_services.items() %}
-  {%- if value.group not in group_names or
-  (value.condition is defined and not value.condition) %}
-  {%- set _ = services.pop(key) %}
-  {%- endif %}
-  {%- endfor %}
-  {{- services -}}
+filtered_nova_services: |-
+  {% set services = [] %}
+  {% for key, value in nova_services.items() %}
+  {%   if (value['group'] in group_names) and
+          (('condition' not in value) or
+           ('condition' in value and value['condition'])) %}
+  {%     set _ = value.update({'service_key': key}) %}
+  {%     set _ = services.append(value) %}
+  {%   endif %}
+  {% endfor %}
+  {{ services | sort(attribute='start_order') }}

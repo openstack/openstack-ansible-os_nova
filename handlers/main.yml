@@ -86,4 +86,4 @@
   retries: 5
   delay: 2
   when:
-    - inventory_hostname in groups['nova_api_placement']
+    - "'nova_api_placement' in group_names"

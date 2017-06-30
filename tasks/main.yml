@@ -49,13 +49,22 @@
   tags:
     - nova-install
 
+- name: refresh local facts
+  setup:
+    filter: ansible_local
+    gather_subset: "!all"
+  tags:
+    - nova-config
+
 - include: nova_post_install.yml
   tags:
     - nova-config
 
 - include: nova_db_setup.yml
+  static: no
   when:
-    - inventory_hostname == groups['nova_api_os_compute'][0]
+    - "'nova_conductor' in group_names"
+    - "inventory_hostname == (groups['nova_conductor'] | intersect(ansible_play_hosts))[0]"
   tags:
     - nova-config
 
@@ -64,29 +73,44 @@
     - nova-config
 
 - include: nova_service_setup.yml
+  static: no
   when:
-    - inventory_hostname == groups['nova_api_os_compute'][0]
+    - "'nova_conductor' in group_names"
+    - "inventory_hostname == (groups['nova_conductor'] | intersect(ansible_play_hosts))[0]"
   tags:
     - nova-config
 
 - include: nova_placement.yml
+  static: no
   when:
-    - nova_placement_service_enabled | bool
-    - inventory_hostname in groups['nova_api_placement']
+    - "nova_placement_service_enabled | bool"
+    - "'nova_api_placement' in group_names"
   tags:
     - nova-placement
 
 - include: nova_compute.yml
+  static: no
   when:
-    - inventory_hostname in groups['nova_compute']
+    - "'nova_compute' in group_names"
   tags:
     - nova-compute
 
 - name: Flush handlers
   meta: flush_handlers
 
+# We have to delegate this back to the conductor
+# because the compute hosts do not have access to
+# the database connection string and therefore
+# cannot run nova-manage.
+# Also, we delegate this to a random host in the
+# conductor group in order to spread the load of
+# multiple forks across the group members.
 - include: nova_db_post_setup.yml
+  delegate_to: "{{ conductor_host }}"
+  with_random_choice: "{{ groups['nova_conductor'] }}"
+  loop_control:
+    loop_var: conductor_host
   when:
-    - inventory_hostname == groups['nova_api_os_compute'][0]
+    - "'nova_compute' in group_names"
   tags:
     - nova-config

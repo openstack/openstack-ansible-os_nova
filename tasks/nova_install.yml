@@ -120,6 +120,25 @@
   tags:
     - nova-novnc-console
 
+- name: Initialise the upgrade facts
+  ini_file:
+    dest: "/etc/ansible/facts.d/openstack_ansible.fact"
+    section: nova
+    option: "{{ item }}"
+    value: True
+  with_items:
+    - "need_service_restart"
+    - "need_online_data_migrations"
+  when:
+    - (nova_get_venv | changed) or
+      (nova_venv_dir | changed) or
+      (install_packages | changed) or
+      (ansible_local is not defined) or
+      ('openstack_ansible' not in ansible_local) or
+      ('nova' not in ansible_local['openstack_ansible']) or
+      ('need_online_data_migrations' not in ansible_local['openstack_ansible']['nova']) or
+      ('need_service_restart' not in ansible_local['openstack_ansible']['nova'])
+
 - name: Record the venv tag deployed
   ini_file:
     dest: "/etc/ansible/facts.d/openstack_ansible.fact"

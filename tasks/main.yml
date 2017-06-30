@@ -48,6 +48,13 @@
   tags:
     - nova-install
 
+- name: refresh local facts
+  setup:
+    filter: ansible_local
+    gather_subset: "!all"
+  tags:
+    - nova-config
+
 - include: nova_post_install.yml
   tags:
     - nova-config
@@ -57,17 +64,23 @@
     - nova-config
 
 - include: nova_db_setup.yml
-  when: inventory_hostname == groups['nova_api_os_compute'][0]
+  static: no
+  when:
+    - "inventory_hostname == groups['nova_conductor'][0]"
   tags:
     - nova-config
 
 - include: nova_service_setup.yml
-  when: inventory_hostname == groups['nova_api_os_compute'][0]
+  static: no
+  when:
+    - "inventory_hostname == groups['nova_api_os_compute'][0]"
   tags:
     - nova-config
 
 - include: nova_compute.yml
-  when: inventory_hostname in groups['nova_compute']
+  static: no
+  when:
+    - "'nova_compute' in group_names"
   tags:
     - nova-compute
 

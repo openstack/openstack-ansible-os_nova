@@ -17,25 +17,29 @@
   command: "{{ nova_bin }}/nova-manage db sync"
   become: yes
   become_user: "{{ nova_system_user_name }}"
-  tags:
-    - nova-db-setup
-    - nova-setup
-    - nova-command-bin
+  changed_when: false
 
 - name: Perform a Nova API DB sync
   command: "{{ nova_bin }}/nova-manage api_db sync"
   become: yes
   become_user: "{{ nova_system_user_name }}"
-  tags:
-    - nova-db-setup
-    - nova-setup
-    - nova-command-bin
+  changed_when: false
 
-- name: Perform Nova online data migrations
+- name: Perform online data migrations
   command: "{{ nova_bin }}/nova-manage db online_data_migrations"
   become: yes
   become_user: "{{ nova_system_user_name }}"
-  tags:
-    - nova-db-setup
-    - nova-setup
-    - nova-command-bin
+  when:
+    - "(nova_all_software_updated | default('no')) | bool"
+    - "ansible_local['openstack_ansible']['nova']['need_online_data_migrations'] | bool"
+  changed_when: false
+  register: data_migrations
+
+- name: Disable the online migrations requirement
+  ini_file:
+    dest: "/etc/ansible/facts.d/openstack_ansible.fact"
+    section: nova
+    option: need_online_data_migrations
+    value: False
+  when:
+    - data_migrations | succeeded

@@ -137,6 +137,7 @@ nova_virt_types:
     nova_firewall_driver: nova.virt.firewall.NoopFirewallDriver
     nova_scheduler_use_baremetal_filters: True
     nova_scheduler_tracks_instance_changes: False
+    nova_cpu_mode: host-model
   kvm:
     nova_compute_driver: libvirt.LibvirtDriver
     nova_scheduler_host_manager: host_manager
@@ -144,6 +145,7 @@ nova_virt_types:
     nova_firewall_driver: nova.virt.firewall.NoopFirewallDriver
     nova_scheduler_use_baremetal_filters: False
     nova_scheduler_tracks_instance_changes: True
+    nova_cpu_mode: host-model
   lxd:
     nova_compute_driver: lxd.LXDDriver
     nova_scheduler_host_manager: host_manager
@@ -152,6 +154,7 @@ nova_virt_types:
     nova_firewall_driver: nova.virt.firewall.NoopFirewallDriver
     nova_scheduler_use_baremetal_filters: False
     nova_scheduler_tracks_instance_changes: True
+    nova_cpu_mode: host-model
   qemu:
     nova_compute_driver: libvirt.LibvirtDriver
     nova_scheduler_host_manager: host_manager
@@ -159,6 +162,7 @@ nova_virt_types:
     nova_firewall_driver: nova.virt.firewall.NoopFirewallDriver
     nova_scheduler_use_baremetal_filters: False
     nova_scheduler_tracks_instance_changes: True
+    nova_cpu_mode: "none"
   powervm:
     nova_compute_driver: powervm.driver.PowerVMDriver
     nova_scheduler_host_manager: host_manager
@@ -166,6 +170,7 @@ nova_virt_types:
     nova_firewall_driver: nova.virt.firewall.NoopFirewallDriver
     nova_scheduler_use_baremetal_filters: False
     nova_scheduler_tracks_instance_changes: True
+    nova_cpu_mode: host-model
 
 
 # If this is not set, then the playbook will try to guess it.
@@ -308,7 +313,6 @@ nova_external_ssl: false
 nova_secure_proxy_ssl_header: HTTP_X_FORWARDED_PROTO
 
 ## Nova global config
-nova_cpu_mode: host-model
 nova_linuxnet_interface_driver: nova.network.linux_net.NeutronLinuxBridgeInterfaceDriver
 
 

@@ -16,10 +16,10 @@
 - name: Place the init script
   template:
     src: "nova-upstart-init.j2"
-    dest: "/etc/init/{{ item.value.service_name }}.conf"
+    dest: "/etc/init/{{ item.service_name }}.conf"
     mode: "0644"
     owner: "root"
     group: "root"
-  with_dict: "{{ filtered_nova_services }}"
+  with_items: "{{ filtered_nova_services }}"
   notify:
     - Reload upstart init scripts

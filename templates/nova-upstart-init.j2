@@ -1,7 +1,7 @@
 # {{ ansible_managed }}
 
 
-description "{{ item.value.service_name }}"
+description "{{ item.service_name }}"
 author "Kevin Carter <kevin.carter@rackspace.com>"
 
 start on runlevel [2345]
@@ -13,18 +13,18 @@ respawn limit 10 5
 kill timeout 120
 
 # Set the RUNBIN environment variable
-env RUNBIN="{{ nova_bin }}/{{ item.value.service_name }}"
+env RUNBIN="{{ nova_bin }}/{{ item.service_name }}"
 
 # Change directory to service users home
 chdir "{{ nova_system_home_folder }}"
 
 # Pre start actions
 pre-start script
-  mkdir -p "/var/run/{{ item.value.service_name }}"
-  chown {{ nova_system_user_name }}:{{ nova_system_group_name }} "/var/run/{{ item.value.service_name }}"
+  mkdir -p "/var/run/{{ item.service_name }}"
+  chown {{ nova_system_user_name }}:{{ nova_system_group_name }} "/var/run/{{ item.service_name }}"
 
-  mkdir -p "/var/lock/{{ item.value.service_name }}"
-  chown {{ nova_system_user_name }}:{{ nova_system_group_name }} "/var/lock/{{ item.value.service_name }}"
+  mkdir -p "/var/lock/{{ item.service_name }}"
+  chown {{ nova_system_user_name }}:{{ nova_system_group_name }} "/var/lock/{{ item.service_name }}"
 
   . {{ nova_bin }}/activate
 
@@ -33,7 +33,7 @@ end script
 # Post stop actions
 # Sleep configured number of seconds between restarts
 post-stop script
-  rm "/var/run/{{ item.value.service_name }}/{{ item.value.service_name }}.pid"
+  rm "/var/run/{{ item.service_name }}/{{ item.service_name }}.pid"
   sleep 2
 end script
 
@@ -41,8 +41,8 @@ end script
 exec start-stop-daemon --start \
                        --chuid {{ nova_system_user_name }} \
                        --make-pidfile \
-                       --pidfile /var/run/{{ item.value.service_name }}/{{ item.value.service_name }}.pid \
+                       --pidfile /var/run/{{ item.service_name }}/{{ item.service_name }}.pid \
                        --exec "{{ program_override|default('$RUNBIN') }}" \
                        -- {{ program_config_options|default('') }} \
-                       --log-file=/var/log/{{ nova_service_name }}/{{ item.value.service_name }}.log
+                       --log-file=/var/log/{{ nova_service_name }}/{{ item.service_name }}.log
 

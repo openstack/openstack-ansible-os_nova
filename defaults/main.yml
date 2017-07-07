@@ -371,40 +371,49 @@ nova_services:
     group: nova_api_metadata
     service_name: nova-api-metadata
     init_config_overrides: "{{ nova_api_metadata_init_overrides }}"
+    start_order: 4
   nova-api-os-compute:
     group: nova_api_os_compute
     service_name: nova-api-os-compute
     init_config_overrides: "{{ nova_api_os_compute_init_overrides }}"
+    start_order: 3
   nova-cert:
     group: nova_cert
     service_name: nova-cert
     init_config_overrides: "{{ nova_cert_init_overrides }}"
+    start_order: 2
   nova-compute:
     group: nova_compute
     service_name: nova-compute
     init_config_overrides: "{{ nova_compute_init_overrides }}"
+    start_order: 5
   nova-conductor:
     group: nova_conductor
     service_name: nova-conductor
     init_config_overrides: "{{ nova_conductor_init_overrides }}"
+    start_order: 1
   nova-consoleauth:
     group: nova_console
     service_name: nova-consoleauth
     init_config_overrides: "{{ nova_consoleauth_init_overrides }}"
+    start_order: 2
   nova-novncproxy:
     group: nova_console
     service_name: nova-novncproxy
     init_config_overrides: "{{ nova_novncproxy_init_overrides }}"
     condition: "{{ nova_console_type == 'novnc' }}"
+    start_order: 4
   nova-scheduler:
     group: nova_scheduler
     service_name: nova-scheduler
     init_config_overrides: "{{ nova_scheduler_init_overrides }}"
+    start_order: 2
   nova-spicehtml5proxy:
     group: nova_console
     service_name: nova-spicehtml5proxy
     init_config_overrides: "{{ nova_spicehtml5proxy_init_overrides }}"
     condition: "{{ nova_console_type == 'spice' }}"
+    start_order: 4
 
 
 nova_novnc_pip_packages:

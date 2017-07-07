@@ -52,7 +52,7 @@
   tags:
     - nova-config
 
-- include: nova_init_common.yml
+- include: "nova_init_{{ ansible_service_mgr }}.yml"
   tags:
     - nova-config
 

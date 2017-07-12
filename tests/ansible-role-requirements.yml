@@ -58,6 +58,10 @@
   src: https://git.openstack.org/openstack/openstack-ansible-os_tempest
   scm: git
   version: origin/stable/ocata
+- name: ceph_client
+  src: https://git.openstack.org/openstack/openstack-ansible-ceph_client
+  scm: git
+  version: origin/stable/ocata
 - name: os_previous_nova
   src: https://git.openstack.org/openstack/openstack-ansible-os_nova
   scm: git

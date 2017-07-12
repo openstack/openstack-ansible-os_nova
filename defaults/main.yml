@@ -389,6 +389,13 @@ nova_ceph_client: '{{ cinder_ceph_client }}'
 # TODO(odyssey4me) - the uuid should be removed, there should be no defaults for secrets
 nova_ceph_client_uuid: 517a4663-3927-44bc-9ea7-4a90e1cd4c66
 
+# Enabled upstream if RBD is in use on cinder backends, which requires that
+# ceph be deployed on the nova compute hosts to enable volume backed instances.
+# The reference to "cinder_backends_rbd_inuse" will be removed and this var
+# should be directly defaulted to False after
+# I6a76e63881150677352520ce9658f1cf6b7e5456 has merged.
+nova_cinder_rbd_inuse: "{{ cinder_backends_rbd_inuse | default(False) }}"
+
 ## General Nova configuration
 # If ``nova_osapi_compute_workers`` is unset the system will use half the number of available VCPUS to
 # compute the number of api workers to use.

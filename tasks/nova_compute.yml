@@ -13,12 +13,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-- include: "{{ item }}"
-  with_first_found:
-    - files:
-        - "nova_compute_{{ nova_virt_type }}.yml"
-      paths:
-        - "drivers/{{ nova_virt_type }}/"
+- include: "drivers/{{ nova_virt_type }}/nova_compute_{{ nova_virt_type }}.yml"
   tags:
     - nova-install
 

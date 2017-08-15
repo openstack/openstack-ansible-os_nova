@@ -68,6 +68,14 @@
   tags:
     - nova-config
 
+- include: nova_placement.yml
+  static: no
+  when:
+    - "nova_placement_service_enabled | bool"
+    - "'nova_api_placement' in group_names"
+  tags:
+    - nova-placement
+
 - include: "nova_init_{{ ansible_service_mgr}}.yml"
   tags:
     - nova-config
@@ -79,14 +87,6 @@
     - "inventory_hostname == (groups['nova_conductor'] | intersect(ansible_play_hosts))[0]"
   tags:
     - nova-config
-
-- include: nova_placement.yml
-  static: no
-  when:
-    - "nova_placement_service_enabled | bool"
-    - "'nova_api_placement' in group_names"
-  tags:
-    - nova-placement
 
 - include: nova_compute.yml
   static: no

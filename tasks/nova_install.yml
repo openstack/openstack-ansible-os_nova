@@ -15,6 +15,7 @@
 
 - name: Setup powervm repository
   include: nova_install_apt_powervm.yml
+  static: no
   when:
     - "'nova_compute' in group_names"
     - "nova_virt_type == 'powervm'"

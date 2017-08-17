@@ -33,6 +33,26 @@
   tags:
     - always
 
+- name: Fail if TCP and TLS are both enabled
+  fail:
+    msg: |
+      TCP and TLS connectivity are currently enabled for libvirtd. This
+      combination prevents libvirtd from starting properly since this role
+      does not generate TLS certificates for libvirtd at this time.
+
+      To enable TCP connectivity without TLS, set the following variables:
+
+          nova_libvirtd_listen_tcp: 1
+          nova_libvirtd_listen_tls: 0
+
+      Please note that this configuration does not encrypt communication with
+      libvirtd.
+  when:
+    - nova_libvirtd_listen_tcp == 1
+    - nova_libvirtd_listen_tls == 1
+  tags:
+    - always
+
 - include: nova_virt_detect.yml
   static: no
   when: nova_virt_type is not defined

@@ -79,6 +79,7 @@
     - nova_venv_download | bool
   tags:
     - nova-pip-packages
+    - always
 
 - name: Attempt venv download
   get_url:
@@ -90,6 +91,7 @@
     - nova_venv_download | bool
   tags:
     - nova-pip-packages
+    - always
 
 - name: Remove existing venv
   file:

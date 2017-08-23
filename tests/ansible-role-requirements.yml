@@ -1,67 +1,67 @@
 - name: apt_package_pinning
   src: https://git.openstack.org/openstack/openstack-ansible-apt_package_pinning
   scm: git
-  version: master
+  version: stable/pike
 - name: pip_install
   src: https://git.openstack.org/openstack/openstack-ansible-pip_install
   scm: git
-  version: master
+  version: stable/pike
 - name: galera_client
   src: https://git.openstack.org/openstack/openstack-ansible-galera_client
   scm: git
-  version: master
+  version: stable/pike
 - name: memcached_server
   src: https://git.openstack.org/openstack/openstack-ansible-memcached_server
   scm: git
-  version: master
+  version: stable/pike
 - name: openstack_hosts
   src: https://git.openstack.org/openstack/openstack-ansible-openstack_hosts
   scm: git
-  version: master
+  version: stable/pike
 - name: lxc_hosts
   src: https://git.openstack.org/openstack/openstack-ansible-lxc_hosts
   scm: git
-  version: master
+  version: stable/pike
 - name: lxc_container_create
   src: https://git.openstack.org/openstack/openstack-ansible-lxc_container_create
   scm: git
-  version: master
+  version: stable/pike
 - name: galera_server
   src: https://git.openstack.org/openstack/openstack-ansible-galera_server
   scm: git
-  version: master
+  version: stable/pike
 - name: rabbitmq_server
   src: https://git.openstack.org/openstack/openstack-ansible-rabbitmq_server
   scm: git
-  version: master
+  version: stable/pike
 - name: openstack_openrc
   src: https://git.openstack.org/openstack/openstack-ansible-openstack_openrc
   scm: git
-  version: master
+  version: stable/pike
 - name: os_keystone
   src: https://git.openstack.org/openstack/openstack-ansible-os_keystone
   scm: git
-  version: master
+  version: stable/pike
 - name: os_glance
   src: https://git.openstack.org/openstack/openstack-ansible-os_glance
   scm: git
-  version: master
+  version: stable/pike
 - name: etcd # dependency of os_neutron role
   scm: git
   src: https://github.com/logan2211/ansible-etcd
-  version: master
+  version: '1.2'
 - name: os_neutron
   src: https://git.openstack.org/openstack/openstack-ansible-os_neutron
   scm: git
-  version: master
+  version: stable/pike
 - name: os_tempest
   src: https://git.openstack.org/openstack/openstack-ansible-os_tempest
   scm: git
-  version: master
+  version: stable/pike
 - name: ceph_client
   src: https://git.openstack.org/openstack/openstack-ansible-ceph_client
   scm: git
-  version: master
+  version: stable/pike
 - name: os_previous_nova
   src: https://git.openstack.org/openstack/openstack-ansible-os_nova
   scm: git

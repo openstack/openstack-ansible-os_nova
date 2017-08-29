@@ -71,4 +71,5 @@
     option: need_online_data_migrations
     value: False
   when:
+    - not data_migrations | skipped
     - data_migrations | succeeded

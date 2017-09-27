@@ -60,6 +60,9 @@ nova_compute_kvm_distro_packages:
   - qemu-img-ev
   - sysfsutils
 
+nova_compute_ksm_packages:
+  - ksmtuned
+
 # TODO: add support for LXD on CentOS at some point.
 nova_compute_lxd_distro_packages: []
 

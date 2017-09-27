@@ -53,6 +53,9 @@ nova_compute_kvm_distro_packages:
   - qemu-tools
   - sysfsutils
 
+nova_compute_ksm_packages:
+  - qemu-ksm
+
 # TODO: add support for LXD on openSUSE at some point.
 nova_compute_lxd_distro_packages: []
 

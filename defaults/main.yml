@@ -176,6 +176,9 @@ nova_virt_types:
 # If this is not set, then the playbook will try to guess it.
 #nova_virt_type: kvm
 
+# Enable Kernel Shared Memory (KSM)
+nova_compute_ksm_enabled: False
+
 #if set, nova_virt_type must be one of these:
 nova_supported_virt_types:
   - qemu

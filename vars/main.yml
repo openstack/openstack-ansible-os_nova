@@ -31,6 +31,9 @@ nova_package_list: |-
   {% if 'nova_compute' in group_names %}
   {%   if nova_virt_type in ['kvm', 'qemu'] %}
   {%     set _ = packages.extend(nova_compute_kvm_distro_packages) %}
+  {%     if nova_compute_ksm_enabled %}
+  {%       set _ = packages.extend(nova_compute_ksm_packages) %}
+  {%     endif %}
   {%   elif nova_virt_type == 'lxd' %}
   {%     set _ = packages.extend(nova_compute_lxd_distro_packages) %}
   {%   elif nova_virt_type == 'powervm' %}

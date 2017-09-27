@@ -101,6 +101,9 @@ nova_compute_powervm_distro_packages:
   - multipath-tools
   - pvm-novalink
 
+nova_compute_ksm_packages:
+  - ksmtuned
+
 novalink_repo:
   repo: "deb [arch=ppc64el] http://public.dhe.ibm.com/systems/virtualization/Novalink/debian/ novalink_1.0.0 non-free"
   state: "present"

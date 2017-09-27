@@ -119,6 +119,12 @@
   tags:
     - nova-config
 
+- include: nova_enable_ksm.yml
+  when:
+    - nova_compute_ksm_enabled | bool
+  tags:
+    - nova-config
+
 - include: nova_compute_kvm_virsh_net_remove.yml
   tags:
     - nova-config

@@ -41,6 +41,8 @@ nova_novnc_distro_packages:
 nova_compute_barbican_distro_packages:
   - cryptsetup
 
+# the qemu-system-.*, qemu-block-extra, qemu-utils, qemu-user packages are explictly listed
+# for consistent upgrades (they will all be to the same version)
 nova_compute_kvm_distro_packages:
   - bridge-utils
   - genisoimage
@@ -57,6 +59,16 @@ nova_compute_kvm_distro_packages:
   - dosfstools
   - dosfstools-dbg
   - multipath-tools
+  - qemu-system
+  - qemu-system-arm
+  - qemu-system-mips
+  - qemu-system-ppc
+  - qemu-system-sparc
+  - qemu-system-x86
+  - qemu-system-misc
+  - qemu-block-extra
+  - qemu-utils
+  - qemu-user
 
 nova_compute_lxd_distro_packages:
   - bridge-utils

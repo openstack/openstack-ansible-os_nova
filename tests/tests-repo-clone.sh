@@ -78,7 +78,7 @@ elif [[ ! -d tests/common ]]; then
     if [[ "$(basename ${WORKING_DIR})" == "openstack-ansible-tests" ]]; then
         ln -s ${WORKING_DIR} ${WORKING_DIR}/tests/common
     else
-        git clone \
+        git clone -b stable/pike \
             https://git.openstack.org/openstack/openstack-ansible-tests \
             ${WORKING_DIR}/tests/common
     fi

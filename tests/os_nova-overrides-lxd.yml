@@ -17,16 +17,16 @@ nova_virt_type: lxd
 
 tempest_test_whitelist:
   - tempest.scenario.test_server_basic_ops.TestServerBasicOps.test_server_basic_ops
+
 tempest_tempest_conf_overrides:
   'compute-feature-enabled':
     'config_drive': 'false'
-tempest_img_url: "http://download.cirros-cloud.net/0.3.4/cirros-0.3.4-x86_64-lxc.tar.gz"
-tempest_img_disk_format: raw
-tempest_image_file: "cirros-0.3.4-x86_64-lxc.tar.gz"
-tempest_img_name: "cirros"
+
 tempest_images:
-  - url: "http://download.cirros-cloud.net/0.3.4/cirros-0.3.4-x86_64-lxc.tar.gz"
-    sha256: "e8172c603fad47f4c95e67bd2751c2977e07164c9ebdfcf3f9c1d7ff598ed217"
+  - url: "http://download.cirros-cloud.net/0.3.5/cirros-0.3.5-x86_64-lxc.tar.gz"
+    checksum: "sha256:7276165f1f02e416d153f337d9d01beaa19cce185ad1d7c59a5fc2466fd19967"
+    format: "raw"
+    name: "cirros"
 
 neutron_provider_networks:
   network_types: "vxlan,flat"

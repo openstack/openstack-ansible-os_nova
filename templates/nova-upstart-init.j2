@@ -4,8 +4,8 @@
 description "{{ item.service_name }}"
 author "Kevin Carter <kevin.carter@rackspace.com>"
 
-start on runlevel [2345]
-stop on runlevel [016]
+start on stopped rc RUNLEVEL=[2345]
+stop on starting rc RUNLEVEL=[016]
 
 respawn
 respawn limit 10 5
@@ -45,4 +45,3 @@ exec start-stop-daemon --start \
                        --exec "{{ program_override|default('$RUNBIN') }}" \
                        -- {{ program_config_options|default('') }} \
                        --log-file=/var/log/{{ nova_service_name }}/{{ item.service_name }}.log
-

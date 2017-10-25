@@ -27,7 +27,7 @@ nova_git_repo: https://git.openstack.org/openstack/nova
 nova_git_install_branch: stable/newton
 
 nova_lxd_git_repo: https://git.openstack.org/openstack/nova-lxd
-nova_lxd_git_install_branch: stable/newton
+nova_lxd_git_install_branch: newton-eol
 
 nova_developer_mode: false
 nova_developer_constraints:

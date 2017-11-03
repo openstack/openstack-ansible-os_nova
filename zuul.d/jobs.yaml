@@ -13,17 +13,9 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-- project:
-    name: openstack/openstack-ansible-os_nova
-    check:
-      jobs:
-        - openstack-ansible-linters
-        - openstack-ansible-functional-ubuntu-trusty
-        - openstack-ansible-functional-ubuntu-xenial
-        - openstack-ansible-lxd-ubuntu-xenial
-    gate:
-      jobs:
-        - openstack-ansible-linters
-        - openstack-ansible-functional-ubuntu-trusty
-        - openstack-ansible-functional-ubuntu-xenial
-        - openstack-ansible-lxd-ubuntu-xenial
+- job:
+    name: openstack-ansible-lxd-ubuntu-xenial
+    parent: openstack-ansible-functional-ubuntu-xenial
+    vars:
+      tox_env: func_lxd
+

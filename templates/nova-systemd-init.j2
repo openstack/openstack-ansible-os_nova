@@ -15,7 +15,9 @@ ExecStart={{ item.program_override }} {{ item.program_config_options | default('
 {% else %}
 ExecStart={{ nova_bin }}/{{ item.service_name }} {{ item.program_config_options | default('') }} {{ item.log_string | default('--log-file=') }}/var/log/nova/{{ item.service_name }}.log
 {% endif %}
+{% if item.service_name != nova_services['nova-novncproxy']['service_name'] and item.service_name != nova_services['nova-spicehtml5proxy']['service_name'] %}
 ExecReload=/bin/kill -HUP $MAINPID
+{% endif %}
 
 # Give a reasonable amount of time for the server to start up/shut down
 TimeoutSec=120

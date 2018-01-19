@@ -21,14 +21,32 @@
   vars:
     test_keystone_host: openstack1
     working_dir: "{{ lookup('env', 'WORKING_DIR') }}"
+    upgrade_venv_folder: "/openstack/venvs/upgrades"
+    upgrade_test_packages:
+      - "python-keystoneclient"
+      - "python-glanceclient"
+      - "openstacksdk"
   tasks:
     - name: Install openstack sdk
       pip:
-        name: "python-openstacksdk"
+        name: "{{ upgrade_test_packages }}"
+        virtualenv: "{{ upgrade_venv_folder }}"
+        virtualenv_site_packages: "no"
+        extra_args: >-
+          {{ (pip_install_upper_constraints is defined) | ternary('--constraint ' + pip_install_upper_constraints | default(''),'') }}
+          {{ pip_install_options | default('') }}
+      register: install_packages
+      until: install_packages | success
+      retries: 5
+      delay: 2
+
     - name: Run rolling test script
-      command: ./openstack-ansible-ops/bowling_ball/rolling_tests.py nova
+      shell: |
+        source {{ upgrade_venv_folder }}/bin/activate
+        ./openstack-ansible-ops/bowling_ball/rolling_tests.py nova
       args:
         chdir: "{{ working_dir }}"
+        executable: /bin/bash
       async: 100000
       poll: 0
       environment:

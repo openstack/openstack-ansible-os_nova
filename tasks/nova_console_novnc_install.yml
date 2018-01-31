@@ -13,10 +13,28 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-- name: Remove old git directory
-  file:
-    path: "/usr/share/novnc"
-    state: "absent"
+- name: Remove existing directory if it is not a git repo or it is dirty
+  shell: |
+    EXIT_CODE=0
+    FOLDER_PATH="/usr/share/novnc"
+    if [[ -e ${FOLDER_PATH} ]]; then
+      if [[ ! -d "${FOLDER_PATH}/.git" ]]; then
+        echo "${FOLDER_PATH} is not a git repo, deleting..."
+        EXIT_CODE=2
+      elif test -n "$(cd ${FOLDER_PATH}; git status --porcelain)"; then
+        echo "${FOLDER_PATH} is a dirty git repo, deleting..."
+        EXIT_CODE=2
+      fi
+      if [[ "${EXIT_CODE}" == "2" ]]; then
+        rm -rf ${FOLDER_PATH}
+      fi
+    fi
+    exit ${EXIT_CODE}
+  args:
+    executable: /bin/bash
+  register: existing_dir_cleanup
+  changed_when: existing_dir_cleanup.rc == 2
+  failed_when: existing_dir_cleanup.rc not in [0,2]
   tags:
     - nova-novnc-git
 
@@ -33,6 +51,8 @@
   until: git_clone|success
   retries: 5
   delay: 2
+  notify:
+    - Restart nova services
   tags:
     - nova-novnc-git
 
@@ -48,7 +68,9 @@
   retries: 5
   delay: 2
   when:
-    - nova_get_venv | failed or nova_developer_mode | bool
+    - nova_get_venv | failed or nova_get_venv | skipped
+  notify:
+    - Restart nova services
   tags:
     - nova-pip-packages
 

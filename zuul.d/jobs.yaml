@@ -16,12 +16,6 @@
 - job:
     name: openstack-ansible-lxd-ubuntu-xenial
     parent: openstack-ansible-functional-ubuntu-xenial
-    # made non-voting due to:
-    # https://bugs.launchpad.net/ubuntu/+source/python-pylxd/+bug/1736454
-    # TODO(odyssey4me):
-    # Once a pylxd 2.0.x update has been made, published and the constraints
-    # have been updated to consume it, revert this to a voting job.
-    voting: false
     vars:
       tox_env: func_lxd
 

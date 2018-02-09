@@ -26,3 +26,4 @@
         - openstack-ansible-linters
         - openstack-ansible-functional-ubuntu-trusty
         - openstack-ansible-functional-ubuntu-xenial
+        - openstack-ansible-lxd-ubuntu-xenial

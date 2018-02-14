@@ -6,7 +6,7 @@ use_stderr = False
 # Logs / State
 debug = {{ debug }}
 fatal_deprecations = {{ nova_fatal_deprecations }}
-log_dir = /var/log/nova
+log_dir = {{ nova_log_dir }}
 state_path = {{ nova_system_home_folder }}
 rootwrap_config = /etc/nova/rootwrap.conf
 service_down_time = 120

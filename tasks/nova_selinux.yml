@@ -43,6 +43,23 @@
   when:
     - selinux_equivalence | changed or selinux_file_context_ssh_keys | changed
 
+- name: Stat nova's log directory
+  stat:
+    path: "{{ nova_log_dir }}"
+  register: nova_log_dir_check
+
+- name: Set SELinux file contexts for nova's log directory
+  sefcontext:
+    target: "{{ (nova_log_dir_check.stat.islnk) | ternary(nova_log_dir_check.stat.lnk_target, nova_log_dir) }}(/.*)?"
+    setype: nova_log_t
+    state: present
+  register: selinux_file_context_log_files
+
+- name: Apply updated SELinux contexts on nova log directory
+  command: "restorecon -Rv {{ (nova_log_dir_check.stat.islnk) | ternary(nova_log_dir_check.stat.lnk_target, nova_log_dir) }}"
+  when:
+    - selinux_file_context_log_files | changed
+
 - name: Copy OSA SELinux policy
   copy:
     src: osa-nova.te

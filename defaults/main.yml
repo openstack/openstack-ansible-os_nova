@@ -60,6 +60,7 @@ nova_system_shell: /bin/bash
 nova_system_comment: nova system user
 nova_system_home_folder: "/var/lib/{{ nova_system_user_name }}"
 nova_libvirt_save_path: "{{ nova_system_home_folder }}/save"
+nova_log_dir: "/var/log/nova"
 
 nova_lock_path: "/var/lock/nova"
 

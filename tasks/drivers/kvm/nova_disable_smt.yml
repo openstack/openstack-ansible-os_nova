@@ -29,7 +29,6 @@
     owner: "root"
     group: "root"
   when:
-    - ansible_service_mgr == 'systemd'
     - smt_disable_result.rc is defined
     - smt_disable_result.rc == 0
   register: smt_disable_service

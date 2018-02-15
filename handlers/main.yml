@@ -18,14 +18,14 @@
     name: "{{ libvirt_service_name }}"
     enabled: yes
     state: "restarted"
-    daemon_reload: "{{ (ansible_service_mgr == 'systemd') | ternary('yes', omit) }}"
+    daemon_reload: yes
 
 - name: Stop services
   service:
     name: "{{ item.service_name }}"
     enabled: yes
     state: "stopped"
-    daemon_reload: "{{ (ansible_service_mgr == 'systemd') | ternary('yes', omit) }}"
+    daemon_reload: yes
   with_items: "{{ filtered_nova_services }}"
   register: _stop
   until: _stop | success
@@ -56,7 +56,7 @@
     name: "{{ item.service_name }}"
     enabled: yes
     state: "started"
-    daemon_reload: "{{ (ansible_service_mgr == 'systemd') | ternary('yes', omit) }}"
+    daemon_reload: yes
   with_items: "{{ filtered_nova_services }}"
   register: _start
   until: _start | success

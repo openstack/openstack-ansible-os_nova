@@ -32,10 +32,10 @@ nova_package_state: "latest"
 nova_pip_package_state: "latest"
 
 nova_git_repo: https://git.openstack.org/openstack/nova
-nova_git_install_branch: master
+nova_git_install_branch: "stable/queens"
 
 nova_lxd_git_repo: https://git.openstack.org/openstack/nova-lxd
-nova_lxd_git_install_branch: master
+nova_lxd_git_install_branch: "16d06d149ed979745aa0ccd2b6db23122d17b57f" # no "stable/queens" branch yet
 
 nova_developer_mode: false
 nova_developer_constraints:
@@ -210,7 +210,7 @@ nova_spice_html5proxy_base_uri: "{{ nova_spice_html5proxy_base_proto }}://{{ ext
 nova_spice_html5proxy_base_url: "{{ nova_spice_html5proxy_base_uri }}/spice_auto.html"
 nova_spice_console_agent_enabled: True
 nova_spicehtml5_git_repo: https://github.com/SPICE/spice-html5
-nova_spicehtml5_git_install_branch: master
+nova_spicehtml5_git_install_branch: "54cc41299bea8cd681ed0262735e0fd821cd774a"
 
 ## Nova novnc
 nova_novncproxy_proto: "{{ openstack_service_publicuri_proto | default('http') }}"
@@ -221,7 +221,7 @@ nova_novncproxy_vncserver_proxyclient_address: "{{ ansible_host }}"
 nova_novncproxy_vncserver_listen: "{{ ansible_host }}"
 nova_novncproxy_agent_enabled: True
 nova_novncproxy_git_repo: https://github.com/novnc/noVNC
-nova_novncproxy_git_install_branch: master
+nova_novncproxy_git_install_branch: "37b4d13db81e0e80e117c07b86ff98714c7b6b1a"
 
 ## Nova serialconsole
 nova_serialconsoleproxy_proto: "ws"

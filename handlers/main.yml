@@ -75,6 +75,14 @@
     - "nova_discover_hosts_in_cells_interval | int < 1"
   listen: "Restart nova services"
 
+- name: Once nova-compute has initialised, wait for it to complete registering
+  pause:
+    minutes: 1
+  when:
+    - "'nova_compute' in group_names"
+    - "nova_discover_hosts_in_cells_interval | int < 1"
+  listen: "Restart nova services"
+
 - name: Reload Nginx
   service:
     name: nginx

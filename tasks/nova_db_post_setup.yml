@@ -15,28 +15,12 @@
 
 - name: Set the delegated task facts
   set_fact:
-    _db_nova_bin: "{{ hostvars[conductor_host]['nova_bin'] | default(nova_bin) }}"
-    _db_nova_system_user_name: "{{ hostvars[conductor_host]['nova_system_user_name'] | default(nova_system_user_name) }}"
-    _db_nova_cell1_name: "{{ hostvars[conductor_host]['nova_cell1_name'] | default(nova_cell1_name) }}"
+    _db_nova_bin: "{{ hostvars[random_conductor]['nova_bin'] | default(nova_bin) }}"
+    _db_nova_system_user_name: "{{ hostvars[random_conductor]['nova_system_user_name'] | default(nova_system_user_name) }}"
 
 # This needs to be done after Compute hosts are added.
 - name: Perform a cell_v2 discover
   command: "{{ _db_nova_bin }}/nova-manage cell_v2 discover_hosts {{ (debug | bool) | ternary('--verbose', '') }}"
-  become: yes
-  become_user: "{{ _db_nova_system_user_name }}"
-  changed_when: false
-
-# When upgrading we need to map existing instances to the new cell1
-# To do this we need the cell UUID.
-- name: Get UUID of new Nova Cell
-  shell: "{{ _db_nova_bin }}/nova-manage cell_v2 list_cells | grep ' {{ _db_nova_cell1_name }} '"
-  become: yes
-  become_user: "{{ _db_nova_system_user_name }}"
-  register: cell1_uuid
-  changed_when: false
-
-- name: Map instances to new Cell1
-  command: "{{ _db_nova_bin }}/nova-manage cell_v2 map_instances --cell_uuid {{ cell1_uuid['stdout'].split()[3] }}"
   become: yes
   become_user: "{{ _db_nova_system_user_name }}"
   changed_when: false

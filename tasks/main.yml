@@ -129,15 +129,12 @@
 # because the compute hosts do not have access to
 # the database connection string and therefore
 # cannot run nova-manage.
-# Also, we delegate this to a random host in the
-# conductor group in order to spread the load of
-# multiple forks across the group members.
 - include: nova_db_post_setup.yml
-  delegate_to: "{{ conductor_host }}"
-  with_random_choice: "{{ groups['nova_conductor'] }}"
-  loop_control:
-    loop_var: conductor_host
+  delegate_to: "{{ random_conductor }}"
+  run_once: true
   when:
     - "nova_services['nova-compute']['group'] in group_names"
+  vars:
+    random_conductor: "{{ groups[nova_services['nova-conductor']['group']] | random }}"
   tags:
     - nova-config

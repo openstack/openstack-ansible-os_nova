@@ -25,14 +25,29 @@
   tags:
     - novalink-apt-keys
 
+# When updating the cache in the apt_repository
+# task, and the update fails, a retry does not
+# detect a change the second attempt and therefore
+# does not update the cache, resulting in a changed
+# repo config, but no updated cache. To work around
+# this bug we implement the change of repo config
+# and the cache update as two seperate tasks.
 - name: Add novalink repo
   apt_repository:
     repo: "{{ novalink_repo.repo }}"
     state: "{{ novalink_repo.state }}"
     filename:  "{{ novalink_repo.filename | default(omit) }}"
-    update_cache: yes
+    update_cache: no
   register: add_nv_repos
-  until: add_nv_repos|success
+  tags:
+    - novalink-repo
+
+- name: Update Apt cache
+  apt:
+    update_cache: yes
+  when: add_nv_repos | changed
+  register: update_apt_cache
+  until: update_apt_cache | success
   retries: 5
   delay: 2
   tags:

@@ -19,3 +19,6 @@ buffer-size = {{ nova_wsgi_buffer_size }}
 thunder-lock = true
 logfile-chmod = 644
 pidfile = /var/run/{{ item.service_name }}/{{ item.service_name }}.pid
+
+# Avoid filling up the logs with health check requests from haproxy.
+route-user-agent = ^osa-haproxy-healthcheck$ donotlog:

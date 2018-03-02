@@ -77,9 +77,9 @@
 
 - name: Test for log directory or link
   shell: |
-    if [ -h "/var/log/nova"  ]; then
-      chown -h {{ nova_system_user_name }}:{{ nova_system_group_name }} "/var/log/nova"
-      chown -R {{ nova_system_user_name }}:{{ nova_system_group_name }} "$(readlink /var/log/nova)"
+    if [ -h "{{ nova_log_dir }}"  ]; then
+      chown -h {{ nova_system_user_name }}:{{ nova_system_group_name }} "{{ nova_log_dir }}"
+      chown -R {{ nova_system_user_name }}:{{ nova_system_group_name }} "$(readlink {{ nova_log_dir }})"
     else
       exit 1
     fi
@@ -92,7 +92,7 @@
 
 - name: Create nova log dir
   file:
-    path: "/var/log/nova"
+    path: "{{ nova_log_dir }}"
     state: directory
     owner: "{{ nova_system_user_name }}"
     group: "{{ nova_system_group_name }}"

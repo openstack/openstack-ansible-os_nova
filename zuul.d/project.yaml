@@ -39,4 +39,3 @@
         # working again.
         #- openstack-ansible-upgrade-ubuntu-xenial
         - openstack-ansible-lxd-ubuntu-xenial
-        - openstack-ansible-nova-ssl-nv

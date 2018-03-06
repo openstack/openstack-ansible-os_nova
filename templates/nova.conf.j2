@@ -295,6 +295,7 @@ secure_proxy_ssl_header = {{ nova_secure_proxy_ssl_header }}
 auth_strategy = keystone
 enable_instance_password = {{ nova_enable_instance_password }}
 use_forwarded_for = {{ nova_network_services[nova_network_type]['use_forwarded_for'] | bool }}
+vendordata_jsonfile_path = /etc/nova/vendor_data.json
 
 [scheduler]
 max_attempts = {{ nova_scheduler_max_attempts }}

@@ -560,6 +560,7 @@ nova_nova_conf_overrides: {}
 nova_rootwrap_conf_overrides: {}
 nova_api_paste_ini_overrides: {}
 nova_policy_overrides: {}
+nova_vendor_data_overrides: {}
 nova_placement_uwsgi_ini_overrides: {}
 nova_api_metadata_uwsgi_ini_overrides: {}
 nova_api_os_compute_uwsgi_ini_overrides: {}

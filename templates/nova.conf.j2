@@ -10,7 +10,9 @@ log_dir = {{ nova_log_dir }}
 state_path = {{ nova_system_home_folder }}
 rootwrap_config = /etc/nova/rootwrap.conf
 service_down_time = 120
+{% if nova_default_schedule_zone is defined %}
 default_schedule_zone = {{ nova_default_schedule_zone }}
+{% endif %}
 
 # Scheduler
 cpu_allocation_ratio = {{ nova_cpu_allocation_ratio }}

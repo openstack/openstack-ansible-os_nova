@@ -50,7 +50,7 @@ nova_compute_kvm_distro_packages:
   - kpartx
   - libvirt-bin
   - open-iscsi
-  - python-libguestfs
+  - python-guestfs
   - python-libvirt
   - qemu
   - qemu-utils
@@ -81,7 +81,7 @@ nova_compute_lxd_distro_packages:
   - multipath-tools
   - nfs-common
   - open-iscsi
-  - python-libguestfs
+  - python-guestfs
   - sysfsutils
   - vlan
   - thin-provisioning-tools
@@ -92,7 +92,7 @@ nova_compute_powervm_distro_packages:
   - genisoimage
   - kpartx
   - open-iscsi
-  - python-libguestfs
+  - python-guestfs
   - sysfsutils
   - vlan
   - nfs-common

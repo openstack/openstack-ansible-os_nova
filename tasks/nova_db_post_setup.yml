@@ -15,8 +15,8 @@
 
 - name: Set the delegated task facts
   set_fact:
-    _db_nova_bin: "{{ hostvars[random_conductor]['nova_bin'] | default(nova_bin) }}"
-    _db_nova_system_user_name: "{{ hostvars[random_conductor]['nova_system_user_name'] | default(nova_system_user_name) }}"
+    _db_nova_bin: "{{ hostvars[first_conductor]['nova_bin'] | default(nova_bin) }}"
+    _db_nova_system_user_name: "{{ hostvars[first_conductor]['nova_system_user_name'] | default(nova_system_user_name) }}"
 
 # This needs to be done after Compute hosts are added.
 - name: Perform a cell_v2 discover

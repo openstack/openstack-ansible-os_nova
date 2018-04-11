@@ -134,11 +134,11 @@
 # the database connection string and therefore
 # cannot run nova-manage.
 - include: nova_db_post_setup.yml
-  delegate_to: "{{ random_conductor }}"
+  delegate_to: "{{ first_conductor }}"
   run_once: true
   when:
     - "nova_services['nova-compute']['group'] in group_names"
   vars:
-    random_conductor: "{{ groups[nova_services['nova-conductor']['group']] | random }}"
+    first_conductor: "{{ groups[nova_services['nova-conductor']['group']][0] }}"
   tags:
     - nova-config

@@ -34,6 +34,6 @@
 
 - name: Script installed to make future kernels readable to nova group/user
   copy:
-    src: 'nova_kernel_permissions.sh'
-    dest: '/etc/kernel/postinst.d/nova_kernel_permissions.sh'
+    src: 'nova_kernel_permissions'
+    dest: '/etc/kernel/postinst.d/nova_kernel_permissions'
     mode: '0755'

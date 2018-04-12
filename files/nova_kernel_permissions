@@ -1,4 +1,4 @@
-#/bin/sh
+#!/bin/sh
 
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -17,4 +17,4 @@ version="$1"
 if [ -z "$version" ]; then
   exit 0
 fi
-exec dpkg-statoverride --update --add root nova 0640 "/boot/vmlinuz-${version}"
+exec dpkg-statoverride --force --update --add root nova 0640 "/boot/vmlinuz-${version}"

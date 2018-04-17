@@ -29,6 +29,7 @@
   until: add_service|success
   retries: 5
   delay: 2
+  no_log: True
   tags:
     - nova-api-setup
     - nova-service-add
@@ -52,6 +53,7 @@
   until: add_service|success
   retries: 5
   delay: 10
+  no_log: True
   tags:
     - nova-api-setup
     - nova-service-add
@@ -75,6 +77,7 @@
   until: add_service|success
   retries: 5
   delay: 10
+  no_log: True
   tags:
     - nova-api-setup
     - nova-service-add
@@ -103,6 +106,7 @@
   until: add_service|success
   retries: 5
   delay: 10
+  no_log: True
   tags:
     - nova-api-setup
     - nova-service-add
@@ -124,6 +128,7 @@
   until: add_service|success
   retries: 5
   delay: 2
+  no_log: True
   tags:
     - nova-api-setup
     - nova-service-add
@@ -145,6 +150,7 @@
   until: add_service|success
   retries: 5
   delay: 10
+  no_log: True
   tags:
     - nova-api-setup
     - nova-service-add
@@ -166,6 +172,7 @@
   until: add_service|success
   retries: 5
   delay: 10
+  no_log: True
   tags:
     - nova-api-setup
     - nova-service-add
@@ -193,6 +200,7 @@
   until: add_service|success
   retries: 5
   delay: 10
+  no_log: True
   tags:
     - nova-api-setup
     - nova-service-add

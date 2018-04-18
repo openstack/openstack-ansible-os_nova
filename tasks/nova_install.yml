@@ -156,11 +156,22 @@
     - ansible_pkg_mgr in ['yum', 'dnf', 'zypper']
     - nova_get_venv | changed
 
+# NOTE(odyssey4me):
+# We reinitialize the venv to ensure that the right
+# version of python is in the venv, but we do not
+# want virtualenv to also replace pip, setuptools
+# and wheel so we tell it not to.
+# We do not use --always-copy for CentOS/SuSE due
+# to https://github.com/pypa/virtualenv/issues/565
 - name: Update virtualenv path
   shell: |
     find {{ nova_bin }} -name \*.pyc -delete
     sed -si '1s/^.*python.*$/#!{{ nova_bin | replace ('/','\/') }}\/python/' {{ nova_bin }}/*
-    virtualenv {{ nova_bin | dirname }}
+    virtualenv {{ nova_bin | dirname }} \
+        {{ (ansible_pkg_mgr == 'apt') | ternary('--always-copy', '') }} \
+        --no-pip \
+        --no-setuptools \
+        --no-wheel
   when:
     - nova_get_venv | changed
   tags:

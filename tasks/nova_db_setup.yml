@@ -13,42 +13,23 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-- name: Get the api_db version
-  command: "{{ nova_bin }}/nova-manage api_db version"
-  become: yes
-  become_user: "{{ nova_system_user_name }}"
-  register: nova_api_db_version
-  changed_when: false
-
-- name: Perform a Nova API DB sync
-  command: "{{ nova_bin }}/nova-manage api_db sync"
-  become: yes
-  become_user: "{{ nova_system_user_name }}"
-  changed_when: false
-  when:
-    - nova_api_db_version.stdout == "0"
-
-- name: Perform cell_v2 map cell0
-  command: "{{ nova_bin }}/nova-manage cell_v2 map_cell0 --database_connection mysql+pymysql://{{ nova_api_galera_user }}:{{ nova_api_container_mysql_password }}@{{ nova_api_galera_address }}/{{ nova_cell0_database }}?charset=utf8"
-  become: yes
-  become_user: "{{ nova_system_user_name }}"
-  changed_when: false
-
-- name: Perform cell_v2 initial cell setup
-  command: "{{ nova_bin }}/nova-manage cell_v2 create_cell --name {{ nova_cell1_name }} --database_connection mysql+pymysql://{{ nova_galera_user }}:{{ nova_container_mysql_password }}@{{ nova_galera_address }}/{{ nova_galera_database }}?charset=utf8 --transport-url rabbit://{% for host in nova_rabbitmq_servers.split(',') %}{{ nova_rabbitmq_userid }}:{{ nova_rabbitmq_password }}@{{ host }}:{{ nova_rabbitmq_port }}{% if not loop.last %},{% else %}/{{ nova_rabbitmq_vhost }}{% endif %}{% endfor %}"
-  become: yes
-  become_user: "{{ nova_system_user_name }}"
-  register: nova_cell1_create
-  failed_when: "nova_cell1_create.rc not in [0, 2]"
-  changed_when: "nova_cell1_create.rc == 0"
-
-- name: Perform a Nova API DB sync
+- name: Synchronize the nova API DB schema
   command: "{{ nova_bin }}/nova-manage api_db sync"
   become: yes
   become_user: "{{ nova_system_user_name }}"
   changed_when: false
 
-- name: Perform a Nova DB sync
+# This is idempotent and therefore safe for greenfield
+# and brownfield installations.
+- name: Create the cell0 mapping entry in the nova API DB
+  command: >-
+    {{ nova_bin }}/nova-manage cell_v2 map_cell0
+      --database_connection mysql+pymysql://{{ nova_api_galera_user }}:{{ nova_api_container_mysql_password }}@{{ nova_api_galera_address }}/{{ nova_cell0_database }}?charset=utf8
+  become: yes
+  become_user: "{{ nova_system_user_name }}"
+  changed_when: false
+
+- name: Synchronize the nova DB schema
   command: "{{ nova_bin }}/nova-manage db sync"
   become: yes
   become_user: "{{ nova_system_user_name }}"
@@ -73,6 +54,25 @@
   when:
     - not data_migrations | skipped
     - data_migrations | succeeded
+
+- name: Create the cell1 mapping entry in the nova API DB
+  command: >-
+    {{ nova_bin }}/nova-manage cell_v2 create_cell
+      --name {{ nova_cell1_name }}
+      --database_connection mysql+pymysql://{{ nova_galera_user }}:{{ nova_container_mysql_password }}@{{ nova_galera_address }}/{{ nova_galera_database }}?charset=utf8
+      --transport-url rabbit://{% for host in nova_rabbitmq_servers.split(',') %}{{ nova_rabbitmq_userid }}:{{ nova_rabbitmq_password }}@{{ host }}:{{ nova_rabbitmq_port }}{% if not loop.last %},{% else %}/{{ nova_rabbitmq_vhost }}{% endif %}{% endfor %}
+  become: yes
+  become_user: "{{ nova_system_user_name }}"
+  register: nova_cell1_create
+  # When upgrading, cell1 will already exist and nova-manage will
+  # give a return code of 2, so we therefore know that if the
+  # return code is:
+  # 0: the cell mapping record in the nova API database was
+  #    successfully implemented (greenfield install)
+  # 2: the cell mapping record in the nova API database already
+  #    exists (brownfield install)
+  failed_when: "nova_cell1_create.rc not in [0, 2]"
+  changed_when: "nova_cell1_create.rc == 0"
 
 # When upgrading we need to map existing instances to the new cell1
 # To do this we need the cell UUID.

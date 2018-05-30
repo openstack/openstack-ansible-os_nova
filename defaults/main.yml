@@ -515,9 +515,6 @@ nova_requires_pip_packages:
   - httplib2
   - python-openstackclient
 
-nova_compute_pip_packages:
-  - libvirt-python
-
 nova_compute_ironic_pip_packages:
   - python-ironicclient
 

@@ -51,32 +51,13 @@
     owner: "{{ nova_qemu_user }}"
     group: "{{ nova_qemu_group }}"
 
-- name: Install pip packages
-  pip:
-    name: "{{ nova_compute_pip_packages }}"
-    state: "{{ nova_pip_package_state }}"
-    virtualenv: "{{ nova_bin | dirname }}"
-    virtualenv_site_packages: "no"
-    extra_args: >-
-      {{ nova_developer_mode | ternary('--constraint /opt/developer-pip-constraints.txt', '') }}
-      {{ (pip_install_upper_constraints is defined) | ternary('--constraint ' + pip_install_upper_constraints | default(''),'') }}
-      {{ pip_install_options | default('') }}
-  register: install_packages
-  until: install_packages|success
-  retries: 5
-  delay: 2
-  when:
-    - nova_get_venv | failed or nova_get_venv | skipped
-  tags:
-    - nova-install
-    - nova-pip-packages
+# Note (odyssey4me):
+# These python libraries have C bindings which tend to be very
+# particular about the version of their companion packages.
+# To ensure things run smoothly for stable releases, we opt to
+# use the distro packages for these and symlink the appropriate
+# library files and binding into the venv.
 
-# TODO(cloudnull): use a package from pypi when its made available
-# This is being done because guestfs is not an installable package at this time.
-#  There is a change in the works to upload the guestfs package to pypi in the
-#  future however that's not been done as of yet.
-#  related thread http://lists.openstack.org/pipermail/openstack-dev/2015-July/070927.html
-#  link on bug about libguestfs on pypi https://bugzilla.redhat.com/show_bug.cgi?id=1075594
 - name: Link guestfs into the venv
   file:
     src: "{{ item.name }}"
@@ -88,4 +69,32 @@
     - { state: link, name: "/usr/lib/python2.7/dist-packages/guestfs.py" }
   tags:
     - nova-install
+    - nova-pip-packages
+
+- name: Register libvirt module path
+  command: python -c 'import libvirt; print libvirt.__file__'
+  changed_when: false
+  register: _libvirt_module_path
+  tags:
+    - nova-pip-packages
+
+- name: Register libvirt-python files
+  shell: >-
+    {{ (ansible_pkg_mgr == 'apt') | ternary('dpkg -L python-libvirt', 'rpm -ql libvirt-python') }}
+    | grep '^{{ _libvirt_module_path.stdout | dirname }}/'
+  args:
+    warn: no
+  changed_when: false
+  register: _libvirt_python_files
+  tags:
+    - nova-pip-packages
+
+- name: Link the libvirt files into venv
+  file:
+    src: "{{ item }}"
+    dest: "{{ nova_bin | dirname }}/lib/python2.7/site-packages/{{ item | basename }}"
+    state: link
+    force: yes
+  with_items: "{{ _libvirt_python_files.stdout_lines }}"
+  tags:
     - nova-pip-packages

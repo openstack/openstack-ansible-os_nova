@@ -29,7 +29,7 @@
   changed_when: selinux_equivalence.rc == 0
   register: selinux_equivalence
   when:
-    - '"/var/lib/nova" not in fcontext_check.stdout'
+    - '"/var/lib/nova" in fcontext_check.stdout'
 
 - name: Set SELinux file contexts for nova's ssh keys
   sefcontext:

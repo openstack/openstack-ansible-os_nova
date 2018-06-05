@@ -210,7 +210,7 @@ nova_spice_html5proxy_base_port: 6082
 nova_spice_html5proxy_base_uri: "{{ nova_spice_html5proxy_base_proto }}://{{ external_lb_vip_address }}:{{ nova_spice_html5proxy_base_port }}"
 nova_spice_html5proxy_base_url: "{{ nova_spice_html5proxy_base_uri }}/spice_auto.html"
 nova_spice_console_agent_enabled: True
-nova_spicehtml5_git_repo: https://github.com/SPICE/spice-html5
+nova_spicehtml5_git_repo: https://gitlab.freedesktop.org/spice/spice-html5.git
 nova_spicehtml5_git_install_branch: "54cc41299bea8cd681ed0262735e0fd821cd774a"
 
 ## Nova novnc

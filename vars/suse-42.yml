@@ -103,6 +103,11 @@ nova_compute_kvm_packages_to_symlink:
 nova_compute_ksm_packages:
   - qemu-ksm
 
+nova_compute_oslomsg_amqp1_distro_packages:
+  - cyrus-sasl
+  - cyrus-sasl-plain
+  - cyrus-sasl-digestmd5
+
 # TODO: add support for LXD on openSUSE at some point.
 nova_compute_lxd_distro_packages: []
 

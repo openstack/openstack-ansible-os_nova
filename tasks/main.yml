@@ -135,6 +135,7 @@
     name: systemd_service
     private: true
   vars:
+    systemd_after_targets: "{{ service_var.after_targets | default(['syslog.target', 'network.target']) }}"
     systemd_user_name: "{{ nova_system_user_name }}"
     systemd_group_name: "{{ nova_system_group_name }}"
     systemd_tempd_prefix: openstack

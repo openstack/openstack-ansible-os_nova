@@ -46,7 +46,7 @@
       no_log: true
 
 - name: Setup Notify MQ Service (RabbitMQ)
-  delegate_to: "{{ _oslomsg_rpc_setup_host }}"
+  delegate_to: "{{ _oslomsg_notify_setup_host }}"
   when:
     - "(_oslomsg_configure_notify | default(_oslomsg_notify_transport is defined))"
     - "(_oslomsg_notify_transport is defined) and (_oslomsg_notify_transport == 'rabbit')"

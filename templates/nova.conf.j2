@@ -314,6 +314,7 @@ use_forwarded_for = {{ nova_network_services[nova_network_type]['use_forwarded_f
 vendordata_jsonfile_path = /etc/nova/vendor_data.json
 
 [scheduler]
+workers = {{ nova_scheduler_workers | default(nova_api_threads) }}
 max_attempts = {{ nova_scheduler_max_attempts }}
 scheduler_driver = {{ nova_scheduler_driver }}
 periodic_task_interval = {{ nova_scheduler_driver_task_period }}

@@ -416,6 +416,10 @@ nova_cinder_rbd_inuse: False
 # compute the number of api workers to use.
 # nova_metadata_workers: 16
 
+# If ``nova_scheduler_workers`` is unset the system will use half the number of available VCPUS to
+# compute the number of api workers to use.
+# nova_scheduler_workers: 16
+
 ## Cap the maximun number of threads / workers when a user value is unspecified.
 nova_api_threads_max: 16
 nova_api_threads: "{{ [[ansible_processor_vcpus|default(2) // 2, 1] | max, nova_api_threads_max] | min }}"

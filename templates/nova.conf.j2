@@ -107,7 +107,7 @@ memcache_servers = {{ memcached_servers }}
 [cinder]
 catalog_info = volumev3:cinderv3:internalURL
 cross_az_attach = {{ nova_cross_az_attach }}
-region_name = {{ nova_service_region }}
+os_region_name = {{ nova_service_region }}
 
 {% if nova_console_type == 'spice' %}
 [spice]

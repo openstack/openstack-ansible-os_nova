@@ -73,6 +73,11 @@
     - always
     - nova-config
 
+- include_tasks: nova_vgpu_detect.yml
+  tags:
+    - always
+    - nova-config
+
 - include_tasks: nova_pre_install.yml
   tags:
     - nova-install

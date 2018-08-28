@@ -345,3 +345,8 @@ server_groups = {{ nova_quota_server_groups }}
 
 [upgrade_levels]
 compute=auto
+
+{% if enabled_vgpu_types is defined %}
+[devices]
+enabled_vgpu_types = {{ enabled_vgpu_types | join(',') }}
+{% endif %}

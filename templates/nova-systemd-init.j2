@@ -2,6 +2,9 @@
 
 [Unit]
 Description=nova openstack service
+{% if item.service_name == nova_services['nova-compute']['service_name'] %}
+After=libvirtd.service
+{% endif %}
 After=syslog.target
 After=network.target
 

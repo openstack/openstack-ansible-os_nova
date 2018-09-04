@@ -481,6 +481,10 @@ nova_services:
     start_order: 6
     execstarts: "{{ nova_bin }}/nova-compute"
     execreloads: "/bin/kill -HUP $MAINPID"
+    after_targets:
+      - libvirtd.service
+      - syslog.target
+      - network.target
   nova-conductor:
     group: nova_conductor
     service_name: nova-conductor

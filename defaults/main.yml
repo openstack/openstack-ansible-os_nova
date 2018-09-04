@@ -40,10 +40,10 @@ nova_pip_package_state: "latest"
 nova_install_method: "source"
 
 nova_git_repo: https://git.openstack.org/openstack/nova
-nova_git_install_branch: master
+nova_git_install_branch: 'stable/rocky'
 
 nova_lxd_git_repo: https://git.openstack.org/openstack/nova-lxd
-nova_lxd_git_install_branch: master
+nova_lxd_git_install_branch: 'stable/rocky'
 
 nova_developer_mode: false
 nova_developer_constraints:

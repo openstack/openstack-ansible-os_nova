@@ -20,9 +20,7 @@
       - release-notes-jobs
     check:
       jobs:
-        - openstack-ansible-upgrade-ubuntu-xenial
         - openstack-ansible-lxd-ubuntu-xenial
-        - openstack-ansible-nova-ssl-nv
         # TODO(jrosser) Revert this once bionic passes
         - openstack-ansible-functional-ubuntu-bionic:
             voting: false
@@ -33,7 +31,6 @@
             voting: false
     gate:
       jobs:
-        - openstack-ansible-upgrade-ubuntu-xenial
         - openstack-ansible-lxd-ubuntu-xenial
         # TODO(jrosser) Revert this once bionic passes
         - openstack-ansible-functional-ubuntu-bionic:

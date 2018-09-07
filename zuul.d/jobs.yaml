@@ -17,11 +17,4 @@
     name: openstack-ansible-lxd-ubuntu-xenial
     parent: openstack-ansible-functional-ubuntu-xenial
     vars:
-      tox_env: func_lxd
-
-- job:
-    name: openstack-ansible-nova-ssl-nv
-    parent: openstack-ansible-functional-ubuntu-xenial
-    voting: false
-    vars:
-      tox_env: ssl
+      tox_env: lxd

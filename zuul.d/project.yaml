@@ -19,10 +19,6 @@
         - openstack-ansible-functional-centos-7
         - openstack-ansible-functional-opensuse-423
         - openstack-ansible-functional-ubuntu-xenial
-        # TODO(odyssey4me):
-        # Restore this to voting once the test is
-        # working again.
-        - openstack-ansible-upgrade-ubuntu-xenial-nv
         - openstack-ansible-lxd-ubuntu-xenial
     gate:
       jobs:
@@ -30,8 +26,4 @@
         - openstack-ansible-functional-centos-7
         - openstack-ansible-functional-opensuse-423
         - openstack-ansible-functional-ubuntu-xenial
-        # TODO(odyssey4me):
-        # Restore this to voting once the test is
-        # working again.
-        #- openstack-ansible-upgrade-ubuntu-xenial
         - openstack-ansible-lxd-ubuntu-xenial

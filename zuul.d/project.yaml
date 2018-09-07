@@ -22,17 +22,9 @@
         - openstack-ansible-linters
         - openstack-ansible-functional-centos-7-nv
         - openstack-ansible-functional-ubuntu-xenial
-        # TODO(odyssey4me):
-        # Restore this to voting once the test is
-        # working again.
-        - openstack-ansible-upgrade-ubuntu-xenial-nv
         - openstack-ansible-lxd-ubuntu-xenial
     gate:
       jobs:
         - openstack-ansible-linters
         - openstack-ansible-functional-ubuntu-xenial
-        # TODO(odyssey4me):
-        # Restore this to voting once the test is
-        # working again.
-        #- openstack-ansible-upgrade-ubuntu-xenial
         - openstack-ansible-lxd-ubuntu-xenial

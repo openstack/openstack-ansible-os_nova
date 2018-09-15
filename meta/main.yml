@@ -39,4 +39,3 @@ galaxy_info:
     - openstack
 dependencies:
   - apt_package_pinning
-  - galera_client

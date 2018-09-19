@@ -90,7 +90,3 @@
   tags:
     - sudoers
     - nova-sudoers
-
-- include_tasks: nova_selinux.yml
-  when:
-    - ansible_selinux.status == "enabled"

@@ -333,8 +333,16 @@ server_groups = {{ nova_quota_server_groups }}
 [upgrade_levels]
 compute=auto
 
-{% if nova_pci_passthrough_whitelist  %}
+{% if nova_pci_passthrough_whitelist or nova_pci_alias %}
 [pci]
+{% if nova_pci_passthrough_whitelist %}
 # White list of PCI devices available to VMs.
 passthrough_whitelist = "{{ nova_pci_passthrough_whitelist }}"
+{% endif %}
+{% if nova_pci_alias %}
+# PCI Alias
+{% for item in nova_pci_alias %}
+alias = "{{item}}"
+{% endfor %}
+{% endif %}
 {% endif %}

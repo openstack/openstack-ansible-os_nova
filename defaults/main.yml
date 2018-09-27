@@ -590,3 +590,9 @@ lxd_storage_backend: dir
 #   Example:
 #     nova_pci_passthrough_whitelist: '{ "physical_network": "physnet1", "devname": "p1p1" }'
 nova_pci_passthrough_whitelist: {}
+# PCI alias,
+# Example:
+# nova_pci_alias:
+#  - '{ "name": "card-alias1", "product_id": "XXXX", "vendor_id": "XXXX" }'
+#  - '{ "name": "card-alias2", "product_id": "XXXY", "vendor_id": "XXXY" }'
+nova_pci_alias: []

@@ -59,11 +59,6 @@ libvirt_vif_type = ethernet
 vif_plugging_timeout = 10
 vif_plugging_is_fatal = False
 
-{% if nova_pci_passthrough_whitelist  %}
-# PCI Passthrough
-pci_passthrough_whitelist = "{{ nova_pci_passthrough_whitelist }}"
-{% endif %}
-
 # Hypervisor
 default_ephemeral_format = ext4
 
@@ -337,3 +332,9 @@ server_groups = {{ nova_quota_server_groups }}
 
 [upgrade_levels]
 compute=auto
+
+{% if nova_pci_passthrough_whitelist  %}
+[pci]
+# White list of PCI devices available to VMs.
+passthrough_whitelist = "{{ nova_pci_passthrough_whitelist }}"
+{% endif %}

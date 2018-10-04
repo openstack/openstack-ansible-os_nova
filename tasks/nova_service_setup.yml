@@ -56,7 +56,8 @@
         endpoint_type: admin
         verify: "{{ not keystone_service_adminuri_insecure }}"
       register: add_service
-      when: "{{ item.condition }}"
+      when:
+        - item.condition
       until: add_service is success
       retries: 5
       delay: 10
@@ -83,7 +84,8 @@
         endpoint_type: admin
         verify: "{{ not keystone_service_adminuri_insecure }}"
       register: add_service
-      when: "{{ item.condition }}"
+      when:
+        - item.condition
       until: add_service is success
       retries: 5
       delay: 10

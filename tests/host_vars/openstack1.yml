@@ -20,5 +20,6 @@ neutron_provider_networks:
 ansible_host: 10.1.1.102
 ansible_become: True
 ansible_user: root
+container_name: openstack1
 tunnel_address: 10.1.2.102
 neutron_local_ip: 10.1.2.102

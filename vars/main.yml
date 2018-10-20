@@ -28,3 +28,13 @@ filtered_nova_services: |-
   {%   endif %}
   {% endfor %}
   {{ services | sort(attribute='start_order') }}
+
+# Define all Nova mountpoints when using NFS. If defined
+# the corresponding directory will only be created by the
+# mount point task.
+nova_mount_points: |-
+  {% set mps = [] %}
+  {% for mp in nova_nfs_client %}
+  {%   set _ = mps.append(mp.local_path) %}
+  {% endfor %}
+  {{ mps }}

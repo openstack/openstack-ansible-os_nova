@@ -32,18 +32,11 @@ nova_devel_distro_packages:
   - which
 
 nova_service_distro_packages:
-  - openstack-nova
   - openstack-nova-api
-  - openstack-nova-cells
-  - openstack-nova-compute
   - openstack-nova-conductor
   - openstack-nova-console
-  - openstack-nova-migration
-  - openstack-nova-network
-  - openstack-nova-novncproxy
   - openstack-nova-placement-api
   - openstack-nova-scheduler
-  - openstack-nova-serialproxy
   - python-memcached
   - python-novaclient
   - python2-PyMySQL
@@ -51,12 +44,16 @@ nova_service_distro_packages:
   - uwsgi-plugin-python
 
 nova_service_extra_distro_packages:
-  kvm: []
+  kvm:
+    - openstack-nova-compute
+    - openstack-nova-migration
   lxd: []
   novnc:
     - openstack-nova-novncproxy
   spice:
     - openstack-nova-spicehtml5proxy
+  serialconsole:
+    - openstack-nova-serialproxy
 
 nova_novnc_distro_packages:
   - js-jquery

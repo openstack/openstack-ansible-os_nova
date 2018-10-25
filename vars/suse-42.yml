@@ -25,6 +25,7 @@ nova_distro_packages:
   - git-core
   - iptables
   - python-openstackclient
+  - libpython2_7-1_0
 
 nova_devel_distro_packages:
   - libxml2-devel

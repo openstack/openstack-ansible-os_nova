@@ -25,6 +25,7 @@ nova_distro_packages:
   - git
   - iptables
   - python-openstackclient
+  - libpython2.7
 
 nova_devel_distro_packages:
   - libpq-dev

@@ -254,6 +254,7 @@ nova_metadata_port: 8775
 ## Nova compute
 nova_enable_instance_password: True
 nova_force_config_drive: False
+nova_nested_virt_enabled: False
 
 ## Nova placement
 nova_placement_service_enabled: True

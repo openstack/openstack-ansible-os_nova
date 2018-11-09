@@ -17,6 +17,19 @@
   tags:
     - nova-install
 
+- name: Set nested kvm virt
+  copy:
+    src: kvm.conf
+    dest: /etc/modprobe.d/kvm.conf
+    owner: root
+    group: root
+    mode: 0644
+  when:
+    - nova_nested_virt_enabled | bool
+  tags:
+    - nova-config
+    - nova-kvm
+
 - name: Add nova user to libvirtd group
   user:
     name: "{{ nova_system_user_name }}"

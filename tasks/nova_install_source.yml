@@ -135,6 +135,18 @@
     - nova-pip-packages
     - Restart nova services
 
+- name: Install optional pip packages
+  pip:
+    name: "{{ nova_optional_oslomsg_amqp1_pip_packages }}"
+    state: "{{ nova_pip_package_state }}"
+    virtualenv: "{{ nova_bin | dirname }}"
+    virtualenv_site_packages: "no"
+  when: nova_oslomsg_amqp1_enabled
+  register: install_optional_packages
+  until: install_optional_packages is success
+  retries: 5
+  delay: 2
+
 - name: Record the venv tag deployed
   ini_file:
     dest: "/etc/ansible/facts.d/openstack_ansible.fact"

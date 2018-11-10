@@ -48,6 +48,9 @@ nova_package_list: |-
   {%     set _ = packages.extend(nova_compute_barbican_distro_packages) %}
   {%   endif %}
   {% endif %}
+  {% if nova_oslomsg_amqp1_enabled | bool %}
+  {%   set _ = packages.extend(nova_compute_oslomsg_amqp1_distro_packages) %}
+  {% endif %}
   {% set _ = packages.extend(nova_service_distro_packages) %}
   {{ packages }}
 

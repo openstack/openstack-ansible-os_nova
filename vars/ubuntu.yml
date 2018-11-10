@@ -71,6 +71,10 @@ nova_novnc_distro_packages:
 nova_compute_barbican_distro_packages:
   - cryptsetup
 
+nova_compute_oslomsg_amqp1_distro_packages:
+  - libsasl2-modules
+  - sasl2-bin
+
 # the qemu-system-.*, qemu-block-extra, qemu-utils, qemu-user packages are explictly listed
 # for consistent upgrades (they will all be to the same version)
 nova_compute_kvm_distro_packages:

@@ -132,6 +132,10 @@ nova_oslomsg_notify_userid: "{{ nova_oslomsg_rpc_userid }}"
 nova_oslomsg_notify_password: "{{ nova_oslomsg_rpc_password }}"
 nova_oslomsg_notify_vhost: "{{ nova_oslomsg_rpc_vhost }}"
 
+## Qdrouterd info
+# TODO(ansmith): Change structure when more backends will be supported
+nova_oslomsg_amqp1_enabled: "{{ nova_oslomsg_rpc_transport == 'amqp' }}"
+
 ## RabbitMQ info
 
 ## Configuration for RPC communications
@@ -558,6 +562,9 @@ nova_pip_packages:
   - python-novaclient
   - python-openstackclient
   - uWSGI
+
+nova_optional_oslomsg_amqp1_pip_packages:
+  - oslo.messaging[amqp1]
 
 nova_compute_lxd_pip_packages:
   - pylxd

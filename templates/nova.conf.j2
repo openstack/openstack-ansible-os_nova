@@ -263,6 +263,12 @@ virt_type = {{ nova_virt_type }}
 remove_unused_resized_minimum_age_seconds = {{ nova_remove_unused_resized_minimum_age_seconds }}
 {% if nova_cpu_mode is defined %}
 cpu_mode = {{ nova_cpu_mode }}
+{% if nova_cpu_mode == 'custom' %}
+cpu_model = {{ nova_cpu_model }}
+{% endif %}
+{% if nova_cpu_model_extra_flags is defined %}
+cpu_model_extra_flags = {{ nova_cpu_model_extra_flags | join(',') }}
+{% endif %}
 {% endif %}
 
 {% if nova_libvirt_images_rbd_pool is defined %}

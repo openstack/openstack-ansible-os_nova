@@ -21,8 +21,7 @@
 - name: Setup the service
   delegate_to: "{{ nova_service_setup_host }}"
   vars:
-    ansible_python_interpreter: >-
-      {{ (nova_service_setup_host == 'localhost') | ternary(ansible_playbook_python, ansible_python['executable']) }}
+    ansible_python_interpreter: "{{ nova_service_setup_host_python_interpreter }}"
   block:
     - name: Add services to the keystone service catalog
       os_keystone_service:

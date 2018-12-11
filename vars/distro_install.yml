@@ -30,6 +30,9 @@ nova_package_list: |-
   {%   if nova_console_type == 'spice' %}
   {%     set _ = packages.extend(nova_service_extra_distro_packages['spice']) %}
   {%   endif %}
+  {%   if nova_console_type == 'serialconsole' %}
+  {%     set _ = packages.extend(nova_service_extra_distro_packages['serialconsole']) %}
+  {%   endif %}
   {% endif %}
   {% if nova_services['nova-compute']['group'] in group_names %}
   {%   if nova_virt_type in ['kvm', 'qemu'] %}

@@ -34,16 +34,10 @@ nova_devel_distro_packages:
 
 nova_service_distro_packages:
   - nova-api
-  - nova-cells
   - nova-conductor
-  - nova-console
   - nova-consoleauth
-  - nova-network
-  - nova-novncproxy
   - nova-placement-api
   - nova-scheduler
-  - nova-serialproxy
-  - nova-volume
   - python-memcache
   - python-novaclient
   - python-pymysql
@@ -60,6 +54,8 @@ nova_service_extra_distro_packages:
     - nova-novncproxy
   spice:
     - nova-spiceproxy
+  serialconsole:
+    - openstack-nova-serialproxy
 
 nova_novnc_distro_packages:
   - libjs-jquery

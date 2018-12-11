@@ -52,6 +52,15 @@
     - nova-key
     - nova-key-create
 
+- name: Create Nova NFS mount point(s)
+  file:
+    path: "{{ item.local_path }}"
+    state: directory
+    mode: "0755"
+  with_items: "{{ nova_nfs_client }}"
+  tags:
+    - nova-dirs
+
 - name: Create nova dir
   file:
     path: "{{ item.path }}"
@@ -59,6 +68,8 @@
     owner: "{{ item.owner|default(nova_system_user_name) }}"
     group: "{{ item.group|default(nova_system_group_name) }}"
     mode: "{{ item.mode|default('0755') }}"
+  when:
+    - "item.path not in nova_mount_points"
   with_items:
     - { path: "/openstack", owner: "root", group: "root" }
     - { path: "/etc/nova", mode: "0750" }

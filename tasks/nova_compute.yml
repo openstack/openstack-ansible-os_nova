@@ -24,3 +24,31 @@
 - include_tasks: nova_compute_key_distribute.yml
   tags:
     - nova-config
+
+- name: Run the systemd mount role
+  include_role:
+    name: systemd_mount
+    private: true
+  vars:
+    systemd_mounts:
+      - config_overrides: "{{ mount_var.config_overrides | default({}) }}"
+        what: "{{ mount_var.server }}:{{ mount_var.remote_path }}"
+        where: "{{ mount_var.local_path }}"
+        type: "{{ mount_var.type }}"
+        options: "{{ mount_var.options }}"
+        unit:
+          After:
+            - network.target rpcbind.service rpc-statd.service
+          Conflicts:
+            - umount.target
+          Requires:
+            - rpcbind.service rpc-statd.service
+          Before:
+            - nova-compute.service
+        state: 'started'
+        enabled: true
+  with_items: "{{ nova_nfs_client }}"
+  loop_control:
+    loop_var: mount_var
+  tags:
+    - nova-config

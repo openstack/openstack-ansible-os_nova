@@ -49,6 +49,16 @@
     group: "{{ nova_system_group_name }}"
     mode: "0640"
     remote_src: yes
+  when:
+    - nova_policy_overrides != {}
+  listen: "Restart nova services"
+
+- name: Remove legacy policy.json file
+  file:
+    path: "/etc/nova/policy.json"
+    state: absent
+  when:
+    - nova_policy_overrides == {}
   listen: "Restart nova services"
 
 - name: Start services

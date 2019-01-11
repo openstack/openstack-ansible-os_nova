@@ -51,16 +51,19 @@
       dest: "/etc/nova/vendor_data.json"
       config_overrides: "{{ nova_vendor_data_overrides }}"
       config_type: "json"
-    - src: "policy.json.j2"
-      dest: "/etc/nova/policy.json-{{ nova_venv_tag }}"
-      config_overrides: "{{ nova_policy_overrides }}"
-      config_type: "json"
   notify:
     - Manage LB
     - Restart nova services
   tags:
     - nova-config
     - nova-post-install
+
+- name: Implement policy.json if there are overrides configured
+  copy:
+    content: "{{ nova_policy_overrides | to_nice_json }}"
+    dest: "/etc/nova/policy.json-{{ nova_venv_tag }}"
+  when:
+    - nova_policy_overrides != {}
 
 - name: Copy nova rootwrap filter config
   copy:

@@ -356,12 +356,12 @@ enabled_vgpu_types = {{ enabled_vgpu_types | join(',') }}
 [pci]
 {% if nova_pci_passthrough_whitelist %}
 # White list of PCI devices available to VMs.
-passthrough_whitelist = "{{ nova_pci_passthrough_whitelist }}"
+passthrough_whitelist = {{ nova_pci_passthrough_whitelist }}
 {% endif %}
 {% if nova_pci_alias %}
 # PCI Alias
 {% for item in nova_pci_alias %}
-alias = "{{item}}"
+alias = {{item}}
 {% endfor %}
 {% endif %}
 {% endif %}

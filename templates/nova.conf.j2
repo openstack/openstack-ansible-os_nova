@@ -56,8 +56,6 @@ my_ip = {% if nova_management_address == 'localhost' %}127.0.0.1{% else %}{{ nov
 {% if nova_virt_type in ['kvm', 'lxd', 'qemu', 'xen'] %}
 libvirt_vif_type = ethernet
 {% endif %}
-vif_plugging_timeout = 10
-vif_plugging_is_fatal = False
 
 # Hypervisor
 default_ephemeral_format = ext4

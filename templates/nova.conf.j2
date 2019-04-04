@@ -271,7 +271,7 @@ discover_hosts_in_cells_interval = {{ nova_discover_hosts_in_cells_interval }}
 [filter_scheduler]
 max_io_ops_per_host = {{ nova_max_io_ops_per_host }}
 ram_weight_multiplier = {{ nova_ram_weight_multiplier }}
-enabled_filters = {{ nova_scheduler_default_filters }}
+enabled_filters = {{ _nova_scheduler_filters | join(',') }}
 host_subset_size = {{ nova_scheduler_host_subset_size }}
 tracks_instance_changes = {{ nova_scheduler_tracks_instance_changes }}
 

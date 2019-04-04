@@ -94,3 +94,12 @@ nova_core_files:
     owner: "root"
     group: "{{ nova_system_group_name }}"
     mode: "0640"
+
+_nova_scheduler_filters: |-
+  {% set default_filters = nova_scheduler_default_filters %}
+  {% if default_filters is not iterable and default_filters is string %}
+  {%   set filters = default_filters.split(',')  %}
+  {% else %}
+  {%   set filters = default_filters %}
+  {% endif %}
+  {{ filters + nova_scheduler_extra_filters }}

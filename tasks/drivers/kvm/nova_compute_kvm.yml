@@ -133,7 +133,7 @@
     regexp: "^KSM_ENABLED=*"
     backup: yes
   when:
-    - ansible_pkg_mgr == 'apt'
+    - ansible_distribution == 'Ubuntu'
   notify: Restart libvirt-bin
   tags:
     - nova-config

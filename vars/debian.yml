@@ -70,7 +70,7 @@ nova_compute_kvm_distro_packages:
   - bridge-utils
   - genisoimage
   - kpartx
-  - libvirt-bin
+  - "{{ (ansible_distribution == 'Debian') | ternary('libvirt-daemon-system', 'libvirt-bin') }}"
   - open-iscsi
   - python-guestfs
   - python3-guestfs

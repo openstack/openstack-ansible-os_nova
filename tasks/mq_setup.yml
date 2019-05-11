@@ -15,7 +15,7 @@
 
 # WARNING:
 # This file is maintained in the openstack-ansible-tests repository.
-# https://git.openstack.org/cgit/openstack/openstack-ansible-tests/tree/sync/tasks/mq_setup.yml
+# https://opendev.org/openstack/openstack-ansible-tests/src/sync/tasks/mq_setup.yml
 # If you need to modify this file, update the one in the openstack-ansible-tests
 # repository. Once it merges there, the changes will automatically be proposed to
 # all the repositories which use it.

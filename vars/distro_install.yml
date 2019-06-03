@@ -20,6 +20,10 @@
 #
 nova_package_list: |-
   {% set packages = nova_distro_packages %}
+  {% if nova_services['nova-api-metadata']['group'] in group_names or
+        nova_services['nova-api-os-compute']['group'] in group_names %}
+  {%      set _ = packages.extend(nova_service_extra_distro_packages['nova_api']) %}
+  {% endif %}
   {% if nova_services['nova-novncproxy']['group'] in group_names or
       nova_services['nova-spicehtml5proxy']['group'] in group_names or
       nova_services['nova-serialconsole-proxy']['group'] in group_names %}

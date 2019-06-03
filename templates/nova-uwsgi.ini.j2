@@ -6,6 +6,9 @@ gid = {{ nova_system_group_name }}
 {% if nova_install_method == 'source' %}
 virtualenv = /openstack/venvs/nova-{{ nova_venv_tag }}
 {% endif %}
+{% if nova_install_method == 'distro' and (ansible_os_family | lower) == 'debian' %}
+plugin = python3
+{% endif %}
 wsgi-file = {{ nova_bin }}/{{ item.wsgi_name }}
 http = 0.0.0.0:{{ item.uwsgi_port }}
 

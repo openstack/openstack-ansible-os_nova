@@ -40,8 +40,6 @@ nova_service_distro_packages:
   - python-memcached
   - python-novaclient
   - python2-PyMySQL
-  - uwsgi
-  - uwsgi-plugin-python
 
 nova_service_extra_distro_packages:
   kvm:
@@ -50,6 +48,9 @@ nova_service_extra_distro_packages:
   lxd: []
   novnc:
     - openstack-nova-novncproxy
+  nova_api:
+    - uwsgi
+    - uwsgi-plugin-python
   spice:
     - openstack-nova-spicehtml5proxy
   serialconsole:

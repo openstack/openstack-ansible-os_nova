@@ -33,6 +33,15 @@
         name: "{{ _oslomsg_rpc_vhost }}"
         state: "present"
 
+    - name: Apply RPC RabbitMQ vhost policies
+      rabbitmq_policy:
+        name: "{{ item.name }}"
+        pattern: "{{ item.pattern }}"
+        priority: "{{ item.priority | default(0) }}"
+        tags: "{{ item.tags }}"
+        vhost: "{{ _oslomsg_rpc_vhost }}"
+      loop: "{{ _oslomsg_rpc_policies | default([]) + oslomsg_rpc_policies }}"
+
     - name: Add RPC RabbitMQ user
       rabbitmq_user:
         user: "{{ _oslomsg_rpc_userid }}"
@@ -42,8 +51,17 @@
         read_priv: ".*"
         write_priv: ".*"
         state: "present"
-        force: true
+        force: false
       no_log: true
+
+    - name: Verify password changed
+      command: "rabbitmqctl authenticate_user {{ _oslomsg_rpc_userid }} {{ _oslomsg_rpc_password }}"
+      register: rpc_password_changed
+
+    - name: Set password when changed
+      command: "rabbitmqctl change_password {{ _oslomsg_rpc_userid }} {{ _oslomsg_rpc_password }}"
+      when:
+        - rpc_password_changed.rc != 0
 
 - name: Setup Notify MQ Service (RabbitMQ)
   delegate_to: "{{ _oslomsg_notify_setup_host }}"
@@ -57,6 +75,17 @@
       rabbitmq_vhost:
         name: "{{ _oslomsg_notify_vhost }}"
         state: "present"
+
+    - name: Apply Notify RabbitMQ vhost policies
+      rabbitmq_policy:
+        name: "{{ item.name }}"
+        pattern: "{{ item.pattern }}"
+        priority: "{{ item.priority | default(0) }}"
+        tags: "{{ item.tags }}"
+        vhost: "{{ _oslomsg_notify_vhost }}"
+      loop: "{{ _oslomsg_notify_policies | default([]) + oslomsg_notify_policies }}"
+      when:
+        - _oslomsg_notify_vhost != _oslomsg_rpc_vhost
 
     - name: Add Notify RabbitMQ user
       rabbitmq_user:

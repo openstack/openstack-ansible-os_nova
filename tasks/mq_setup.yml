@@ -57,6 +57,7 @@
     - name: Verify password changed
       command: "rabbitmqctl authenticate_user {{ _oslomsg_rpc_userid }} {{ _oslomsg_rpc_password }}"
       register: rpc_password_changed
+      failed_when: false
 
     - name: Set password when changed
       command: "rabbitmqctl change_password {{ _oslomsg_rpc_userid }} {{ _oslomsg_rpc_password }}"
@@ -96,8 +97,20 @@
         read_priv: ".*"
         write_priv: ".*"
         state: "present"
-        force: true
+        force: false
       no_log: true
+
+    - name: Verify password changed
+      command: "rabbitmqctl authenticate_user {{ _oslomsg_notify_userid }} {{ _oslomsg_notify_password }}"
+      register: notify_password_changed
+      failed_when: false
+      when: _oslomsg_notify_userid != _oslomsg_rpc_userid
+
+    - name: Set password when changed
+      command: "rabbitmqctl change_password {{ _oslomsg_notify_userid }} {{ _oslomsg_notify_password }}"
+      when:
+        - notify_password_changed.rc | default(0) != 0
+        - _oslomsg_notify_userid != _oslomsg_rpc_userid
 
 - name: Setup RPC MQ Service (Qdrouterd)
   delegate_to: "{{ _oslomsg_rpc_setup_host }}"

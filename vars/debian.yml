@@ -71,6 +71,7 @@ nova_compute_kvm_distro_packages:
   - genisoimage
   - kpartx
   - "{{ (ansible_distribution == 'Debian') | ternary('libvirt-daemon-system', 'libvirt-bin') }}"
+  - netcat-openbsd
   - open-iscsi
   - python-guestfs
   - python3-guestfs

@@ -79,6 +79,7 @@ nova_compute_kvm_distro_packages:
   - genisoimage
   - kpartx
   - libvirt-bin
+  - netcat-openbsd
   - open-iscsi
   - python-guestfs
   - python3-guestfs

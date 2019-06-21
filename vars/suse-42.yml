@@ -78,6 +78,7 @@ nova_compute_kvm_distro_packages:
   - libvirt-daemon-driver-storage-mpath
   - libvirt-daemon-driver-storage-rbd
   - libvirt-daemon-driver-storage-scsi
+  - netcat-openbsd
   - qemu-kvm
   - qemu-block-curl
   - qemu-block-dmg

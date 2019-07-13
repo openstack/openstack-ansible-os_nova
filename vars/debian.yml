@@ -33,16 +33,8 @@ nova_devel_distro_packages:
   - python-httplib2
 
 nova_service_distro_packages:
-  - nova-api
-  - nova-conductor
-  - nova-placement-api
-  - nova-scheduler
-  - python-memcache
-  - python-novaclient
-  - python-pymysql
-  - python-sqlalchemy
-  - uwsgi
-  - uwsgi-plugin-python
+  - python3-nova
+  - python3-memcache
 
 nova_service_extra_distro_packages:
   kvm:
@@ -51,6 +43,9 @@ nova_service_extra_distro_packages:
     - nova-compute-lxd
   novnc:
     - nova-novncproxy
+  nova_api:
+    - uwsgi
+    - uwsgi-plugin-python3
   spice:
     - nova-spiceproxy
   serialconsole:

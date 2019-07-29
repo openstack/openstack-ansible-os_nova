@@ -53,7 +53,7 @@
     venv_build_distro_package_list: "{{ nova_devel_distro_packages }}"
     venv_install_destination_path: "{{ nova_bin | dirname }}"
     venv_pip_install_args: "{{ nova_pip_install_args }}"
-    venv_packages_to_symlink: "{{ (nova_services['nova-compute']['group'] in group_names) | ternary(nova_compute_kvm_packages_to_symlink, []) }}"
+    venv_packages_to_symlink: "{{ (nova_services['nova-compute']['group'] in group_names and nova_virt_type != 'ironic') | ternary(nova_compute_kvm_packages_to_symlink, []) }}"
     venv_pip_packages: "{{ nova_venv_packages }}"
     venv_facts_when_changed:
       - section: "nova"

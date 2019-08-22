@@ -21,19 +21,13 @@
     check:
       jobs:
         - openstack-ansible-lxd-ubuntu-xenial
-        # TODO(jrosser) Revert this once bionic passes
-        - openstack-ansible-functional-ubuntu-bionic:
-            voting: false
+        - openstack-ansible-functional-ubuntu-bionic
         - openstack-ansible-functional-distro_install-centos-7
-        - openstack-ansible-functional-distro_install-opensuse-423
         # NOTE(hwoarang) xenial does not currently work. It needs investigation
         - openstack-ansible-functional-distro_install-ubuntu-xenial:
             voting: false
     gate:
       jobs:
         - openstack-ansible-lxd-ubuntu-xenial
-        # TODO(jrosser) Revert this once bionic passes
-        - openstack-ansible-functional-ubuntu-bionic:
-            voting: false
+        - openstack-ansible-functional-ubuntu-bionic
         - openstack-ansible-functional-distro_install-centos-7
-        - openstack-ansible-functional-distro_install-opensuse-423

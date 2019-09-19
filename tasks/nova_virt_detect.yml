@@ -50,9 +50,3 @@
     nova_virt_type: "qemu"
   when:
     - nova_virt_type is not defined
-
-- name: Remove lib linking for kvm with ironic
-  set_fact:
-    nova_compute_kvm_packages_to_symlink: []
-  when:
-    - nova_virt_type == 'ironic'

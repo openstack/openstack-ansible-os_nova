@@ -200,6 +200,7 @@ ssl = {{ nova_oslomsg_rpc_use_ssl }}
 
 {% if nova_virt_type == 'ironic' %}
 [ironic]
+auth_type = {{ nova_keystone_auth_plugin }}
 username = {{ nova_service_user_name }}
 password = {{ nova_service_password }}
 project_name = {{ nova_service_project_name }}

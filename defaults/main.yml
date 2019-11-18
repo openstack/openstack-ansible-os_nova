@@ -301,12 +301,8 @@ nova_reserved_host_disk_mb: 2048
 nova_scheduler_host_subset_size: 10
 nova_scheduler_max_attempts: 5
 nova_scheduler_default_filters: >-
-  RetryFilter,
   AvailabilityZoneFilter,
-  AggregateRamFilter,
   ComputeFilter,
-  AggregateCoreFilter,
-  AggregateDiskFilter,
   AggregateNumInstancesFilter,
   AggregateIoOpsFilter,
   ComputeCapabilitiesFilter,

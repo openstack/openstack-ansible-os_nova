@@ -72,6 +72,23 @@
     - nova-novnc-console
     - nova-spice-console
 
+- name: Populate service facts
+  service_facts:
+
+- name: Disable existing services for any unused console types
+  systemd:
+    name: "{{ item.service }}"
+    enabled: no
+    state: stopped
+  when: item.service in ansible_facts.services and item.type != nova_console_type
+  loop:
+    - service: "nova-novncproxy.service"
+      type: "novnc"
+    - service: "nova-spicehtml5proxy.service"
+      type: "spice"
+    - service: "nova-serialproxy.service"
+      type: "serialconsole"
+
 - name: Initialise the upgrade facts
   ini_file:
     dest: "/etc/ansible/facts.d/openstack_ansible.fact"

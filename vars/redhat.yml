@@ -27,6 +27,7 @@ nova_distro_packages:
 
 nova_devel_distro_packages:
   - libxml2-devel
+  - systemd-devel
 
 nova_service_distro_packages:
   - openstack-nova-api
@@ -60,6 +61,7 @@ nova_compute_barbican_distro_packages:
 nova_compute_kvm_distro_packages:
   - libvirt-daemon-kvm
   - "qemu-kvm{% if ansible_distribution_major_version|int <= 7 %}-ev{% endif %}"
+  - libvirt-client
   - libvirt-python
   - nfs-utils
   - python-libguestfs

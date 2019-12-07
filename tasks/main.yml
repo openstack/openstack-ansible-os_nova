@@ -149,6 +149,7 @@
     _service_setup_host: "{{ nova_service_setup_host }}"
     _service_setup_host_python_interpreter: "{{ nova_service_setup_host_python_interpreter }}"
     _service_project_name: "{{ nova_service_project_name }}"
+    _service_region: "{{ nova_service_region }}"
     _service_users:
       - name: "{{ nova_service_user_name }}"
         password: "{{ nova_service_password }}"

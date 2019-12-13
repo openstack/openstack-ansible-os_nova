@@ -240,8 +240,8 @@ nova_novncproxy_base_url: "{{ nova_novncproxy_base_uri }}/vnc_lite.html"
 nova_novncproxy_vncserver_proxyclient_address: "{{ ansible_host }}"
 nova_novncproxy_vncserver_listen: "{{ ansible_host }}"
 nova_novncproxy_agent_enabled: True
-nova_novncproxy_git_repo: https://github.com/novnc/noVNC
-nova_novncproxy_git_install_branch: master
+nova_novncproxy_git_repo: "{{ novncproxy_git_repo | default('https://github.com/novnc/noVNC') }}"
+nova_novncproxy_git_install_branch: "{{ novncproxy_git_install_branch | default('master') }}"
 
 ## Nova serialconsole
 nova_serialconsoleproxy_proto: "ws"

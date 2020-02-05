@@ -84,9 +84,8 @@
 
 - name: Create nova dir
   file:
-    path: "{{ item.path | default(omit) }}"
+    path: "{{ item.path }}"
     src: "{{ item.src | default(omit) }}"
-    dest: "{{ item.dest | default(omit) }}"
     state: "{{ item.state | default('directory') }}"
     owner: "{{ item.owner|default(nova_system_user_name) }}"
     group: "{{ item.group|default(nova_system_group_name) }}"
@@ -104,7 +103,7 @@
     # NOTE(cloudnull): The "src" path is relative. This ensures all files remain
     #                  within the host/container confines when connecting to
     #                  them using the connection plugin or the root filesystem.
-    - dest: "/etc/nova"
+    - path: "/etc/nova"
       src: "{{ nova_bin | dirname | regex_replace('^/', '../') }}/etc/nova"
       state: link
       force: true

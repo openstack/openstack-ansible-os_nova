@@ -120,6 +120,7 @@ insecure = {{ keystone_service_internaluri_insecure | bool }}
 
 # Neutron
 [neutron]
+region_name = {{ nova_service_region }}
 auth_type = password
 default_floating_pool = public
 username = {{ nova_service_user_name }}
@@ -142,6 +143,7 @@ notification_format = {% if nova_versioned_notification_enabled %}both{% else %}
 {% endif %}
 
 [placement]
+region_name = {{ nova_service_region }}
 auth_type = password
 username = {{ nova_service_user_name }}
 password = {{ nova_service_password }}

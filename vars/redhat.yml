@@ -23,7 +23,6 @@ nova_distro_packages:
   - git
   - iptables
   - libxml2
-  - systemd-python
 
 nova_devel_distro_packages:
   - libxml2-devel
@@ -35,7 +34,7 @@ nova_service_distro_packages:
   - openstack-nova-scheduler
   - python-memcached
   - python2-PyMySQL
-  - systemd-devel
+  - systemd-python
 
 nova_service_extra_distro_packages:
   kvm:

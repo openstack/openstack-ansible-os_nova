@@ -68,8 +68,10 @@ nova_compute_oslomsg_amqp1_distro_packages:
 nova_compute_kvm_distro_packages:
   - libvirt-daemon
   - libvirt-daemon-system
+  - ovmf
   - python3-libvirt
   - qemu
+  - qemu-efi
   - qemu-utils
   - qemu-user
   - qemu-block-extra

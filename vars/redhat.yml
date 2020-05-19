@@ -51,6 +51,7 @@ nova_compute_packages:
   - dosfstools
   - genisoimage
   - kpartx
+  - nc
   - python-libguestfs
   - sysfsutils
 

@@ -52,6 +52,7 @@ nova_compute_packages:
   - genisoimage
   - kpartx
   - multipath-tools
+  - netcat-openbsd
   - nfs-common
   - open-iscsi
   - python3-guestfs

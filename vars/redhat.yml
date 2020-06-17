@@ -32,9 +32,9 @@ nova_service_distro_packages:
   - openstack-nova-api
   - openstack-nova-conductor
   - openstack-nova-scheduler
-  - python-memcached
-  - python2-PyMySQL
-  - systemd-python
+  - "{{ ansible_distribution_major_version is version('8', '<') | ternary('python-memcached', 'python3-memcached') }}"
+  - "{{ ansible_distribution_major_version is version('8', '<') | ternary('python2-PyMySQL', 'python3-PyMySQL') }}"
+  - "{{ ansible_distribution_major_version is version('8', '<') | ternary('systemd-python', 'python3-systemd') }}"
 
 nova_service_extra_distro_packages:
   kvm:
@@ -52,7 +52,7 @@ nova_compute_packages:
   - genisoimage
   - kpartx
   - nc
-  - python-libguestfs
+  - "{{ ansible_distribution_major_version is version('8', '<') | ternary('python-libguestfs', 'python3-libguestfs') }}"
   - sysfsutils
 
 nova_compute_barbican_distro_packages:

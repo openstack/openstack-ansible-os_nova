@@ -255,6 +255,7 @@ nova_libvirt_inject_partition: -2
 nova_libvirt_inject_password: False
 nova_libvirt_disk_cachemodes: '{{ nova_libvirt_images_rbd_pool is defined | ternary("network=writeback", "") }}'
 nova_libvirt_hw_disk_discard: '{{ nova_libvirt_images_rbd_pool is defined | ternary("unmap", "ignore") }}'
+nova_libvirt_live_migration_inbound_addr: '{{ (nova_management_address == "localhost") | ternary("127.0.0.1", nova_management_address) }}'
 
 ## Nova console
 nova_console_agent_enabled: True

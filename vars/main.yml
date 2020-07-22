@@ -18,8 +18,7 @@ nova_venv_packages: |-
   {%- if nova_oslomsg_amqp1_enabled | bool %}
   {%-   set _ = pkg_list.extend(nova_optional_oslomsg_amqp1_pip_packages) %}
   {%- endif %}
-  {%- if (nova_services['nova-novncproxy']['group'] in group_names) and
-         (nova_console_type == 'novnc') %}
+  {%- if (nova_console_type == 'novnc') %}
   {%-   set _ = pkg_list.extend(nova_novnc_pip_packages) %}
   {%- endif %}
   {%- if (nova_services['nova-compute']['group'] in group_names) %}

@@ -77,7 +77,7 @@ nova_compute_kvm_packages_to_symlink: |-
 
 nova_compute_kvm_pip_packages:
   - http://download.libguestfs.org/python/guestfs-1.40.2.tar.gz
-  - libvirt-python
+  - libvirt-python==6.6.0
 
 nova_compute_ksm_packages:
   - ksmtuned

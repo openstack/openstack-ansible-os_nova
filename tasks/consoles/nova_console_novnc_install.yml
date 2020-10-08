@@ -56,6 +56,7 @@
   notify:
     - Manage LB
     - Restart nova services
+    - Restart uwsgi services
   tags:
     - nova-novnc-git
 

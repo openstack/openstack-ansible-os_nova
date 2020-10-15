@@ -303,16 +303,18 @@ nova_reserved_host_disk_mb: 2048
 
 nova_scheduler_host_subset_size: 10
 nova_scheduler_max_attempts: 5
-nova_scheduler_default_filters: >-
-  AvailabilityZoneFilter,
-  ComputeFilter,
-  AggregateNumInstancesFilter,
-  AggregateIoOpsFilter,
-  ComputeCapabilitiesFilter,
-  ImagePropertiesFilter,
-  ServerGroupAntiAffinityFilter,
-  ServerGroupAffinityFilter,
-  NUMATopologyFilter
+nova_scheduler_default_filters:
+  - AvailabilityZoneFilter
+  - ComputeFilter
+  - AggregateNumInstancesFilter
+  - AggregateIoOpsFilter
+  - ComputeCapabilitiesFilter
+  - ImagePropertiesFilter
+  - ServerGroupAntiAffinityFilter
+  - ServerGroupAffinityFilter
+  - NUMATopologyFilter
+
+nova_scheduler_extra_filters: []
 
 # This should be tuned depending on the number of compute hosts present in the
 # deployment. Large clouds may wish to disable automatic discovery by setting

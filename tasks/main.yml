@@ -207,7 +207,7 @@
     name: ceph_client
   vars:
     openstack_service_system_user: "{{ nova_system_user_name }}"
-    openstack_service_venv_bin: "{{ nova_bin }}"
+    openstack_service_venv_bin: "{{ (nova_install_method == 'source') | ternary(nova_bin, '') }}"
   when:
     - nova_virt_type != 'ironic'
     - "nova_services['nova-compute']['group'] in group_names"

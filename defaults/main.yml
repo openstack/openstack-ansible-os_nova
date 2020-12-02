@@ -292,6 +292,10 @@ nova_network_services:
   calico:
     use_forwarded_for: True
     metadata_proxy_enabled: False
+  nsx:
+    use_forwarded_for: True
+    metadata_proxy_enabled: True
+    ovs_bridge: nsx-managed
 
 # Nova Scheduler
 nova_cpu_allocation_ratio: 2.0

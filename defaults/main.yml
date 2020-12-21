@@ -506,6 +506,20 @@ nova_vendor_data_overrides: {}
 nova_api_metadata_uwsgi_ini_overrides: {}
 nova_api_os_compute_uwsgi_ini_overrides: {}
 
+# Enabled vGPU Types - dict defining 'type' and 'address' (optional) of vGPU
+# an address is only required when supporting more than one physical GPU on the host
+# Example 1:
+# nova_enabled_vgpu_types:
+#   - type: nvidia-35
+#
+# Example 2:
+# nova_enabled_vgpu_types:
+#   - type: nvidia-35
+#     address: <device address>
+#   - type: nvidia-36
+#     address: <another device address>
+nova_enabled_vgpu_types: {}
+
 # PCI devices passthrough to nova
 # For SR-IOV please use:
 #   nova_pci_passthrough_whitelist: '{ "physical_network": "<ml2 network name>", "devname": "<physical nic>" }'

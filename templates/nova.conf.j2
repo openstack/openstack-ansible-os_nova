@@ -284,9 +284,14 @@ tracks_instance_changes = {{ nova_scheduler_tracks_instance_changes }}
 [upgrade_levels]
 compute=auto
 
-{% if enabled_vgpu_types is defined %}
+{% if nova_enabled_vgpu_types | length > 0 or discovered_vgpu_types is defined %}
 [devices]
-enabled_vgpu_types = {{ enabled_vgpu_types | join(',') }}
+enabled_vgpu_types = {{ nova_enabled_vgpu_types | map(attribute='type') | list | default(discovered_vgpu_types, true) | unique | join(',') }}
+
+{% for record in nova_enabled_vgpu_types | selectattr('address', 'defined') | list %}
+[vgpu_{{ record.type }}]
+device_addresses = {{ record.address }}
+{% endfor %}
 {% endif %}
 
 {% if nova_pci_passthrough_whitelist or nova_pci_alias %}

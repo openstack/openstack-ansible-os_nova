@@ -24,7 +24,7 @@
 
 - name: Register a fact for nova enabled_vgpu_types
   set_fact:
-    enabled_vgpu_types: "{{ mdev.stdout_lines | unique }}"
+    discovered_vgpu_types: "{{ mdev.stdout_lines | unique }}"
   when:
     - mdev.stdout_lines is defined
     - mdev.stdout_lines | length > 0

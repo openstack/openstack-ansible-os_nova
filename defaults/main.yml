@@ -380,7 +380,7 @@ nova_api_threads: "{{ [[ansible_processor_vcpus|default(2) // 2, 1] | max, nova_
 nova_service_in_ldap: false
 
 ## libvirtd config options
-nova_libvirtd_listen_tls: 1
+nova_libvirtd_listen_tls: 0
 nova_libvirtd_listen_tcp: 0
 nova_libvirtd_auth_tcp: sasl
 nova_libvirtd_debug_log_filters: "3:remote 4:event 3:json 3:rpc"

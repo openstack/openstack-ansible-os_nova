@@ -13,12 +13,37 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-- name: Restart libvirt-bin
+- name: Stop libvirt-bin
   service:
     name: "{{ libvirt_service_name }}"
     enabled: yes
-    state: "restarted"
-    daemon_reload: yes
+    state: "stopped"
+  listen:
+    - Restart libvirt-bin
+
+- name: Enable sockets when needed
+  service:
+    name: "{{ item.name | default(item) }}"
+    state: "{{ item.condition | default(False) | ternary('started', 'stopped') }}"
+    enabled: "{{ item.condition | default(False) }}"
+    masked: no
+  when:
+    - libvirtd_version is version('5.7', '>=')
+  with_items:
+    - name: libvirtd-tls.socket
+      condition: "{{ nova_libvirtd_listen_tls | bool }}"
+    - name: libvirtd-tcp.socket
+      condition: "{{ nova_libvirtd_listen_tcp | bool }}"
+  listen:
+    - Restart libvirt-bin
+
+- name: Start libvirt-bin
+  service:
+    name: "{{ libvirt_service_name }}"
+    enabled: yes
+    state: "started"
+  listen:
+    - Restart libvirt-bin
 
 - name: Stop services
   service:

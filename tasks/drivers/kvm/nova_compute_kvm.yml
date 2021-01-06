@@ -17,6 +17,25 @@
   tags:
     - nova-install
 
+- name: Check libvirtd version
+  command: "libvirtd --version"
+  register: _libvirtd_version_cmd
+  changed_when: false
+  tags:
+    - nova-install
+    - nova-config
+    - nova-kvm
+    - nova-libvirt
+
+- name: Set libvirtd version
+  set_fact:
+    libvirtd_version: "{{ _libvirtd_version_cmd['stdout'].split()[-1] }}"
+  tags:
+    - nova-install
+    - nova-config
+    - nova-kvm
+    - nova-libvirt
+
 - name: Set nested kvm virt
   copy:
     src: kvm.conf
@@ -81,14 +100,30 @@
     - nova-kvm
     - nova-libvirt
 
-- name: Set libvirt runtime options when listening on tcp (Ubuntu)
+- name: Set libvirt runtime options (Ubuntu)
   lineinfile:
     dest: "/etc/default/libvirtd"
     line: 'libvirtd_opts="-l"'
     regexp: "^libvirtd_opts="
     backup: "yes"
   when:
-    - nova_libvirtd_listen_tcp == 1
+    - (nova_libvirtd_listen_tcp == 1) or (nova_libvirtd_listen_tls == 1)
+    - libvirtd_version is version('5.7', '<')
+    - ansible_pkg_mgr == 'apt'
+  notify: Restart libvirt-bin
+  tags:
+    - nova-config
+    - nova-kvm
+    - nova-libvirt
+
+- name: Unset libvirt runtime options (Ubuntu)
+  lineinfile:
+    dest: "/etc/default/libvirtd"
+    line: 'libvirtd_opts=""'
+    regexp: "^libvirtd_opts="
+    backup: "yes"
+  when:
+    - (nova_libvirtd_listen_tcp == 0 and nova_libvirtd_listen_tls == 0) or libvirtd_version is version('5.7', '>=')
     - ansible_pkg_mgr == 'apt'
   notify: Restart libvirt-bin
   tags:
@@ -103,7 +138,8 @@
     regexp: "^(#)?LIBVIRTD_ARGS=*"
     backup: "yes"
   when:
-    - nova_libvirtd_listen_tcp == 1
+    - (nova_libvirtd_listen_tcp == 1) or (nova_libvirtd_listen_tls == 1)
+    - libvirtd_version is version('5.7', '<')
     - ansible_pkg_mgr in ['yum', 'dnf', 'zypper']
   notify: Restart libvirt-bin
   tags:
@@ -111,14 +147,14 @@
     - nova-kvm
     - nova-libvirt
 
-- name: Set libvirt runtime options (RPM)
+- name: Unset libvirt runtime options (RPM)
   lineinfile:
     dest: "/etc/sysconfig/libvirtd"
     line: 'LIBVIRTD_ARGS=""'
     regexp: "^(#)?LIBVIRTD_ARGS=*"
     backup: "yes"
   when:
-    - nova_libvirtd_listen_tcp == 0
+    - (nova_libvirtd_listen_tcp == 0 and nova_libvirtd_listen_tls == 0) or libvirtd_version is version('5.7', '>=')
     - ansible_pkg_mgr in ['yum', 'dnf', 'zypper']
   notify: Restart libvirt-bin
   tags:

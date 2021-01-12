@@ -31,7 +31,7 @@
   vars:
     apt_package_pinning_file_name: "qemu_backports.pref"
     apt_package_pinning_priority: "1000"
-    apt_pinned_packages: [{ package: 'qemu*', release: 'Debian Backports' }]
+    apt_pinned_packages: [{ package: "{{ nova_backports_packages | join(' ') }}", release: 'Debian Backports' }]
   when:
     - ansible_distribution | lower == 'debian'
 

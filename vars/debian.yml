@@ -86,3 +86,13 @@ nova_compute_kvm_packages_to_symlink:
 
 nova_compute_ksm_packages:
   - ksmtuned
+
+nova_backports_packages:
+  - qemu*
+  - liburing1
+  - libfdt1
+  - libpmem1
+  - libslirp0
+  - libdaxctl1
+  - libndctl6
+  - libudev1

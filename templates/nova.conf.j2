@@ -238,7 +238,7 @@ cpu_mode = {{ nova_cpu_mode }}
 rbd_user = {{ nova_ceph_client }}
 rbd_secret_uuid = {{ nova_ceph_client_uuid }}
 {% endif %}
-{% if nova_libvirt_images_rbd_pool | bool %}
+{% if nova_libvirt_images_rbd_pool | length > 0 %}
 images_type = rbd
 images_rbd_pool = {{ nova_libvirt_images_rbd_pool }}
 images_rbd_ceph_conf = /etc/ceph/ceph.conf

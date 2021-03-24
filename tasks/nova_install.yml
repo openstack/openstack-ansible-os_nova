@@ -34,6 +34,12 @@
     apt_pinned_packages: [{ package: "{{ nova_backports_packages | join(' ') }}", release: 'Debian Backports' }]
   when:
     - ansible_distribution | lower == 'debian'
+  args:
+    apply:
+      tags:
+        - nova-install
+  tags:
+    - always
 
 - name: Install distro packages
   package:
@@ -92,10 +98,14 @@
         nova_services['nova-spicehtml5proxy']['group'] in group_names or
         nova_services['nova-serialconsole-proxy']['group'] in group_names"
     - "nova_console_type != 'serialconsole'"
+  args:
+    apply:
+      tags:
+        - nova-install
+        - nova-novnc-console
+        - nova-spice-console
   tags:
-    - nova-install
-    - nova-novnc-console
-    - nova-spice-console
+    - always
 
 - name: Populate service facts
   service_facts:

@@ -14,8 +14,12 @@
 # limitations under the License.
 
 - include_tasks: "drivers/{{ nova_virt_type }}/nova_compute_{{ nova_virt_type }}.yml"
+  args:
+    apply:
+      tags:
+        - nova-install
   tags:
-    - nova-install
+    - always
 
 - import_tasks: nova_compute_key_populate.yml
   tags:
@@ -51,5 +55,9 @@
   with_items: "{{ nova_nfs_client }}"
   loop_control:
     loop_var: mount_var
+  args:
+    apply:
+      tags:
+        - nova-config
   tags:
-    - nova-config
+    - always

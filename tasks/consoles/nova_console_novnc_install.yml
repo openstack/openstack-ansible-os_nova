@@ -64,7 +64,11 @@
   when:
     - nova_console_user_ssl_cert is defined
     - nova_console_user_ssl_key is defined
+  args:
+    apply:
+      tags:
+        - nova-novnc
+        - nova-novnc-ssl
+        - nova-config
   tags:
-    - nova-novnc
-    - nova-novnc-ssl
-    - nova-config
+    - always

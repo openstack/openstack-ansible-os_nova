@@ -13,7 +13,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-- include_tasks: nova_compute_kvm_install.yml
+- import_tasks: nova_compute_kvm_install.yml
   tags:
     - nova-install
 
@@ -70,6 +70,14 @@
   when:
     - ansible_distribution == 'Ubuntu'
     - nova_libvirt_inject_key | bool or nova_libvirt_inject_password | bool
+  args:
+    apply:
+      tags:
+        - nova-config
+        - nova-kvm
+        - nova-libvirt
+  tags:
+    - always
 
 - name: Set libvirtd config
   template:
@@ -179,16 +187,24 @@
 - include_tasks: nova_disable_smt.yml
   when:
     - ansible_architecture == 'ppc64le'
+  args:
+    apply:
+      tags:
+        - nova-config
   tags:
-    - nova-config
+    - always
 
 - include_tasks: nova_enable_ksm.yml
   when:
     - nova_compute_ksm_enabled | bool
+  args:
+    apply:
+      tags:
+        - nova-config
   tags:
-    - nova-config
+    - always
 
-- include_tasks: nova_compute_kvm_virsh_net_remove.yml
+- import_tasks: nova_compute_kvm_virsh_net_remove.yml
   tags:
     - nova-config
     - nova-kvm

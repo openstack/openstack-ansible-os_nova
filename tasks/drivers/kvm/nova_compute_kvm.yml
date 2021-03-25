@@ -13,9 +13,13 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-- import_tasks: nova_compute_kvm_install.yml
+- include_tasks: nova_compute_kvm_install.yml
+  args:
+    apply:
+      tags:
+        - nova-install
   tags:
-    - nova-install
+    - always
 
 - name: Check libvirtd version
   command: "libvirtd --version"
@@ -204,12 +208,20 @@
   tags:
     - always
 
-- import_tasks: nova_compute_kvm_virsh_net_remove.yml
+- include_tasks: nova_compute_kvm_virsh_net_remove.yml
+  args:
+    apply:
+      tags:
+        - nova-config
+        - nova-kvm
+        - nova-libvirt
+        - nova-kvm-virsh-net
   tags:
     - nova-config
     - nova-kvm
     - nova-libvirt
     - nova-kvm-virsh-net
+    - always
 
 # NOTE(mnaser): These 2 tasks should disappear once the following bug is fixed
 #               https://bugs.launchpad.net/nova/+bug/1825386

@@ -35,7 +35,7 @@
   register: existing_dir_cleanup
   changed_when: existing_dir_cleanup.rc == 2
   failed_when: existing_dir_cleanup.rc not in [0,2]
-  when: nova_install_method == 'source'
+  when: nova_install_method == 'source' or ansible_facts['os_family'] | lower == 'redhat'
   tags:
     - nova-spice-git
 
@@ -52,7 +52,7 @@
   until: git_clone is success
   retries: 5
   delay: 2
-  when: nova_install_method == 'source'
+  when: nova_install_method == 'source' or ansible_facts['os_family'] | lower == 'redhat'
   notify:
     - Manage LB
     - Restart nova services

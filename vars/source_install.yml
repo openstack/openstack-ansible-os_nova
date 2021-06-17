@@ -27,6 +27,9 @@ nova_package_list: |-
   {%     if nova_compute_ksm_enabled %}
   {%       set _ = packages.extend(nova_compute_ksm_packages) %}
   {%     endif %}
+  {%     if 'libvirt_devel' in nova_compute_kvm_distro_packages %}
+  {%       set _ = packages.extend(['gcc']) %}
+  {%     endif %}
   {%   endif %}
   {%   if nova_barbican_enabled | bool %}
   {%     set _ = packages.extend(nova_compute_barbican_distro_packages) %}

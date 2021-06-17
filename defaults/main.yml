@@ -231,8 +231,8 @@ nova_spice_html5proxy_base_port: 6082
 nova_spice_html5proxy_base_uri: "{{ nova_spice_html5proxy_base_proto }}://{{ external_lb_vip_address }}:{{ nova_spice_html5proxy_base_port }}"
 nova_spice_html5proxy_base_url: "{{ nova_spice_html5proxy_base_uri }}/spice_auto.html"
 nova_spice_console_agent_enabled: "{{ ansible_architecture != 'aarch64' }}"
-nova_spicehtml5_git_repo: https://gitlab.freedesktop.org/spice/spice-html5.git
-nova_spicehtml5_git_install_branch: master
+nova_spicehtml5_git_repo: "{{ spicehtml5_git_repo | default('https://gitlab.freedesktop.org/spice/spice-html5.git') }}"
+nova_spicehtml5_git_install_branch: "{{ spicehtml5_git_install_branch | default('master') }}"
 
 ## Nova novnc
 nova_novncproxy_proto: "{{ openstack_service_publicuri_proto | default('http') }}"

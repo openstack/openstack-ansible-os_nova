@@ -63,7 +63,7 @@ nova_bin: "{{ _nova_bin }}"
 ## Nova user information
 nova_system_user_name: nova
 nova_system_group_name: nova
-nova_system_shell: "{{ (nova_libvirtd_listen_tls | bool) | ternary('/bin/false', '/bin/bash') }}"
+nova_system_shell: /bin/bash
 nova_system_comment: nova system user
 nova_system_home_folder: "/var/lib/{{ nova_system_user_name }}"
 nova_system_slice_name: nova

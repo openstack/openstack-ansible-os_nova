@@ -1,8 +1,0 @@
----
-upgrade:
-  - |
-    From now on ``nova_system_shell`` depends on the value of
-    nova_libvirtd_listen_tls by default. When libvirt listens on tls we
-    assume that tunnelled migration is not used, so nova user does not
-    need shell access and it will be disabled. When nova_libvirtd_listen_tls
-    is disabled, ``nova_system_shell`` will be set to /bin/bash

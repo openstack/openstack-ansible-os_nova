@@ -27,8 +27,6 @@
       tags:
         - nova-config
         - nova-key
-  when:
-    - nova_libvirtd_listen_tls == 0
 
 - include_tasks: nova_compute_key_distribute.yml
   args:
@@ -36,8 +34,6 @@
       tags:
         - nova-config
         - nova-key
-  when:
-   - nova_libvirtd_listen_tls == 0
 
 - name: Run the systemd mount role
   include_role:

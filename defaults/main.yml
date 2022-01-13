@@ -432,7 +432,7 @@ nova_services:
   nova-api-os-compute:
     group: nova_api_os_compute
     service_name: nova-api-os-compute
-    init_config_overrides: "{{ {'Install': {'Alias': 'nova-api.service'}} | combine(nova_api_os_compute_init_overrides) }}"
+    init_config_overrides: "{{ {'Install': {'Alias': 'nova-api.service'}} | combine(nova_api_os_compute_init_overrides, recursive=True) }}"
     start_order: 4
     wsgi_app: True
     uwsgi_overrides: "{{ nova_api_os_compute_uwsgi_ini_overrides }}"
@@ -474,7 +474,7 @@ nova_services:
   nova-spicehtml5proxy:
     group: nova_console
     service_name: nova-spicehtml5proxy
-    init_config_overrides: "{{ {'Install': {'Alias': 'nova-spiceproxy.service'}} | combine(nova_spicehtml5proxy_init_overrides) }}"
+    init_config_overrides: "{{ {'Install': {'Alias': 'nova-spiceproxy.service'}} | combine(nova_spicehtml5proxy_init_overrides, recursive=True) }}"
     condition: "{{ nova_console_type == 'spice' }}"
     start_order: 5
     execstarts: "{{ nova_bin }}/nova-spicehtml5proxy"

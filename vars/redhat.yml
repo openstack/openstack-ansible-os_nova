@@ -16,7 +16,9 @@
 nova_qemu_user: qemu
 nova_qemu_group: qemu
 libvirt_group: libvirt
-libvirt_service_name: libvirtd
+libvirt_service_name:
+  - libvirtd.socket
+  - libvirtd.service
 
 # Common yum packages
 nova_distro_packages:

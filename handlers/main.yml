@@ -15,12 +15,14 @@
 
 - name: Stop libvirt-bin
   service:
-    name: "{{ libvirt_service_name }}"
+    name: "{{ item }}"
     enabled: yes
     state: "stopped"
   listen:
     - Restart libvirt-bin
     - "cert installed"
+  with_items:
+    - "{{ libvirt_service_name }}"
   when:
     - "'nova_compute' in group_names"
     - nova_virt_type != 'ironic'
@@ -43,9 +45,11 @@
 
 - name: Start libvirt-bin
   service:
-    name: "{{ libvirt_service_name }}"
+    name: "{{ item }}"
     enabled: yes
     state: "started"
+  with_items:
+    - "{{ libvirt_service_name }}"
   listen:
     - Restart libvirt-bin
     - "cert installed"

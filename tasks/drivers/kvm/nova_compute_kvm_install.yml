@@ -15,8 +15,9 @@
 
 - name: Make sure libvirt is started
   service:
-    name: "{{ libvirt_service_name }}"
+    name: "{{ item }}"
     state: "started"
+  with_items: "{{ libvirt_service_name }}"
 
 - name: Check the state of the default qemu save directory
   stat:

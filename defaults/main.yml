@@ -252,6 +252,9 @@ nova_metadata_port: 8775
 ## Nova compute
 nova_nested_virt_enabled: False
 
+## Nova usage from placement
+nova_count_usage_from_placement: False
+
 # Uwsgi settings
 nova_wsgi_processes_max: 16
 nova_wsgi_processes: "{{ [[ansible_facts['processor_vcpus']|default(1), 1] | max * 2, nova_wsgi_processes_max] | min }}"

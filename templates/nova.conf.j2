@@ -165,6 +165,9 @@ project_domain_id = {{ nova_service_project_domain_id }}
 auth_url = {{ keystone_service_adminurl }}
 insecure = {{ keystone_service_adminuri_insecure | bool }}
 
+[quota]
+count_usage_from_placement = {{ nova_count_usage_from_placement | bool }}
+
 [conductor]
 workers = {{ nova_conductor_workers | default(nova_api_threads) }}
 

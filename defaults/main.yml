@@ -114,6 +114,9 @@ nova_cell1_name: "cell1"
 
 ## Oslo Messaging
 
+# RabbitMQ
+nova_oslomsg_heartbeat_in_pthread: "{{ oslomsg_heartbeat_in_pthread | default(_nova_oslomsg_heartbeat_in_pthread) }}"
+
 # RPC
 nova_oslomsg_rpc_host_group: "{{ oslomsg_rpc_host_group | default('rabbitmq_all') }}"
 nova_oslomsg_rpc_setup_host: "{{ (nova_oslomsg_rpc_host_group in groups) | ternary(groups[nova_oslomsg_rpc_host_group][0], 'localhost') }}"

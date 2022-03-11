@@ -57,6 +57,10 @@ topics = {{ notification_topics | join(',') }}
 driver = {{ (notification_topics | length > 0) | ternary('messagingv2', 'noop') }}
 transport_url = {{ nova_oslomsg_notify_transport }}://{% for host in nova_oslomsg_notify_servers.split(',') %}{{ nova_oslomsg_notify_userid }}:{{ nova_oslomsg_notify_password }}@{{ host }}:{{ nova_oslomsg_notify_port }}{% if not loop.last %},{% else %}/{{ nova_oslomsg_notify_vhost }}{% if nova_oslomsg_notify_use_ssl | bool %}?ssl=1&ssl_version={{ nova_oslomsg_notify_ssl_version }}&ssl_ca_file={{ nova_oslomsg_notify_ssl_ca_file }}{% else %}?ssl=0{% endif %}{% endif %}{% endfor %}
 
+# Messaging
+[oslo_messaging_rabbit]
+heartbeat_in_pthread = {{ nova_oslomsg_heartbeat_in_pthread }}
+
 # Image cache
 [image_cache]
 manager_interval = {{ nova_image_cache_manager_interval }}

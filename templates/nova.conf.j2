@@ -273,6 +273,11 @@ hw_disk_discard = {{ nova_libvirt_hw_disk_discard }}
 disk_cachemodes = {{ nova_libvirt_disk_cachemodes }}
 {% endif %}
 
+{% if (neutron_plugin_type == "ml2.ovs") | default(False) %}
+[os_vif_ovs]
+isolate_vif = True
+{% endif %}
+
 {% if nova_barbican_enabled %}
 [barbican]
 auth_endpoint = {{ keystone_service_internaluri }}/v3

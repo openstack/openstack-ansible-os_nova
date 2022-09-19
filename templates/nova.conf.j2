@@ -114,7 +114,7 @@ vencrypt_ca_certs={{ nova_vencrypt_ca_certs }}
 enabled = True
 # Console Url and binds
 base_url= {{ nova_serialconsoleproxy_base_url }}
-proxyclient_address = {% if nova_management_address == 'localhost' %}127.0.0.1{% else %}{{ nova_management_address }}{% endif %}
+proxyclient_address = {% if nova_management_address == 'localhost' +%}127.0.0.1{% else +%}{{ nova_management_address }}{% endif +%}
 port_range = {{ nova_serialconsoleproxy_port_range }}
 {% if nova_services['nova-serialconsole-proxy']['group'] %}
 serialproxy_host= {{ nova_serialconsoleproxy_serialconsole_proxyserver_proxyclient_address }}

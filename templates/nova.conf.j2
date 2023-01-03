@@ -136,6 +136,7 @@ enabled = False
 [glance]
 insecure = {{ keystone_service_internaluri_insecure | bool }}
 {% if nova_glance_rbd_inuse | bool %}
+enable_rbd_download = True
 rbd_user = {{ nova_ceph_client }}
 rbd_pool = {{ nova_glance_images_rbd_pool }}
 rbd_ceph_conf = /etc/ceph/ceph.conf

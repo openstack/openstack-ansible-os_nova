@@ -78,6 +78,7 @@ memcache_servers = {{ nova_cache_servers }}
 [cinder]
 catalog_info = volumev3:cinderv3:internalURL
 os_region_name = {{ nova_service_region }}
+auth_section = keystone_authtoken
 
 {% if nova_console_type == 'spice' %}
 [spice]

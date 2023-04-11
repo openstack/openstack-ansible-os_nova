@@ -70,6 +70,7 @@
     - "Restart nova services"
     - "venv changed"
     - "cert installed"
+    - "systemd service changed"
 
 - name: Start services
   service:
@@ -86,3 +87,4 @@
     - "Restart nova services"
     - "venv changed"
     - "cert installed"
+    - "systemd service changed"

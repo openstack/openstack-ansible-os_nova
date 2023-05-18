@@ -179,6 +179,17 @@ insecure = {{ keystone_service_adminuri_insecure | bool }}
 [conductor]
 workers = {{ nova_conductor_workers | default(nova_api_threads) }}
 
+[service_user]
+send_service_user_token = {{ nova_service_token_roles_required | bool }}
+region_name = {{ nova_service_region }}
+auth_type = password
+username = {{ nova_service_user_name }}
+password = {{ nova_service_password }}
+project_name = {{ nova_service_project_name }}
+user_domain_id = {{ nova_service_user_domain_id }}
+project_domain_id = {{ nova_service_project_domain_id }}
+auth_url = {{ keystone_service_adminurl }}
+insecure = {{ keystone_service_adminuri_insecure | bool }}
 
 [keystone_authtoken]
 insecure = {{ keystone_service_internaluri_insecure | bool }}
@@ -283,6 +294,7 @@ isolate_vif = True
 {% if nova_barbican_enabled %}
 [barbican]
 auth_endpoint = {{ keystone_service_internaluri }}/v3
+send_service_user_token = {{ nova_service_token_roles_required | bool }}
 
 [key_manager]
 backend = barbican

@@ -133,6 +133,7 @@ enabled = False
 
 # Glance
 [glance]
+region_name = {{ nova_service_region }}
 insecure = {{ keystone_service_internaluri_insecure | bool }}
 {% if nova_glance_rbd_inuse | bool %}
 enable_rbd_download = True

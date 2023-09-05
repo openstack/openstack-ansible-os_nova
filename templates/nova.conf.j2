@@ -348,11 +348,11 @@ device_addresses = {{ (record.address is string) | ternary(record.address, recor
 {% endfor %}
 {% endif %}
 
-{% if nova_pci_passthrough_whitelist or nova_pci_alias %}
+{% if nova_device_spec or nova_pci_alias %}
 [pci]
-{% if nova_pci_passthrough_whitelist %}
+{% if nova_device_spec %}
 # White list of PCI devices available to VMs.
-passthrough_whitelist = {{ nova_pci_passthrough_whitelist }}
+device_spec = {{ nova_device_spec }}
 {% endif %}
 {% if nova_pci_alias %}
 # PCI Alias

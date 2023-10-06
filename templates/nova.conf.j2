@@ -302,6 +302,9 @@ disk_cachemodes = {{ nova_libvirt_disk_cachemodes }}
 auth_endpoint = {{ keystone_service_internaluri }}/v3
 send_service_user_token = {{ nova_service_token_roles_required | bool }}
 
+[barbican_service_user]
+auth_section = service_user
+
 [key_manager]
 backend = barbican
 auth_type = "password"

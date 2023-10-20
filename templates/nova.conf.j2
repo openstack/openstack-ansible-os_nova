@@ -294,6 +294,7 @@ isolate_vif = True
 
 {% if nova_barbican_enabled %}
 [barbican]
+barbican_endpoint_type = internal
 auth_endpoint = {{ keystone_service_internaluri }}/v3
 send_service_user_token = {{ nova_service_token_roles_required | bool }}
 

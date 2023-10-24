@@ -84,7 +84,7 @@
             Unit: "nova-archive-deleted.service"
       - service_name: "nova-purge-deleted"
         execstarts:
-          - /bin/sh -c "{{ _db_nova_bin }}/nova-manage db purge --until-complete --all-cells --before \"$(date -d '{{ nova_purge_deleted_before }}' +'%%Y-%%m-%%d %%H:%%M')\""
+          - /bin/sh -c "{{ _db_nova_bin }}/nova-manage db purge --all-cells --before \"$(date -d '{{ nova_purge_deleted_before }}' +'%%Y-%%m-%%d %%H:%%M')\""
         environment:
           UMASK: '0640'
           UMASK_DIR: '0750'

@@ -13,16 +13,16 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-- name: Check for libvirt default network
-  shell: "virsh net-list | awk '/default/'"
+- name: Get information about libvirt default network
+  command: "virsh net-info default"
   changed_when: false
-  register: default_net
+  failed_when: (default_net_info.rc != 0) and ('Network not found' not in default_net_info.stderr)
+  register: default_net_info
 
 - name: Disable libvirt default network
   command: "virsh net-autostart default --disable"
-  failed_when: false
-  when: default_net.stdout.find('default') != -1
+  when: default_net_info.stdout | regex_search('Autostart:\s+yes')
 
 - name: Destroy libvirt default network
   command: "virsh net-destroy default"
-  when: default_net.stdout.find('default') != -1
+  when: default_net_info.stdout | regex_search('Active:\s+yes')

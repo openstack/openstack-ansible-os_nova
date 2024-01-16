@@ -313,7 +313,7 @@
   when:
     - nova_virt_type != 'ironic'
     - nova_services['nova-compute']['group'] in group_names
-    - (nova_rbd_inuse | bool) or (nova_glance_rbd_inuse | bool)
+    - (nova_rbd_inuse | bool) or (nova_glance_rbd_inuse | bool) or (nova_cinder_rbd_inuse | bool)
   tags:
     - always
 

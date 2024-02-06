@@ -84,8 +84,6 @@
     owner: "root"
     group: "root"
     mode: "0600"
-  when:
-    - _nova_qemu_conf | length > 0
   notify: Restart libvirt-bin
   tags:
     - nova-config

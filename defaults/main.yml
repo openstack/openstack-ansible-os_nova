@@ -565,11 +565,10 @@ nova_api_os_compute_uwsgi_ini_overrides: {}
 nova_enabled_mdev_types: "{{ nova_enabled_vgpu_types | default({}) }}"
 
 # PCI devices passthrough to nova
-# For SR-IOV please use:
-#   nova_device_spec: '{ "physical_network": "<ml2 network name>", "devname": "<physical nic>" }'
-#   Example:
-#     nova_device_spec: '{ "physical_network": "physnet1", "devname": "p1p1" }'
-nova_device_spec: "{{ nova_pci_passthrough_whitelist | default({}) }}"
+# Example:
+# nova_device_spec:
+#   - '{ "physical_network": "physnet1", "devname": "p1p1" }'
+nova_device_spec: "{{ nova_pci_passthrough_whitelist | default([]) }}"
 
 # PCI alias,
 # Example:

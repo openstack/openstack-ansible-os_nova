@@ -33,7 +33,7 @@ enabled_apis = {{ nova_enabled_apis }}
 transport_url = {{ nova_oslomsg_rpc_transport }}://{% for host in nova_oslomsg_rpc_servers.split(',') %}{{ nova_oslomsg_rpc_userid }}:{{ nova_oslomsg_rpc_password }}@{{ host }}:{{ nova_oslomsg_rpc_port }}{% if not loop.last %},{% else %}/{{ nova_oslomsg_rpc_vhost }}{% if nova_oslomsg_rpc_use_ssl | bool %}?ssl=1&ssl_version={{ nova_oslomsg_rpc_ssl_version }}&ssl_ca_file={{ nova_oslomsg_rpc_ssl_ca_file }}{% else %}?ssl=0{% endif %}{% endif %}{% endfor %}
 
 # Network
-my_ip = {% if nova_management_address == 'localhost' %}127.0.0.1{% else %}{{ nova_management_address }}{% endif %}
+my_ip = {{ _nova_my_ip }}
 
 # Hypervisor
 default_ephemeral_format = ext4
@@ -86,12 +86,9 @@ agent_enabled = {{ nova_spice_console_agent_enabled }}
 enabled = True
 # Console Url and binds
 html5proxy_base_url = {{ nova_spice_html5proxy_base_url }}
-html5proxy_host = {% if nova_management_address == 'localhost' %}127.0.0.1{% else %}{{ nova_management_address }}{% endif %}
-
-server_listen = {% if nova_management_address == 'localhost' %}127.0.0.1{% else %}{{ nova_management_address }}{% endif %}
-
-server_proxyclient_address = {% if nova_management_address == 'localhost' %}127.0.0.1{% else %}{{ nova_management_address }}{% endif %}
-
+html5proxy_host = {{ _nova_my_ip }}
+server_listen = {{ _nova_my_ip }}
+server_proxyclient_address = {{ _nova_my_ip }}
 
 [vnc]
 enabled = False
@@ -117,7 +114,7 @@ vencrypt_ca_certs={{ nova_vencrypt_ca_certs }}
 enabled = True
 # Console Url and binds
 base_url= {{ nova_serialconsoleproxy_base_url }}
-proxyclient_address = {% if nova_management_address == 'localhost' +%}127.0.0.1{% else +%}{{ nova_management_address }}{% endif +%}
+proxyclient_address = {{ _nova_my_ip }}
 port_range = {{ nova_serialconsoleproxy_port_range }}
 {% if nova_services['nova-serialconsole-proxy']['group'] %}
 serialproxy_host= {{ nova_serialconsoleproxy_serialconsole_proxyserver_proxyclient_address }}

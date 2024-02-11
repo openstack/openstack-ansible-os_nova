@@ -112,6 +112,8 @@ nova_core_files:
     group: "{{ nova_system_group_name }}"
     mode: "0640"
 
+_nova_my_ip: "{{ (nova_management_address == 'localhost') | ternary('127.0.0.1', nova_management_address) }}"
+
 _nova_scheduler_filters: |-
   {% set default_filters = nova_scheduler_default_filters %}
   {% if default_filters is not iterable and default_filters is string %}

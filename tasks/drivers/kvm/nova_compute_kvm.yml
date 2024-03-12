@@ -135,6 +135,23 @@
     - nova-kvm
     - nova-libvirt
 
+- name: Set apparmor config (Ubuntu/Debian)
+  lineinfile:
+    dest: "/etc/apparmor.d/local/usr.lib.libvirt.virt-aa-helper"
+    line: "  {{ nova_system_home_folder }}/instances/_base/* r,"
+    backup: true
+    create: true
+    owner: "root"
+    group: "root"
+    mode: "0644"
+  when:
+    - ansible_facts['distribution'] == 'Ubuntu' or ansible_facts['distribution'] == 'Debian'
+  notify: Reload apparmor profile
+  tags:
+    - nova-config
+    - nova-kvm
+    - nova-libvirt
+
 - name: Including nova_disable_smt tasks
   include_tasks: nova_disable_smt.yml
   when:

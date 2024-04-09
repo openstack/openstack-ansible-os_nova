@@ -19,32 +19,56 @@
   become_user: "{{ nova_system_user_name }}"
   changed_when: false
 
+# We need to check for existance of the cell, since nova-manage cell_v2 create_cell
+# might be not idempotent due to the bug https://bugs.launchpad.net/nova/+bug/1923899
+- name: Get UUID of Nova Cells
+  command: "{{ nova_bin }}/nova-manage cell_v2 list_cells"
+  become: yes
+  become_user: "{{ nova_system_user_name }}"
+  changed_when: false
+  register: _cell_list
+
+- name: Set cell facts
+  set_fact:
+    _cell0_record: '{{ _cell_list.stdout_lines | select("regex", "[0-]{36}") }}'
+    _cell1_record: '{{ _cell_list.stdout_lines | select("regex", " " ~ nova_cell1_name ~ " ") }}'
+
 # This is idempotent and therefore safe for greenfield
 # and brownfield installations.
+# Though since we anyway need to fetch cell records - let's run
+# it conditionally.
 - name: Create the cell0 mapping entry in the nova API DB
   command: >-
     {{ nova_bin }}/nova-manage cell_v2 map_cell0
       --database_connection mysql+pymysql://{{ nova_api_galera_user }}:{{ nova_api_container_mysql_password }}@{{ nova_api_galera_address }}/{{
-        nova_cell0_database }}?charset=utf8{% if nova_galera_use_ssl | bool %}&ssl_ca={{ nova_galera_ssl_ca_cert }}{% endif %}
+        nova_cell0_database }}?charset=utf8{% if nova_galera_use_ssl | bool %}&ssl_verify_cert=true{%
+          if nova_galera_ssl_ca_cert | length > 0 %}&ssl_ca={{ nova_galera_ssl_ca_cert }}{% endif %}{% endif %}
   become: yes
   become_user: "{{ nova_system_user_name }}"
   changed_when: false
+  when:
+    - not _cell0_record
+
+- name: Update the cell0 mapping entry in the nova API DB
+  command: >-
+    {{ nova_bin }}/nova-manage cell_v2 update_cell --cell_uuid 00000000-0000-0000-0000-000000000000
+      --database_connection mysql+pymysql://{{ nova_api_galera_user }}:{{ nova_api_container_mysql_password }}@{{ nova_api_galera_address }}/{{
+        nova_cell0_database }}?charset=utf8{% if nova_galera_use_ssl | bool %}&ssl_verify_cert=true{%
+          if nova_galera_ssl_ca_cert | length > 0 %}&ssl_ca={{ nova_galera_ssl_ca_cert }}{% endif %}{% endif %}
+      --transport-url 'none:/'
+  become: yes
+  become_user: "{{ nova_system_user_name }}"
+  changed_when: false
+  when:
+    - _cell0_record | length > 0
+    - ('ssl_verify_cert' not in _cell0_record[0] and nova_galera_use_ssl) or
+      ('ssl_verify_cert' in _cell0_record[0] and not nova_galera_use_ssl)
 
 - name: Synchronize the nova DB schema
   command: "{{ nova_bin }}/nova-manage db sync"
   become: yes
   become_user: "{{ nova_system_user_name }}"
   changed_when: false
-
-# We need to check for existance of the cell, since nova-manage cell_v2 create_cell
-# might be not idempotent due to the bug https://bugs.launchpad.net/nova/+bug/1923899
-- name: Get UUID of new Nova Cell
-  shell: "{{ nova_bin }}/nova-manage cell_v2 list_cells | grep ' {{ nova_cell1_name }} '"
-  become: yes
-  become_user: "{{ nova_system_user_name }}"
-  changed_when: false
-  failed_when: false
-  register: _cell_uuid
 
 - name: Create the cell1 mapping entry in the nova API DB
   command: >-
@@ -66,12 +90,13 @@
   #    because of the bug https://bugs.launchpad.net/nova/+bug/1923899
   failed_when: "nova_cell1_create.rc not in [0, 2]"
   changed_when: "nova_cell1_create.rc == 0"
-  when: "_cell_uuid.rc == 1"
+  when:
+    - not _cell1_record
 
 - name: "Change the template for cell {{ nova_cell1_name }}"
   command: >-
     {{ nova_bin }}/nova-manage cell_v2 update_cell
-      --cell_uuid {{ _cell_uuid['stdout'].split()[3] }}
+      --cell_uuid {{ _cell1_record[0].split()[3] }}
       --database_connection {scheme}://{username}:{password}@{hostname}:{port}/{path}?{query}
       --transport-url {scheme}://{username}:{password}@{hostname}:{port}/{{ (
           not nova_oslomsg_rabbit_quorum_queues | bool) | ternary('/{path}', '{path}') }}?{query}
@@ -79,8 +104,8 @@
   become_user: "{{ nova_system_user_name }}"
   changed_when: false
   when:
-    - "_cell_uuid.rc == 0"
-    - (nova_oslomsg_rpc_port ~ '/' ~ _nova_oslomsg_rpc_vhost_conf) not in _cell_uuid.stdout
+    - _cell1_record | length > 0
+    - (nova_oslomsg_rpc_port ~ '/' ~ _nova_oslomsg_rpc_vhost_conf) not in _cell1_record[0]
 
 # The nova-status upgrade check command is typically run after upgrading the
 # controller services to new code, but is also OK to run for a greenfield

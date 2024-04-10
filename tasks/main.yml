@@ -139,7 +139,7 @@
     - nova-config
 
 # Create certs after nova groups have been created but before handlers
-- name: Create and install SSL certificates for API
+- name: Create and install SSL certificates for API and Consoles
   include_role:
     name: pki
     tasks_from: main_certs.yml
@@ -152,10 +152,10 @@
     pki_dir: "{{ nova_pki_dir }}"
     pki_create_certificates: "{{ nova_user_ssl_cert is not defined and nova_user_ssl_key is not defined }}"
     pki_regen_cert: "{{ nova_pki_regen_cert }}"
-    pki_certificates: "{{ nova_pki_certificates }}"
-    pki_install_certificates: "{{ nova_pki_install_certificates }}"
+    pki_certificates: "{{ nova_pki_certificates + nova_pki_console_certificates }}"
+    pki_install_certificates: "{{ nova_pki_install_certificates + nova_pki_console_install_certificates }}"
   when:
-    - "'nova_api_metadata' in group_names or 'nova_api_os_compute' in group_names"
+    - nova_pki_certificates_condition | bool or nova_pki_console_condition | bool
   tags:
     - always
 
@@ -178,26 +178,6 @@
     - nova_libvirtd_listen_tls == 1
     - "'nova_compute' in group_names"
     - nova_virt_type != 'ironic'
-  tags:
-    - always
-
-- name: Create and install SSL certificates for console hosts
-  include_role:
-    name: pki
-    tasks_from: main_certs.yml
-    apply:
-      tags:
-        - nova-config
-        - pki
-  vars:
-    pki_setup_host: "{{ nova_pki_setup_host }}"
-    pki_dir: "{{ nova_pki_dir }}"
-    pki_create_certificates: "{{ nova_user_ssl_cert is not defined and nova_user_ssl_key is not defined }}"
-    pki_regen_cert: "{{ nova_pki_regen_cert }}"
-    pki_certificates: "{{ nova_pki_certificates + nova_pki_console_certificates }}"
-    pki_install_certificates: "{{ nova_pki_install_certificates + nova_pki_console_install_certificates }}"
-  when:
-    - "'nova_console' in group_names"
   tags:
     - always
 

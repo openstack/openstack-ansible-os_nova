@@ -801,7 +801,7 @@ nova_backend_ssl: "{{ openstack_service_backend_ssl | default(False) }}"
 
 nova_pki_certificates:
    # Used to encrypt traffic between haproxy and nova backends
-  - name: "nova_{{ ansible_facts['hostname'] }}"
+  - name: "nova_{{ ansible_facts['hostname'] }}_api"
     provider: ownca
     cn: "{{ ansible_facts['hostname'] }}"
     san: "{{ nova_pki_san }}"
@@ -814,13 +814,13 @@ nova_ssl_key: /etc/nova/nova.key
 
 # Installation details for SSL certificates
 nova_pki_install_certificates:
-  - src: "{{ nova_user_ssl_cert | default(nova_pki_certs_path ~ 'nova_' ~ ansible_facts['hostname'] ~ '-chain.crt') }}"
+  - src: "{{ nova_user_ssl_cert | default(nova_pki_certs_path ~ 'nova_' ~ ansible_facts['hostname'] ~ '_api-chain.crt') }}"
     dest: "{{ nova_ssl_cert }}"
     owner: "{{ nova_system_user_name }}"
     group: "{{ nova_system_user_name }}"
     mode: "0644"
     condition: "{{ nova_backend_ssl }}"
-  - src: "{{ nova_user_ssl_key | default(nova_pki_keys_path ~ 'nova_' ~ ansible_facts['hostname'] ~ '.key.pem') }}"
+  - src: "{{ nova_user_ssl_key | default(nova_pki_keys_path ~ 'nova_' ~ ansible_facts['hostname'] ~ '_api.key.pem') }}"
     dest: "{{ nova_ssl_key }}"
     owner: "{{ nova_system_user_name }}"
     group: "{{ nova_system_user_name }}"

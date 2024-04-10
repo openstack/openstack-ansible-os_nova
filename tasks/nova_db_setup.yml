@@ -61,7 +61,8 @@
   changed_when: false
   when:
     - _cell0_record | length > 0
-    - ('ssl_verify_cert' not in _cell0_record[0] and nova_galera_use_ssl) or
+    - nova_cell_force_update or
+      ('ssl_verify_cert' not in _cell0_record[0] and nova_galera_use_ssl) or
       ('ssl_verify_cert' in _cell0_record[0] and not nova_galera_use_ssl)
 
 - name: Synchronize the nova DB schema
@@ -105,7 +106,8 @@
   changed_when: false
   when:
     - _cell1_record | length > 0
-    - (nova_oslomsg_rpc_port ~ '/' ~ _nova_oslomsg_rpc_vhost_conf) not in _cell1_record[0]
+    - nova_cell_force_update or
+      (nova_oslomsg_rpc_port ~ '/' ~ _nova_oslomsg_rpc_vhost_conf) not in _cell1_record[0]
 
 # The nova-status upgrade check command is typically run after upgrading the
 # controller services to new code, but is also OK to run for a greenfield

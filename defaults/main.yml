@@ -128,6 +128,7 @@ nova_api_db_connection_recycle_time: "{{ openstack_db_connection_recycle_time | 
 ## DB Cells
 nova_cell0_database: "nova_cell0"
 nova_cell1_name: "cell1"
+nova_cell_force_update: False
 
 ## Oslo Messaging
 

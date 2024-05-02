@@ -88,3 +88,8 @@
     - "venv changed"
     - "cert installed"
     - "systemd service changed"
+
+- name: Reload apparmor profile
+  ansible.builtin.service:
+    name: apparmor.service
+    state: reloaded

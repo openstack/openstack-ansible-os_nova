@@ -725,6 +725,7 @@ nova_pki_compute_install_certificates:
 # nova_user_ssl_ca_cert: <path to cert on ansible deployment host>
 
 # TLS certficates for console hosts
+nova_pki_console_condition: "{{ nova_qemu_vnc_tls == 1 and nova_console_type == 'novnc' and 'nova_console' in group_names }}"
 nova_pki_console_certificates:
   # Client certificate used by novnv proxy to authenticate with compute hosts using vencrypt
   - name: "nova_{{ ansible_facts['hostname'] }}-client"
@@ -738,7 +739,7 @@ nova_pki_console_certificates:
       - keyEncipherment
     extended_key_usage:
       - clientAuth
-    condition: "{{ nova_qemu_vnc_tls == 1 and 'novnc' in nova_console_proxy_types }}"
+    condition: "{{ nova_pki_console_condition | bool }}"
 
 # Installation details for SSL certificates for console hosts
 nova_pki_console_install_certificates:
@@ -747,19 +748,19 @@ nova_pki_console_install_certificates:
     owner: "root"
     group: "{{ nova_system_group_name }}"
     mode: "0640"
-    condition: "{{ nova_qemu_vnc_tls == 1 and nova_console_type == 'novnc' }}"
+    condition: "{{ nova_pki_console_condition | bool }}"
   - src: "{{ nova_user_ssl_key | default(nova_pki_keys_path ~ 'nova_' ~ ansible_facts['hostname'] ~ '-client.key.pem') }}"
     dest: "{{ nova_vencrypt_client_key }}"
     owner: "root"
     group: "{{ nova_system_group_name }}"
     mode: "0640"
-    condition: "{{ nova_qemu_vnc_tls == 1 and nova_console_type == 'novnc' }}"
+    condition: "{{ nova_pki_console_condition | bool }}"
   - src: "{{ nova_user_ssl_ca_cert | default(nova_pki_intermediate_chain_path) }}"
     dest: "{{ nova_vencrypt_ca_certs }}"
     owner: "root"
     group: "{{ nova_system_group_name }}"
     mode: "0640"
-    condition: "{{ nova_qemu_vnc_tls == 1 and nova_console_type == 'novnc' }}"
+    condition: "{{ nova_pki_console_condition | bool }}"
 
 # host which holds the ssh certificate authority
 nova_ssh_keypairs_setup_host: "{{ openstack_ssh_keypairs_setup_host | default('localhost') }}"
@@ -799,6 +800,14 @@ nova_ssh_keypairs_principals:
 # Define if communication between haproxy and service backends should be
 # encrypted with TLS.
 nova_backend_ssl: "{{ openstack_service_backend_ssl | default(False) }}"
+nova_pki_certificates_condition: >-
+  {{
+    nova_backend_ssl and (
+      'nova_console' in group_names or
+      'nova_api_metadata' in group_names or
+      'nova_api_os_compute' in group_names
+    )
+  }}
 
 nova_pki_certificates:
    # Used to encrypt traffic between haproxy and nova backends
@@ -807,7 +816,7 @@ nova_pki_certificates:
     cn: "{{ ansible_facts['hostname'] }}"
     san: "{{ nova_pki_san }}"
     signed_by: "{{ nova_pki_intermediate_cert_name }}"
-    condition: "{{ nova_backend_ssl }}"
+    condition: "{{ nova_pki_certificates_condition | bool }}"
 
 # nova destination files for SSL certificates
 nova_ssl_cert: /etc/nova/nova.pem
@@ -820,13 +829,13 @@ nova_pki_install_certificates:
     owner: "{{ nova_system_user_name }}"
     group: "{{ nova_system_user_name }}"
     mode: "0644"
-    condition: "{{ nova_backend_ssl }}"
+    condition: "{{ nova_pki_certificates_condition | bool }}"
   - src: "{{ nova_user_ssl_key | default(nova_pki_keys_path ~ 'nova_' ~ ansible_facts['hostname'] ~ '_api.key.pem') }}"
     dest: "{{ nova_ssl_key }}"
     owner: "{{ nova_system_user_name }}"
     group: "{{ nova_system_user_name }}"
     mode: "0600"
-    condition: "{{ nova_backend_ssl }}"
+    condition: "{{ nova_pki_certificates_condition | bool }}"
 
 # Periodically move records for deleted resources to shadow tables
 nova_archive_deleted: False

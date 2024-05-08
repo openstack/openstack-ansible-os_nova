@@ -188,6 +188,7 @@
   import_tasks: nova_post_install.yml
   tags:
     - nova-config
+    - post-install
 
 - name: Including osa.service_setup tasks
   include_role:
@@ -232,6 +233,7 @@
     apply:
       tags:
         - nova-config
+        - post-install
   when:
     - _nova_is_first_play_host
   tags:

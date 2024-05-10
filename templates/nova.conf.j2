@@ -61,6 +61,10 @@ transport_url = {{ nova_oslomsg_notify_transport }}://{% for host in nova_osloms
 [oslo_messaging_rabbit]
 heartbeat_in_pthread = {{ nova_oslomsg_heartbeat_in_pthread }}
 rabbit_quorum_queue = {{ nova_oslomsg_rabbit_quorum_queues }}
+rabbit_transient_quorum_queue = {{ nova_oslomsg_rabbit_transient_quorum_queues }}
+rabbit_qos_prefetch_count = {{ nova_oslomsg_rabbit_qos_prefetch_count }}
+use_queue_manager = {{ nova_oslomsg_rabbit_queue_manager }}
+rabbit_stream_fanout = {{ nova_oslomsg_rabbit_stream_fanout }}
 rabbit_quorum_delivery_limit = {{ nova_oslomsg_rabbit_quorum_delivery_limit }}
 rabbit_quorum_max_memory_bytes = {{ nova_oslomsg_rabbit_quorum_max_memory_bytes }}
 

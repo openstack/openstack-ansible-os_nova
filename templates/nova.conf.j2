@@ -39,7 +39,7 @@ my_ip = {{ _nova_my_ip }}
 default_ephemeral_format = ext4
 
 # Ceilometer notification configurations
-{% if nova_ceilometer_enabled %}
+{% if nova_oslomsg_notify_configure %}
 instance_usage_audit = True
 instance_usage_audit_period = hour
 {% endif %}
@@ -47,7 +47,7 @@ instance_usage_audit_period = hour
 # Notifications
 [oslo_messaging_notifications]
 {% set notification_topics = [] %}
-{% if nova_ceilometer_enabled %}
+{% if nova_oslomsg_notify_configure %}
 {%   set _ = notification_topics.append('notifications') %}
 {% endif %}
 {% if nova_designate_enabled %}

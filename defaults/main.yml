@@ -153,6 +153,7 @@ nova_oslomsg_rpc_ssl_version: "{{ oslomsg_rpc_ssl_version | default('TLSv1_2') }
 nova_oslomsg_rpc_ssl_ca_file: "{{ oslomsg_rpc_ssl_ca_file | default('') }}"
 
 # Notify
+nova_oslomsg_notify_configure: "{{ oslomsg_notify_configure | default(nova_ceilometer_enabled) }}"
 nova_oslomsg_notify_host_group: "{{ oslomsg_notify_host_group | default('rabbitmq_all') }}"
 nova_oslomsg_notify_setup_host: "{{ (nova_oslomsg_notify_host_group in groups) | ternary(groups[nova_oslomsg_notify_host_group][0], 'localhost') }}"
 nova_oslomsg_notify_transport: "{{ oslomsg_notify_transport | default('rabbit') }}"

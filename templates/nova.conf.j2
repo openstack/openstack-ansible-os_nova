@@ -64,6 +64,9 @@ rabbit_quorum_queue = {{ nova_oslomsg_rabbit_quorum_queues }}
 rabbit_transient_quorum_queue = {{ nova_oslomsg_rabbit_transient_quorum_queues }}
 rabbit_qos_prefetch_count = {{ nova_oslomsg_rabbit_qos_prefetch_count }}
 use_queue_manager = {{ nova_oslomsg_rabbit_queue_manager }}
+{% if nova_oslomsg_rabbit_queue_manager %}
+hostname = {{ [ansible_facts['hostname'], nova_service_name] | join('-') }}
+{% endif %}
 rabbit_stream_fanout = {{ nova_oslomsg_rabbit_stream_fanout }}
 rabbit_quorum_delivery_limit = {{ nova_oslomsg_rabbit_quorum_delivery_limit }}
 rabbit_quorum_max_memory_bytes = {{ nova_oslomsg_rabbit_quorum_max_memory_bytes }}

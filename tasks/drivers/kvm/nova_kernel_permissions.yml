@@ -24,13 +24,12 @@
 - name: Latest kernel readable to nova group/user
   command: 'dpkg-statoverride --update --add root nova 0640 {{ latest_kernel }}'
   register: dpkg_statoverride_result
-  changed_when: >
-    'an override for \'{{ latest_kernel }}\' already exists; aborting'
-    not in dpkg_statoverride_result.stderr
-  failed_when: >
-    (dpkg_statoverride_result.rc != 0) and
-    ('an override for \'{{ latest_kernel }}\' already exists; aborting'
-    not in dpkg_statoverride_result.stderr)
+  changed_when:
+    - ("an override for '" ~ latest_kernel ~ "' already exists; aborting" not in dpkg_statoverride_result.stderr)
+  failed_when:
+    - (dpkg_statoverride_result.rc != 0) and
+      ("an override for '" ~ latest_kernel ~ "' already exists; aborting"
+        not in dpkg_statoverride_result.stderr)
 
 - name: Script installed to make future kernels readable to nova group/user
   copy:

@@ -159,8 +159,6 @@ _qemu_default_conf_dict: |-
 
 _nova_qemu_conf: "{{ _qemu_default_conf_dict | combine(qemu_conf_dict) }}"
 
-_nova_oslomsg_heartbeat_in_pthread: "{{ (nova_services['nova-compute']['group'] in group_names) | ternary(False, True) }}"
-
 _nova_cache_backend_map:
   dogpile:
     - oslo_cache.memcache_pool

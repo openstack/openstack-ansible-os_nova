@@ -133,7 +133,7 @@ nova_cell_force_update: False
 ## Oslo Messaging
 
 # RabbitMQ
-nova_oslomsg_heartbeat_in_pthread: "{{ oslomsg_heartbeat_in_pthread | default(_nova_oslomsg_heartbeat_in_pthread) }}"
+nova_oslomsg_heartbeat_in_pthread: "{{ oslomsg_heartbeat_in_pthread | default(False) }}"
 
 # RPC
 nova_oslomsg_rpc_host_group: "{{ oslomsg_rpc_host_group | default('rabbitmq_all') }}"

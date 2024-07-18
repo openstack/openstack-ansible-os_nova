@@ -71,13 +71,12 @@ nova_compute_oslomsg_amqp1_distro_packages:
 nova_compute_kvm_distro_packages:
   - libvirt-daemon
   - libvirt-daemon-system
-  - ovmf
   - python3-libvirt
-  - qemu-efi
   - qemu-utils
   - qemu-user
   - qemu-block-extra
   - "{{ (ansible_facts['architecture'] == 'x86_64') | ternary('qemu-system-x86', 'qemu-system-arm') }}"
+  - "{{ (ansible_facts['architecture'] == 'x86_64') | ternary('ovmf', 'qemu-efi-aarch64') }}"
   - qemu-system-misc
   - ipxe-qemu
 

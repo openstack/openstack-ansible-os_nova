@@ -16,7 +16,7 @@
 _nova_is_first_play_host: >-
   {{
     (nova_services['nova-conductor']['group'] in group_names and
-      inventory_hostname == (groups[nova_services['nova-conductor']['group']] | intersect(ansible_play_hosts)) | first) | bool
+      inventory_hostname == (groups[nova_services['nova-conductor']['group']] | select('in', ansible_play_hosts)) | first) | bool
   }}
 
 _nova_oslomsg_rpc_vhost_conf: >-

@@ -63,6 +63,7 @@
     mode: "0640"
     config_overrides: "{{ item.config_overrides }}"
     config_type: "{{ item.config_type }}"
+    yml_multilines: "{{ item.yml_multilines | default(omit) }}"
   with_items:
     - src: "nova.conf.j2"
       dest: "/etc/nova/nova.conf"
@@ -72,6 +73,7 @@
       dest: "/etc/nova/vendor_data.json"
       config_overrides: "{{ nova_vendor_data_overrides }}"
       config_type: "json"
+      yml_multilines: True
   notify:
     - Restart nova services
     - Restart uwsgi services

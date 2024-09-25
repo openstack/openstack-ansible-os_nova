@@ -1,0 +1,5 @@
+Host *
+    StrictHostKeyChecking no
+{%  for key, value in nova_ssh_custom_config.items()  %}
+    {{ key }} {{ value }}
+{%  endfor  %}

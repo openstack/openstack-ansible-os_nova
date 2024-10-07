@@ -769,6 +769,12 @@ nova_pki_console_install_certificates:
     mode: "0640"
     condition: "{{ nova_pki_console_condition | bool }}"
 
+# Extra settings which will be applied for `nova` user for offline
+# migrations and resizes. Example:
+# nova_ssh_custom_config:
+#    Port: 2022
+nova_ssh_custom_config: {}
+
 # host which holds the ssh certificate authority
 nova_ssh_keypairs_setup_host: "{{ openstack_ssh_keypairs_setup_host | default('localhost') }}"
 

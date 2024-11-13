@@ -55,6 +55,30 @@
     - "'nova_compute' in group_names"
     - nova_virt_type != 'ironic'
 
+- name: Symlink nova config directory
+  file:
+    # NOTE(cloudnull): The "src" path is relative. This ensures all files remain
+    #                  within the host/container confines when connecting to
+    #                  them using the connection plugin or the root filesystem.
+    src: "{{ nova_conf_version_dir | regex_replace('^/', '../') }}"
+    dest: "{{ nova_conf_dir }}"
+    state: link
+    force: true
+  when: nova_install_method == 'source'
+  listen:
+    - "venv changed"
+
+- name: Drop sudoers file
+  template:
+    src: "sudoers.j2"
+    dest: "/etc/sudoers.d/{{ nova_system_user_name }}_sudoers"
+    mode: "0440"
+    owner: "root"
+    group: "root"
+  listen:
+    - "Restart nova services"
+    - "venv changed"
+
 - name: Stop services
   service:
     name: "{{ item.service_name }}"

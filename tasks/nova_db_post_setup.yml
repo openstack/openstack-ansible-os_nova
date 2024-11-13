@@ -21,7 +21,7 @@
 # This needs to be done after Compute hosts are added.
 - name: Perform a cell_v2 discover
   command: >-
-    {{ _db_nova_bin }}/nova-manage cell_v2 discover_hosts{{ (debug | bool) | ternary(' --verbose', '') }}{{
+    {{ _db_nova_bin }}/nova-manage --config-file {{ nova_conf_version_dir }}/nova.conf cell_v2 discover_hosts{{ (debug | bool) | ternary(' --verbose', '') }}{{
       (nova_ironic_used | bool) | ternary(' --by-service', '') }}
   become: yes
   become_user: "{{ _db_nova_system_user_name }}"
@@ -34,7 +34,7 @@
 # intervention is required to resolve the issue causing remaining updates to fail.
 # It should be considered successfully completed only when the exit status is 0.
 - name: Perform online data migrations
-  command: "{{ _db_nova_bin }}/nova-manage db online_data_migrations"
+  command: "{{ _db_nova_bin }}/nova-manage --config-file {{ nova_conf_version_dir }}/nova.conf db online_data_migrations"
   become: yes
   become_user: "{{ _db_nova_system_user_name }}"
   changed_when: false

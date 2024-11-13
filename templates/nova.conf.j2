@@ -310,11 +310,11 @@ insecure = {{ keystone_service_adminuri_insecure | bool }}
 {% endif %}
 
 [wsgi]
-api_paste_config = /etc/nova/api-paste.ini
+api_paste_config = {{ nova_conf_dir }}/api-paste.ini
 
 
 [api]
-vendordata_jsonfile_path = /etc/nova/vendor_data.json
+vendordata_jsonfile_path = {{ nova_conf_dir }}/vendor_data.json
 dhcp_domain = {{ nova_dhcp_domain }}
 
 [scheduler]

@@ -14,7 +14,7 @@
 # limitations under the License.
 
 - name: Synchronize the nova API DB schema
-  command: "{{ nova_bin }}/nova-manage api_db sync"
+  command: "{{ nova_bin }}/nova-manage --config-file {{ nova_conf_version_dir }}/nova.conf api_db sync"
   become: yes
   become_user: "{{ nova_system_user_name }}"
   changed_when: false
@@ -22,7 +22,7 @@
 # We need to check for existance of the cell, since nova-manage cell_v2 create_cell
 # might be not idempotent due to the bug https://bugs.launchpad.net/nova/+bug/1923899
 - name: Get UUID of Nova Cells
-  command: "{{ nova_bin }}/nova-manage cell_v2 list_cells"
+  command: "{{ nova_bin }}/nova-manage --config-file {{ nova_conf_version_dir }}/nova.conf cell_v2 list_cells"
   become: yes
   become_user: "{{ nova_system_user_name }}"
   changed_when: false
@@ -39,7 +39,7 @@
 # it conditionally.
 - name: Create the cell0 mapping entry in the nova API DB
   command: >-
-    {{ nova_bin }}/nova-manage cell_v2 map_cell0
+    {{ nova_bin }}/nova-manage --config-file {{ nova_conf_version_dir }}/nova.conf cell_v2 map_cell0
       --database_connection mysql+pymysql://{{ nova_api_galera_user }}:{{ nova_api_container_mysql_password }}@{{ nova_api_galera_address }}/{{
         nova_cell0_database }}?charset=utf8{% if nova_galera_use_ssl | bool %}&ssl_verify_cert=true{%
           if nova_galera_ssl_ca_cert | length > 0 %}&ssl_ca={{ nova_galera_ssl_ca_cert }}{% endif %}{% endif %}
@@ -51,7 +51,7 @@
 
 - name: Update the cell0 mapping entry in the nova API DB
   command: >-
-    {{ nova_bin }}/nova-manage cell_v2 update_cell --cell_uuid 00000000-0000-0000-0000-000000000000
+    {{ nova_bin }}/nova-manage --config-file {{ nova_conf_version_dir }}/nova.conf cell_v2 update_cell --cell_uuid 00000000-0000-0000-0000-000000000000
       --database_connection mysql+pymysql://{{ nova_api_galera_user }}:{{ nova_api_container_mysql_password }}@{{ nova_api_galera_address }}/{{
         nova_cell0_database }}?charset=utf8{% if nova_galera_use_ssl | bool %}&ssl_verify_cert=true{%
           if nova_galera_ssl_ca_cert | length > 0 %}&ssl_ca={{ nova_galera_ssl_ca_cert }}{% endif %}{% endif %}
@@ -66,14 +66,14 @@
       ('ssl_verify_cert' in _cell0_record[0] and not nova_galera_use_ssl)
 
 - name: Synchronize the nova DB schema
-  command: "{{ nova_bin }}/nova-manage db sync"
+  command: "{{ nova_bin }}/nova-manage --config-file {{ nova_conf_version_dir }}/nova.conf db sync"
   become: yes
   become_user: "{{ nova_system_user_name }}"
   changed_when: false
 
 - name: Create the cell1 mapping entry in the nova API DB
   command: >-
-    {{ nova_bin }}/nova-manage cell_v2 create_cell
+    {{ nova_bin }}/nova-manage --config-file {{ nova_conf_version_dir }}/nova.conf cell_v2 create_cell
       --name {{ nova_cell1_name }}
       --database_connection {scheme}://{username}:{password}@{hostname}:{port}/{path}?{query}
       --transport-url {scheme}://{username}:{password}@{hostname}:{port}/{{ (
@@ -96,7 +96,7 @@
 
 - name: "Change the template for cell {{ nova_cell1_name }}"
   command: >-
-    {{ nova_bin }}/nova-manage cell_v2 update_cell
+    {{ nova_bin }}/nova-manage --config-file {{ nova_conf_version_dir }}/nova.conf cell_v2 update_cell
       --cell_uuid {{ _cell1_record[0].split()[3] }}
       --database_connection {scheme}://{username}:{password}@{hostname}:{port}/{path}?{query}
       --transport-url {scheme}://{username}:{password}@{hostname}:{port}/{{ (
@@ -115,7 +115,7 @@
 # mapping setup and before actual service restart.
 # https://docs.openstack.org/nova/latest/cli/nova-status.html
 - name: Run nova-status upgrade check to validate a healthy configuration
-  command: "{{ nova_bin }}/nova-status upgrade check"
+  command: "{{ nova_bin }}/nova-status --config-file {{ nova_conf_version_dir }}/nova.conf upgrade check"
   become: yes
   become_user: "{{ nova_system_user_name }}"
   register: nova_status_upgrade_check

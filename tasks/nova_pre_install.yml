@@ -53,12 +53,12 @@
   block:
     - name: Stat config directory
       stat:
-        path: "/etc/nova"
+        path: "{{ nova_conf_dir }}"
       register: nova_conf_dir_stat
 
     - name: Remove the config directory
       file:
-        path: "/etc/nova"
+        path: "{{ nova_conf_dir }}"
         state: absent
       when:
         - nova_conf_dir_stat.stat.isdir is defined and
@@ -69,12 +69,10 @@
 - name: Create nova dir
   file:
     path: "{{ item.path }}"
-    src: "{{ item.src | default(omit) }}"
     state: "{{ item.state | default('directory') }}"
     owner: "{{ item.owner | default(nova_system_user_name) }}"
     group: "{{ item.group | default(nova_system_group_name) }}"
     mode: "{{ item.mode | default('0755') }}"
-    force: "{{ item.force | default(omit) }}"
   when:
     - (item.condition | default(true)) | bool
     - item.path not in nova_mount_points
@@ -82,17 +80,9 @@
     - path: "/openstack"
       owner: "root"
       group: "root"
-    - path: "{{ (nova_install_method == 'distro') | ternary('/etc/nova', (nova_bin | dirname) + '/etc/nova') }}"
+    - path: "{{ nova_conf_version_dir }}"
       mode: "0755"
-    # NOTE(cloudnull): The "src" path is relative. This ensures all files remain
-    #                  within the host/container confines when connecting to
-    #                  them using the connection plugin or the root filesystem.
-    - path: "/etc/nova"
-      src: "{{ nova_bin | dirname | regex_replace('^/', '../') }}/etc/nova"
-      state: link
-      force: true
-      condition: "{{ nova_install_method == 'source' }}"
-    - path: "/etc/nova/provider_config"
+    - path: "{{ nova_conf_version_dir }}/provider_config"
       owner: "root"
       mode: "0640"
     - path: "/etc/sudoers.d"
@@ -106,17 +96,6 @@
     - path: "{{ nova_system_home_folder }}/instances"
   tags:
     - nova-dirs
-
-- name: Drop sudoers file
-  template:
-    src: "sudoers.j2"
-    dest: "/etc/sudoers.d/{{ nova_system_user_name }}_sudoers"
-    mode: "0440"
-    owner: "root"
-    group: "root"
-  tags:
-    - sudoers
-    - nova-sudoers
 
 - name: Set default nova console for ppc64le
   set_fact:

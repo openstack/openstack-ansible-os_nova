@@ -330,7 +330,7 @@ nova_console_proxy_types:
   - "{{ nova_ironic_console_type }}"
 
 # Nova console ssl info, presently only used by novnc console type
-nova_console_ssl_dir: "/etc/nova/ssl"
+nova_console_ssl_dir: "{{ nova_system_home_folder }}/console_ssl"
 nova_console_ssl_cert: "{{ nova_console_ssl_dir }}/nova-console.pem"
 nova_console_ssl_key: "{{ nova_console_ssl_dir }}/nova-console.key"
 
@@ -832,8 +832,8 @@ nova_pki_certificates:
     condition: "{{ nova_pki_certificates_condition | bool }}"
 
 # nova destination files for SSL certificates
-nova_ssl_cert: /etc/nova/nova.pem
-nova_ssl_key: /etc/nova/nova.key
+nova_ssl_cert: "{{ nova_system_home_folder }}/nova.pem"
+nova_ssl_key: "{{ nova_system_home_folder }}/nova.key"
 
 # Installation details for SSL certificates
 nova_pki_install_certificates:

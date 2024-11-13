@@ -36,14 +36,14 @@
     group: "{{ item.group | default(nova_system_group_name) }}"
     mode: "{{ item.mode | default(omit) }}"
   with_items:
-    - path: "/etc/nova/rootwrap.d"
+    - path: "{{ nova_conf_version_dir }}/rootwrap.d"
       owner: "root"
       group: "root"
 
 - name: Copy nova rootwrap filter config
   copy:
     src: "{{ item }}"
-    dest: "/etc/nova/rootwrap.d/"
+    dest: "{{ nova_conf_version_dir }}/rootwrap.d/"
     owner: "root"
     group: "root"
     mode: "0644"
@@ -68,11 +68,11 @@
     yml_multilines: "{{ item.yml_multilines | default(omit) }}"
   with_items:
     - src: "nova.conf.j2"
-      dest: "/etc/nova/nova.conf"
+      dest: "{{ nova_conf_version_dir }}/nova.conf"
       config_overrides: "{{ nova_nova_conf_overrides }}"
       config_type: "ini"
     - src: "vendor_data.json.j2"
-      dest: "/etc/nova/vendor_data.json"
+      dest: "{{ nova_conf_version_dir }}/vendor_data.json"
       config_overrides: "{{ nova_vendor_data_overrides }}"
       config_type: "json"
       yml_multilines: True
@@ -86,7 +86,7 @@
 - name: Implement policy.yaml if there are overrides configured
   openstack.config_template.config_template:
     content: "{{ nova_policy_overrides }}"
-    dest: "/etc/nova/policy.yaml"
+    dest: "{{ nova_conf_version_dir }}/policy.yaml"
     owner: "root"
     group: "{{ nova_system_group_name }}"
     mode: "0640"
@@ -100,7 +100,7 @@
 - name: Implement compute host provider.yaml if there are overrides configured
   openstack.config_template.config_template:
     content: "{{ item.content }}"
-    dest: "/etc/nova/provider_config/{{ item.name }}.yaml"
+    dest: "{{ nova_conf_version_dir }}/provider_config/{{ item.name }}.yaml"
     owner: "root"
     group: "{{ nova_system_group_name }}"
     mode: "0640"
@@ -115,7 +115,7 @@
 
 - name: Remove legacy policy.yaml file
   file:
-    path: "/etc/nova/policy.yaml"
+    path: "{{ nova_conf_dir }}/policy.yaml"
     state: absent
   when:
     - nova_policy_overrides | length == 0
@@ -174,14 +174,3 @@
   tags:
     - nova-config
     - nova-post-install
-
-- name: Drop sudoers file
-  template:
-    src: "sudoers.j2"
-    dest: "/etc/sudoers.d/{{ nova_system_user_name }}_sudoers"
-    mode: "0440"
-    owner: "root"
-    group: "root"
-  tags:
-    - sudoers
-    - nova-sudoers

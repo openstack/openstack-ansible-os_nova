@@ -13,6 +13,9 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+nova_conf_dir: /etc/nova
+nova_conf_version_dir: "{{ (nova_install_method == 'distro') | ternary(nova_conf_dir, (nova_bin | dirname) + nova_conf_dir) }}"
+
 _nova_is_first_play_host: >-
   {{
     (nova_services['nova-conductor']['group'] in group_names and
@@ -119,16 +122,16 @@ nova_mount_points: |-
 
 _nova_rootwrap_conf_overrides:
   DEFAULT:
-    filters_path: "/etc/nova/rootwrap.d,/usr/share/nova/rootwrap"
+    filters_path: "{{ nova_conf_dir }}/rootwrap.d,/usr/share/nova/rootwrap"
     exec_dirs: "{{ nova_bin }},/sbin,/usr/sbin,/bin,/usr/bin,/usr/local/bin,/usr/local/sbin"
 
 nova_core_files:
   - tmp_f: "/tmp/api-paste.ini"
-    target_f: "/etc/nova/api-paste.ini"
+    target_f: "{{ nova_conf_version_dir }}/api-paste.ini"
     config_overrides: "{{ nova_api_paste_ini_overrides }}"
     config_type: "ini"
   - tmp_f: "/tmp/rootwrap.conf"
-    target_f: "/etc/nova/rootwrap.conf"
+    target_f: "{{ nova_conf_version_dir }}/rootwrap.conf"
     config_overrides: "{{ _nova_rootwrap_conf_overrides | combine(nova_rootwrap_conf_overrides, recursive=True) }}"
     config_type: "ini"
     owner: "root"

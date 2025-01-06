@@ -84,7 +84,3 @@ nova_compute_kvm_pip_packages:
 
 nova_compute_ksm_packages:
   - ksmtuned
-
-nova_compute_oslomsg_amqp1_distro_packages:
-  - cyrus-sasl-plain
-  - cyrus-sasl-md5

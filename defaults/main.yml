@@ -167,10 +167,6 @@ nova_oslomsg_notify_ssl_version: "{{ oslomsg_notify_ssl_version | default('TLSv1
 nova_oslomsg_notify_ssl_ca_file: "{{ oslomsg_notify_ssl_ca_file | default('') }}"
 nova_oslomsg_notify_policies: []
 
-## Qdrouterd info
-# TODO(ansmith): Change structure when more backends will be supported
-nova_oslomsg_amqp1_enabled: "{{ nova_oslomsg_rpc_transport == 'amqp' }}"
-
 ###
 ### RabbitMQ info
 ###
@@ -570,9 +566,6 @@ nova_pip_packages:
 
 # Specific pip packages provided by the user
 nova_user_pip_packages: []
-
-nova_optional_oslomsg_amqp1_pip_packages:
-  - oslo.messaging[amqp1]
 
 nova_qemu_user: libvirt-qemu
 nova_qemu_group: kvm

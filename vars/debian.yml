@@ -63,11 +63,6 @@ nova_compute_packages:
 nova_compute_barbican_distro_packages:
   - cryptsetup
 
-nova_compute_oslomsg_amqp1_distro_packages:
-  - libssl-dev
-  - libsasl2-modules
-  - sasl2-bin
-
 nova_compute_kvm_distro_packages:
   - libvirt-daemon
   - libvirt-daemon-system

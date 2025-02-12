@@ -125,7 +125,7 @@
 - name: Disable existing services for any unused console types
   systemd:
     name: "{{ item.service }}"
-    enabled: no
+    enabled: false
     state: stopped
   when: (item.condition | bool) and item.type not in nova_console_proxy_types
   loop:

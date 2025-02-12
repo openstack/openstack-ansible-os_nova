@@ -46,8 +46,8 @@
     clone: "yes"
     update: "yes"
     version: "{{ nova_novncproxy_git_install_branch }}"
-    force: yes
-    accept_hostkey: yes
+    force: true
+    accept_hostkey: true
   register: git_clone
   until: git_clone is success
   retries: 5

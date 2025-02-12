@@ -13,8 +13,8 @@
 
 - name: Find installed kernels
   find:
-    paths: '/boot'
-    patterns: 'vmlinuz-*'
+    paths: "/boot"
+    patterns: "vmlinuz-*"
   register: kernels
 
 - name: Determine latest installed kernel
@@ -22,7 +22,7 @@
     latest_kernel: "{{ kernels.files | map(attribute='path') | sort(reverse=True) | first }}"
 
 - name: Latest kernel readable to nova group/user
-  command: 'dpkg-statoverride --update --add root nova 0640 {{ latest_kernel }}'
+  command: "dpkg-statoverride --update --add root nova 0640 {{ latest_kernel }}"
   register: dpkg_statoverride_result
   changed_when:
     - ("an override for '" ~ latest_kernel ~ "' already exists; aborting" not in dpkg_statoverride_result.stderr)
@@ -33,6 +33,6 @@
 
 - name: Script installed to make future kernels readable to nova group/user
   copy:
-    src: 'nova_kernel_permissions'
-    dest: '/etc/kernel/postinst.d/nova_kernel_permissions'
-    mode: '0755'
+    src: "nova_kernel_permissions"
+    dest: "/etc/kernel/postinst.d/nova_kernel_permissions"
+    mode: "0755"

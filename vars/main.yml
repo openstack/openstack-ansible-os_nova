@@ -171,10 +171,10 @@ _nova_cache_backend_map:
     - oslo_cache.etcd3gw
 
 _nova_cache_backend_package: |-
-    {% set oslo = namespace(backend='dogpile') %}
-    {% for key, value in _nova_cache_backend_map.items() %}
-    {%   if nova_cache_backend in value %}
-    {%     set oslo.backend = key %}
-    {%-   endif %}
-    {%- endfor %}
-    oslo.cache[{{ oslo.backend }}]
+  {% set oslo = namespace(backend='dogpile') %}
+  {% for key, value in _nova_cache_backend_map.items() %}
+  {%   if nova_cache_backend in value %}
+  {%     set oslo.backend = key %}
+  {%-   endif %}
+  {%- endfor %}
+  oslo.cache[{{ oslo.backend }}]

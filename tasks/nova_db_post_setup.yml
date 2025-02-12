@@ -23,10 +23,9 @@
   command: >-
     {{ _db_nova_bin }}/nova-manage --config-file {{ nova_conf_version_dir }}/nova.conf cell_v2 discover_hosts{{ (debug | bool) | ternary(' --verbose', '') }}{{
       (nova_ironic_used | bool) | ternary(' --by-service', '') }}
-  become: yes
+  become: true
   become_user: "{{ _db_nova_system_user_name }}"
   changed_when: false
-
 
 # If it exits with partial updates (exit status 1) it should be called again,
 # even if some updates initially generated errors,
@@ -35,7 +34,7 @@
 # It should be considered successfully completed only when the exit status is 0.
 - name: Perform online data migrations
   command: "{{ _db_nova_bin }}/nova-manage --config-file {{ nova_conf_version_dir }}/nova.conf db online_data_migrations"
-  become: yes
+  become: true
   become_user: "{{ _db_nova_system_user_name }}"
   changed_when: false
   when:
@@ -51,7 +50,7 @@
     dest: "/etc/ansible/facts.d/openstack_ansible.fact"
     section: nova
     option: need_online_data_migrations
-    value: False
+    value: false
     mode: "0644"
   with_items: "{{ groups[nova_services['nova-conductor']['group']] }}"
   when:
@@ -73,10 +72,10 @@
         execstarts:
           - /bin/sh -c "{{ _db_nova_bin }}/nova-manage db archive_deleted_rows --until-complete --all-cells --before \"$(date -d '{{ nova_archive_deleted_before }}' +'%%Y-%%m-%%d %%H:%%M')\" {{ (nova_archive_deleted_purge) | ternary('--purge', '') }} {{ (nova_archive_task_log) | ternary('--task-log', '') }}" # noqa: yaml[line-length]
         environment:
-          UMASK: '0640'
-          UMASK_DIR: '0750'
+          UMASK: "0640"
+          UMASK_DIR: "0750"
         program_sandboxing:
-          RuntimeDirectory: 'nova-archive-deleted'
+          RuntimeDirectory: "nova-archive-deleted"
         enabled: "{{ nova_archive_deleted }}"
         timer:
           state: "{{ nova_archive_deleted | ternary('started', 'stopped') }}"
@@ -90,10 +89,10 @@
         execstarts:
           - /bin/sh -c "{{ _db_nova_bin }}/nova-manage db purge --all-cells --before \"$(date -d '{{ nova_purge_deleted_before }}' +'%%Y-%%m-%%d %%H:%%M')\"" # noqa: yaml[line-length]
         environment:
-          UMASK: '0640'
-          UMASK_DIR: '0750'
+          UMASK: "0640"
+          UMASK_DIR: "0750"
         program_sandboxing:
-          RuntimeDirectory: 'nova-purge-deleted'
+          RuntimeDirectory: "nova-purge-deleted"
         enabled: "{{ nova_purge_deleted }}"
         timer:
           state: "{{ nova_purge_deleted | ternary('started', 'stopped') }}"

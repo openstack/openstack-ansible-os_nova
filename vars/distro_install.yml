@@ -49,4 +49,4 @@ nova_package_list: |-
   {% set _ = packages.extend(nova_service_distro_packages) %}
   {{ packages }}
 
-_nova_bin: '/usr/bin'
+_nova_bin: "/usr/bin"

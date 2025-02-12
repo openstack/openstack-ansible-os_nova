@@ -75,7 +75,7 @@
       dest: "{{ nova_conf_version_dir }}/vendor_data.json"
       config_overrides: "{{ nova_vendor_data_overrides }}"
       config_type: "json"
-      yml_multilines: True
+      yml_multilines: true
   notify:
     - Restart nova services
     - Restart uwsgi services
@@ -136,7 +136,7 @@
   fetch:
     src: "{{ item.target_f }}"
     dest: "{{ item.tmp_f }}"
-    flat: yes
+    flat: true
   changed_when: false
   run_once: true
   with_items: "{{ nova_core_files }}"

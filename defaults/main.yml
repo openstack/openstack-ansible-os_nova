@@ -12,8 +12,6 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
-
-
 # Enable/Disable barbican configurations
 nova_barbican_enabled: "{{ (groups['barbican_all'] is defined) and (groups['barbican_all'] | length > 0) }}"
 # Enable/Disable blazar configurations
@@ -25,7 +23,7 @@ nova_notifications_designate: notifications_designate
 # Enable/Disable ceilometer configurations
 nova_ceilometer_enabled: "{{ (groups['ceilometer_all'] is defined) and (groups['ceilometer_all'] | length > 0) }}"
 # Enable/Disable nova versioned notification
-nova_versioned_notification_enabled: False
+nova_versioned_notification_enabled: false
 
 # Caching
 nova_cache_servers: "{{ nova_memcached_servers | default(memcached_servers) }}"
@@ -33,7 +31,7 @@ nova_cache_backend: "{{ openstack_cache_backend | default('oslo_cache.memcache_p
 nova_cache_backend_map: "{{ openstack_cache_backend_map | default(_nova_cache_backend_map) }}"
 
 ## Verbosity Options
-debug: False
+debug: false
 
 # Set the host which will execute the shade modules
 # for the service setup. The host must already have
@@ -128,7 +126,7 @@ nova_api_db_connection_recycle_time: "{{ openstack_db_connection_recycle_time | 
 ## DB Cells
 nova_cell0_database: "nova_cell0"
 nova_cell1_name: "cell1"
-nova_cell_force_update: False
+nova_cell_force_update: false
 
 ## Oslo Messaging
 
@@ -189,23 +187,22 @@ nova_virt_types:
   ironic:
     nova_compute_driver: ironic.IronicDriver
     nova_reserved_host_memory_mb: 0
-    nova_scheduler_tracks_instance_changes: False
+    nova_scheduler_tracks_instance_changes: false
   kvm:
     nova_compute_driver: libvirt.LibvirtDriver
     nova_reserved_host_memory_mb: 2048
-    nova_scheduler_tracks_instance_changes: True
+    nova_scheduler_tracks_instance_changes: true
   qemu:
     nova_compute_driver: libvirt.LibvirtDriver
     nova_reserved_host_memory_mb: 2048
-    nova_scheduler_tracks_instance_changes: True
+    nova_scheduler_tracks_instance_changes: true
     nova_cpu_mode: "none"
-
 
 # If this is not set, then the playbook will try to guess it.
 # nova_virt_type: kvm
 
 # Enable Kernel Shared Memory (KSM)
-nova_compute_ksm_enabled: False
+nova_compute_ksm_enabled: false
 
 # if set, nova_virt_type must be one of these:
 nova_supported_virt_types:
@@ -258,7 +255,7 @@ nova_spice_html5proxy_base_proto: "{{ openstack_service_publicuri_proto | defaul
 nova_spice_html5proxy_base_port: 6082
 nova_spice_html5proxy_base_uri: "{{ nova_spice_html5proxy_base_proto }}://{{ external_lb_vip_address }}:{{ nova_spice_html5proxy_base_port }}"
 nova_spice_html5proxy_base_url: "{{ nova_spice_html5proxy_base_uri }}/spice_auto.html"
-nova_spice_console_agent_enabled: True
+nova_spice_console_agent_enabled: true
 nova_spicehtml5_git_repo: "{{ spicehtml5_git_repo | default('https://gitlab.freedesktop.org/spice/spice-html5.git') }}"
 nova_spicehtml5_git_install_branch: "{{ spicehtml5_git_install_branch | default('master') }}"
 
@@ -282,12 +279,12 @@ nova_serialconsoleproxy_base_url: "{{ nova_serialconsoleproxy_base_uri }}"
 nova_serialconsoleproxy_serialconsole_proxyserver_proxyclient_address: "{{ nova_management_address }}"
 
 ## Nova metadata
-nova_metadata_proxy_enabled: True
+nova_metadata_proxy_enabled: true
 nova_metadata_bind_address: "{{ openstack_service_bind_address | default('0.0.0.0') }}"
 nova_metadata_port: 8775
 
 ## Nova compute
-nova_nested_virt_enabled: False
+nova_nested_virt_enabled: false
 
 # Uwsgi settings
 nova_wsgi_processes_max: 16
@@ -301,14 +298,14 @@ nova_uwsgi_tls:
 # Warning: If nova_libvirt_inject_key or nova_libvirt_inject_password are enabled for Ubuntu compute hosts
 # then the kernel will be made readable to nova user (a requirement for libguestfs).
 # See Launchpad bugs 1507915 (Nova), 759725 (Ubuntu), and http://libguestfs.org/guestfs-faq.1.html
-nova_libvirt_inject_key: False
+nova_libvirt_inject_key: false
 # inject partition options:
 #  -2 => disable, -1 => inspect (libguestfs only), 0 => not partitioned, >0 => partition number
 nova_libvirt_inject_partition: -2
-nova_libvirt_inject_password: False
+nova_libvirt_inject_password: false
 nova_libvirt_disk_cachemodes: '{{ (nova_libvirt_images_rbd_pool | length > 0) | ternary("network=writeback", "") }}'
 nova_libvirt_hw_disk_discard: '{{ (nova_libvirt_images_rbd_pool | length > 0) | ternary("unmap", "ignore") }}'
-nova_libvirt_live_migration_inbound_addr: '{{ _nova_my_ip }}'
+nova_libvirt_live_migration_inbound_addr: "{{ _nova_my_ip }}"
 
 ## Nova console
 # Set the console type for the compute host. Presently the only options are ["spice", "novnc", "serialconsole", "disabled"].
@@ -391,16 +388,16 @@ nova_nfs_client: []
 # Nova Ceph rbd
 # Enble and define nova_libvirt_images_rbd_pool to use rbd as nova backend
 # nova_libvirt_images_rbd_pool: vms
-nova_libvirt_images_rbd_pool: ''
+nova_libvirt_images_rbd_pool: ""
 nova_ceph_client: "{{ cinder_ceph_client }}"
 
 # Enabled upstream if RBD is in use on cinder backends, which requires that
 # ceph be deployed on the nova compute hosts to enable volume backed instances.
-nova_cinder_rbd_inuse: False
+nova_cinder_rbd_inuse: false
 
 # Enable compute nodes to retrieve images from RBD directly rather then through
 # HTTP if images_type is NOT set to RBD. Must be False if nova images stored in RBD.
-nova_glance_rbd_inuse: False
+nova_glance_rbd_inuse: false
 nova_glance_images_rbd_pool: "{{ glance_rbd_store_pool | default('images') }}"
 
 # Used to determine if we need a Ceph client
@@ -476,7 +473,7 @@ nova_services:
     service_name: nova-api-metadata
     init_config_overrides: "{{ nova_api_metadata_init_overrides }}"
     start_order: 5
-    wsgi_app: True
+    wsgi_app: true
     uwsgi_overrides: "{{ nova_api_metadata_uwsgi_ini_overrides }}"
     uwsgi_bind_address: "{{ nova_metadata_bind_address }}"
     uwsgi_port: "{{ nova_metadata_port }}"
@@ -487,7 +484,7 @@ nova_services:
     service_name: nova-api-os-compute
     init_config_overrides: "{{ {'Install': {'Alias': 'nova-api.service'}} | combine(nova_api_os_compute_init_overrides, recursive=True) }}"
     start_order: 4
-    wsgi_app: True
+    wsgi_app: true
     uwsgi_overrides: "{{ nova_api_os_compute_uwsgi_ini_overrides }}"
     uwsgi_bind_address: "{{ nova_service_bind_address }}"
     uwsgi_port: "{{ nova_service_port }}"
@@ -624,7 +621,7 @@ nova_pki_certs_path: "{{ nova_pki_dir ~ '/certs/certs/' }}"
 nova_pki_intermediate_cert_name: "{{ openstack_pki_service_intermediate_cert_name }}"
 nova_pki_intermediate_chain_path: >-
   {{ nova_pki_dir ~ '/roots/' ~ nova_pki_intermediate_cert_name ~ '/certs/' ~ nova_pki_intermediate_cert_name ~ '-chain.crt' }}
-nova_pki_regen_cert: ''
+nova_pki_regen_cert: ""
 nova_pki_san: "{{ openstack_pki_san | default('DNS:' ~ ansible_facts['hostname'] ~ ',IP:' ~ management_address) }}"
 nova_pki_compute_san: >-
   {{
@@ -816,7 +813,7 @@ nova_pki_certificates_condition: >-
   }}
 
 nova_pki_certificates:
-   # Used to encrypt traffic between haproxy and nova backends
+  # Used to encrypt traffic between haproxy and nova backends
   - name: "nova_{{ ansible_facts['hostname'] }}_api"
     provider: ownca
     cn: "{{ ansible_facts['hostname'] }}"
@@ -844,7 +841,7 @@ nova_pki_install_certificates:
     condition: "{{ nova_pki_certificates_condition | bool }}"
 
 # Periodically move records for deleted resources to shadow tables
-nova_archive_deleted: False
+nova_archive_deleted: false
 # When to start archive task. Reffer to Systemd Calendar Events for guidance
 # on format:
 # https://www.freedesktop.org/software/systemd/man/systemd.time.html#Calendar%20Events
@@ -853,14 +850,14 @@ nova_archive_deleted_on_calendar: "*-*-* 00:00:00"
 # Should be in a format of bash date string
 nova_archive_deleted_before: "6 month ago"
 # Delete records instead of moving them to shadow tables
-nova_archive_deleted_purge: False
+nova_archive_deleted_purge: false
 # Archive instance task log
-nova_archive_task_log: False
+nova_archive_task_log: false
 # Delay the timer by a randomly selected amount of time.
 nova_archive_deleted_randomized_delay_sec: 0
 
 # Periodically purge shadow tables, where archived records are stored
-nova_purge_deleted: False
+nova_purge_deleted: false
 # When to start purge task.
 nova_purge_deleted_on_calendar: "*-*-* 01:00:00"
 # Purge events that are older then the timeframe below.

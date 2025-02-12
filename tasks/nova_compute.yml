@@ -68,7 +68,7 @@
             - rpcbind.service rpc-statd.service
           Before:
             - nova-compute.service
-        state: 'started'
+        state: "started"
         enabled: true
   with_items: "{{ nova_nfs_client }}"
   loop_control:

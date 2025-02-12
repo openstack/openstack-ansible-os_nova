@@ -120,13 +120,12 @@
     - nova-kvm
     - nova-libvirt
 
-
 - name: Set qemu-kvm KSM config (Ubuntu)
   lineinfile:
     dest: "/etc/default/qemu-kvm"
     line: "KSM_ENABLED={{ nova_compute_ksm_enabled | ternary('1', '0') }}"
     regexp: "^KSM_ENABLED=*"
-    backup: yes
+    backup: true
   when:
     - ansible_facts['distribution'] == 'Ubuntu'
   notify: Restart libvirt-bin

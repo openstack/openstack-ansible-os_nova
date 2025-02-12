@@ -29,7 +29,7 @@
   register: _qemu_save_dir
 
 - name: Check if the qemu save directory is empty
-  command: 'ls -1A /var/lib/libvirt/qemu/save'
+  command: "ls -1A /var/lib/libvirt/qemu/save"
   changed_when: false
   register: _qemu_save_dir_contents
   when:

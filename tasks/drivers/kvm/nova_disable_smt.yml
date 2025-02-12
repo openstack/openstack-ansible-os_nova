@@ -36,5 +36,5 @@
 - name: Enable systemd service which disables smt
   service:
     name: smt
-    enabled: yes
+    enabled: true
   when: smt_disable_service | changed

@@ -16,7 +16,7 @@
 - name: Stop libvirt-bin
   service:
     name: "{{ item }}"
-    enabled: yes
+    enabled: true
     state: "stopped"
   listen:
     - Restart libvirt-bin
@@ -32,7 +32,7 @@
     name: "{{ item.name | default(item) }}"
     state: "{{ item.condition | default(False) | ternary('started', 'stopped') }}"
     enabled: "{{ item.condition | default(False) }}"
-    masked: no
+    masked: false
   with_items:
     - name: libvirtd-tls.socket
       condition: "{{ nova_libvirtd_listen_tls | bool }}"
@@ -44,7 +44,7 @@
 - name: Start libvirt-bin
   service:
     name: "{{ item }}"
-    enabled: yes
+    enabled: true
     state: "started"
   with_items:
     - "{{ libvirt_service_name }}"
@@ -82,9 +82,9 @@
 - name: Stop services
   service:
     name: "{{ item.service_name }}"
-    enabled: yes
+    enabled: true
     state: "stopped"
-    daemon_reload: yes
+    daemon_reload: true
   with_items: "{{ filtered_nova_services }}"
   register: _stop
   until: _stop is success
@@ -99,9 +99,9 @@
 - name: Start services
   service:
     name: "{{ item.service_name }}"
-    enabled: yes
+    enabled: true
     state: "started"
-    daemon_reload: yes
+    daemon_reload: true
   with_items: "{{ filtered_nova_services }}"
   register: _start
   until: _start is success

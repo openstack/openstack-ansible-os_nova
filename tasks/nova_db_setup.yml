@@ -15,7 +15,7 @@
 
 - name: Synchronize the nova API DB schema
   command: "{{ nova_bin }}/nova-manage --config-file {{ nova_conf_version_dir }}/nova.conf api_db sync"
-  become: yes
+  become: true
   become_user: "{{ nova_system_user_name }}"
   changed_when: false
 
@@ -23,7 +23,7 @@
 # might be not idempotent due to the bug https://bugs.launchpad.net/nova/+bug/1923899
 - name: Get UUID of Nova Cells
   command: "{{ nova_bin }}/nova-manage --config-file {{ nova_conf_version_dir }}/nova.conf cell_v2 list_cells"
-  become: yes
+  become: true
   become_user: "{{ nova_system_user_name }}"
   changed_when: false
   register: _cell_list
@@ -43,7 +43,7 @@
       --database_connection mysql+pymysql://{{ nova_api_galera_user }}:{{ nova_api_container_mysql_password }}@{{ nova_api_galera_address }}/{{
         nova_cell0_database }}?charset=utf8{% if nova_galera_use_ssl | bool %}&ssl_verify_cert=true{%
           if nova_galera_ssl_ca_cert | length > 0 %}&ssl_ca={{ nova_galera_ssl_ca_cert }}{% endif %}{% endif %}
-  become: yes
+  become: true
   become_user: "{{ nova_system_user_name }}"
   changed_when: false
   when:
@@ -56,7 +56,7 @@
         nova_cell0_database }}?charset=utf8{% if nova_galera_use_ssl | bool %}&ssl_verify_cert=true{%
           if nova_galera_ssl_ca_cert | length > 0 %}&ssl_ca={{ nova_galera_ssl_ca_cert }}{% endif %}{% endif %}
       --transport-url 'none:/'
-  become: yes
+  become: true
   become_user: "{{ nova_system_user_name }}"
   changed_when: false
   when:
@@ -67,7 +67,7 @@
 
 - name: Synchronize the nova DB schema
   command: "{{ nova_bin }}/nova-manage --config-file {{ nova_conf_version_dir }}/nova.conf db sync"
-  become: yes
+  become: true
   become_user: "{{ nova_system_user_name }}"
   changed_when: false
 
@@ -78,7 +78,7 @@
       --database_connection {scheme}://{username}:{password}@{hostname}:{port}/{path}?{query}
       --transport-url {scheme}://{username}:{password}@{hostname}:{port}/{{ (
           not nova_oslomsg_rabbit_quorum_queues | bool) | ternary('/{path}', '{path}') }}?{query}
-  become: yes
+  become: true
   become_user: "{{ nova_system_user_name }}"
   register: nova_cell1_create
   # When upgrading, cell1 will already exist and nova-manage will
@@ -101,7 +101,7 @@
       --database_connection {scheme}://{username}:{password}@{hostname}:{port}/{path}?{query}
       --transport-url {scheme}://{username}:{password}@{hostname}:{port}/{{ (
           not nova_oslomsg_rabbit_quorum_queues | bool) | ternary('/{path}', '{path}') }}?{query}
-  become: yes
+  become: true
   become_user: "{{ nova_system_user_name }}"
   changed_when: false
   when:
@@ -116,7 +116,7 @@
 # https://docs.openstack.org/nova/latest/cli/nova-status.html
 - name: Run nova-status upgrade check to validate a healthy configuration
   command: "{{ nova_bin }}/nova-status --config-file {{ nova_conf_version_dir }}/nova.conf upgrade check"
-  become: yes
+  become: true
   become_user: "{{ nova_system_user_name }}"
   register: nova_status_upgrade_check
   until: nova_status_upgrade_check is success

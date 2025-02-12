@@ -12,17 +12,17 @@
 # limitations under the License.
 
 - name: Find installed kernels
-  find:
+  ansible.builtin.find:
     paths: "/boot"
     patterns: "vmlinuz-*"
   register: kernels
 
 - name: Determine latest installed kernel
-  set_fact:
+  ansible.builtin.set_fact:
     latest_kernel: "{{ kernels.files | map(attribute='path') | sort(reverse=True) | first }}"
 
 - name: Latest kernel readable to nova group/user
-  command: "dpkg-statoverride --update --add root nova 0640 {{ latest_kernel }}"
+  ansible.builtin.command: "dpkg-statoverride --update --add root nova 0640 {{ latest_kernel }}"
   register: dpkg_statoverride_result
   changed_when:
     - ("an override for '" ~ latest_kernel ~ "' already exists; aborting" not in dpkg_statoverride_result.stderr)
@@ -32,7 +32,7 @@
         not in dpkg_statoverride_result.stderr)
 
 - name: Script installed to make future kernels readable to nova group/user
-  copy:
+  ansible.builtin.copy:
     src: "nova_kernel_permissions"
     dest: "/etc/kernel/postinst.d/nova_kernel_permissions"
     mode: "0755"

@@ -14,7 +14,7 @@
 # limitations under the License.
 
 - name: Remove existing directory if it is not a git repo or it is dirty
-  shell: |
+  ansible.builtin.shell: |
     EXIT_CODE=0
     FOLDER_PATH="/usr/share/novnc"
     if [[ -e ${FOLDER_PATH} ]]; then
@@ -40,7 +40,7 @@
     - nova-novnc-git
 
 - name: Get package from git
-  git:
+  ansible.builtin.git:
     repo: "{{ nova_novncproxy_git_repo }}"
     dest: "/usr/share/novnc"
     clone: "yes"
@@ -60,7 +60,7 @@
     - nova-novnc-git
 
 - name: Including nova_console_novnc_ssl tasks
-  include_tasks: nova_console_novnc_ssl.yml
+  ansible.builtin.include_tasks: nova_console_novnc_ssl.yml
   when:
     - nova_console_user_ssl_cert is defined
     - nova_console_user_ssl_key is defined

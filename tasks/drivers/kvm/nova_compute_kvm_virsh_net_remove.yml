@@ -14,15 +14,15 @@
 # limitations under the License.
 
 - name: Get information about libvirt default network
-  command: "virsh net-info default"
+  ansible.builtin.command: "virsh net-info default"
   changed_when: false
   failed_when: (default_net_info.rc != 0) and ('Network not found' not in default_net_info.stderr)
   register: default_net_info
 
 - name: Disable libvirt default network # noqa: no-changed-when
-  command: "virsh net-autostart default --disable"
+  ansible.builtin.command: "virsh net-autostart default --disable"
   when: default_net_info.stdout | regex_search('Autostart:\s+yes')
 
 - name: Destroy libvirt default network # noqa: no-changed-when
-  command: "virsh net-destroy default"
+  ansible.builtin.command: "virsh net-destroy default"
   when: default_net_info.stdout | regex_search('Active:\s+yes')

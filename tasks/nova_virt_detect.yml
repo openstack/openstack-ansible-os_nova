@@ -14,17 +14,17 @@
 # limitations under the License.
 
 - name: Get CPU info content and store as var
-  command: cat /proc/cpuinfo
+  ansible.builtin.command: cat /proc/cpuinfo
   register: cpuinfo_contents
   changed_when: false
 
 - name: Check for existence of KVM node
-  stat:
+  ansible.builtin.stat:
     path: "/dev/kvm"
   register: dev_kvm
 
 - name: Register a fact for the nova kvm virt type
-  set_fact:
+  ansible.builtin.set_fact:
     nova_virt_type: "kvm"
   when:
     - cpuinfo_contents.stdout.find('vmx') != -1
@@ -37,7 +37,7 @@
           and ansible_facts['architecture'] == 'aarch64')
 
 - name: Register a fact for the nova qemu virt type
-  set_fact:
+  ansible.builtin.set_fact:
     nova_virt_type: "qemu"
   when:
     - nova_virt_type is not defined

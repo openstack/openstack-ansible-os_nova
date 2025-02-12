@@ -14,18 +14,18 @@
 # limitations under the License.
 
 - name: Check if the mdev folder exist
-  stat:
+  ansible.builtin.stat:
     path: /sys/class/mdev_bus
   register: mdev_folder
 
 - name: Get mdev info content and store as var
-  command: "/bin/sh -c 'ls -1 /sys/class/mdev_bus/*/mdev_supported_types'"
+  ansible.builtin.command: "/bin/sh -c 'ls -1 /sys/class/mdev_bus/*/mdev_supported_types'"
   register: mdev
   changed_when: false
   when: mdev_folder.stat.exists
 
 - name: Register a fact for nova enabled_mdev_types
-  set_fact:
+  ansible.builtin.set_fact:
     discovered_mdev_types: "{{ mdev.stdout_lines | unique }}"
   when:
     - mdev.stdout_lines is defined

@@ -1,12 +1,12 @@
 ---
 - name: Enable ksm systemd service
-  service:
+  ansible.builtin.service:
     name: ksm
     enabled: true
     state: started
 
 - name: Enable ksmtuned systemd service
-  service:
+  ansible.builtin.service:
     name: ksmtuned
     enabled: true
     state: started

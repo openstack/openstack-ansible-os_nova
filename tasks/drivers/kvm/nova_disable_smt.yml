@@ -14,7 +14,7 @@
 # limitations under the License.
 
 - name: Disable SMT
-  command: /usr/sbin/ppc64_cpu --smt=off
+  ansible.builtin.command: /usr/sbin/ppc64_cpu --smt=off
   register: smt_disable_result
   changed_when: false
   failed_when: false
@@ -22,7 +22,7 @@
     - kvm-disable-smt
 
 - name: Place the systemd init script
-  copy:
+  ansible.builtin.copy:
     src: "smt.service"
     dest: "/etc/systemd/system/smt.service"
     mode: "0644"
@@ -34,7 +34,7 @@
   register: smt_disable_service
 
 - name: Enable systemd service which disables smt
-  service:
+  ansible.builtin.service:
     name: smt
     enabled: true
   when: smt_disable_service | changed

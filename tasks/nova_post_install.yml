@@ -17,7 +17,7 @@
 #  dynamically loading facts from the nova_virt_types based on the
 #  nova_virt_type setting.
 - name: Set nova config facts
-  set_fact:
+  ansible.builtin.set_fact:
     "{{ item.key }}": "{{ item.value }}" # noqa: var-naming[no-jinja]
   with_dict: "{{ nova_virt_types[nova_virt_type] }}"
   when:
@@ -29,7 +29,7 @@
 # NOTE(cloudnull): This task is required to copy rootwrap filters that we need
 #                  and nova does not provide by default.
 - name: Create aux nova dir
-  file:
+  ansible.builtin.file:
     path: "{{ item.path | default(omit) }}"
     state: "directory"
     owner: "{{ item.owner | default(nova_system_user_name) }}"
@@ -41,7 +41,7 @@
       group: "root"
 
 - name: Copy nova rootwrap filter config
-  copy:
+  ansible.builtin.copy:
     src: "{{ item }}"
     dest: "{{ nova_conf_version_dir }}/rootwrap.d/"
     owner: "root"
@@ -114,7 +114,7 @@
     - nova-provider-override
 
 - name: Remove legacy policy.yaml file
-  file:
+  ansible.builtin.file:
     path: "{{ nova_conf_dir }}/policy.yaml"
     state: absent
   when:
@@ -127,13 +127,13 @@
 #                  because we only want to copy the original files once. and we
 #                  don't want to need multiple tasks.
 - name: Preserve original configuration file(s)
-  command: "cp {{ item.target_f }} {{ item.target_f }}.original"
+  ansible.builtin.command: "cp {{ item.target_f }} {{ item.target_f }}.original"
   args:
     creates: "{{ item.target_f }}.original"
   with_items: "{{ nova_core_files }}"
 
 - name: Fetch override files
-  fetch:
+  ansible.builtin.fetch:
     src: "{{ item.target_f }}"
     dest: "{{ item.tmp_f }}"
     flat: true
@@ -156,7 +156,7 @@
     - Restart uwsgi services
 
 - name: Cleanup fetched temp files
-  file:
+  ansible.builtin.file:
     path: "{{ item.tmp_f }}"
     state: absent
   changed_when: false
@@ -165,7 +165,7 @@
   with_items: "{{ nova_core_files }}"
 
 - name: Remove nova-compute config
-  file:
+  ansible.builtin.file:
     path: /etc/nova/nova-compute.conf
     state: absent
   notify:

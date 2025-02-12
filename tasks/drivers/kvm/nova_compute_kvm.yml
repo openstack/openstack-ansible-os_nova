@@ -14,7 +14,7 @@
 # limitations under the License.
 
 - name: Including nova_compute_kvm_install tasks
-  include_tasks: nova_compute_kvm_install.yml
+  ansible.builtin.include_tasks: nova_compute_kvm_install.yml
   args:
     apply:
       tags:
@@ -23,7 +23,7 @@
     - always
 
 - name: Set nested kvm virt
-  copy:
+  ansible.builtin.copy:
     src: kvm.conf
     dest: /etc/modprobe.d/kvm.conf
     owner: root
@@ -36,7 +36,7 @@
     - nova-kvm
 
 - name: Add nova user to libvirtd group
-  user:
+  ansible.builtin.user:
     name: "{{ nova_system_user_name }}"
     groups: "{{ libvirt_group }}"
     append: "yes"
@@ -45,14 +45,14 @@
     - nova-libvirt
 
 - name: Ensure kvm permissions
-  command: "udevadm trigger"
+  ansible.builtin.command: "udevadm trigger"
   changed_when: false
   tags:
     - nova-config
     - nova-kvm
 
 - name: Set kernel permissions to enable libguestfs features (Ubuntu)
-  include_tasks: nova_kernel_permissions.yml
+  ansible.builtin.include_tasks: nova_kernel_permissions.yml
   when:
     - ansible_facts['distribution'] == 'Ubuntu'
     - nova_libvirt_inject_key | bool or nova_libvirt_inject_password | bool
@@ -66,7 +66,7 @@
     - always
 
 - name: Set libvirtd config
-  template:
+  ansible.builtin.template:
     src: libvirtd.conf.j2
     dest: /etc/libvirt/libvirtd.conf
     owner: "root"
@@ -79,7 +79,7 @@
     - nova-libvirt
 
 - name: Set qemu config
-  template:
+  ansible.builtin.template:
     src: "qemu.conf.j2"
     dest: "/etc/libvirt/qemu.conf"
     owner: "root"
@@ -92,7 +92,7 @@
     - nova-libvirt
 
 - name: Unset libvirt runtime options (Ubuntu)
-  lineinfile:
+  ansible.builtin.lineinfile:
     dest: "/etc/default/libvirtd"
     line: 'libvirtd_opts=""'
     regexp: "^libvirtd_opts="
@@ -106,7 +106,7 @@
     - nova-libvirt
 
 - name: Unset libvirt runtime options (RPM)
-  lineinfile:
+  ansible.builtin.lineinfile:
     dest: "/etc/sysconfig/libvirtd"
     line: 'LIBVIRTD_ARGS=""'
     regexp: "^(#)?LIBVIRTD_ARGS=*"
@@ -121,7 +121,7 @@
     - nova-libvirt
 
 - name: Set qemu-kvm KSM config (Ubuntu)
-  lineinfile:
+  ansible.builtin.lineinfile:
     dest: "/etc/default/qemu-kvm"
     line: "KSM_ENABLED={{ nova_compute_ksm_enabled | ternary('1', '0') }}"
     regexp: "^KSM_ENABLED=*"
@@ -135,7 +135,7 @@
     - nova-libvirt
 
 - name: Set apparmor config (Ubuntu/Debian)
-  lineinfile:
+  ansible.builtin.lineinfile:
     dest: "/etc/apparmor.d/local/usr.lib.libvirt.virt-aa-helper"
     line: "  {{ nova_system_home_folder }}/instances/_base/* r,"
     backup: true
@@ -152,7 +152,7 @@
     - nova-libvirt
 
 - name: Including nova_disable_smt tasks
-  include_tasks: nova_disable_smt.yml
+  ansible.builtin.include_tasks: nova_disable_smt.yml
   when:
     - ansible_facts['architecture'] == 'ppc64le'
   args:
@@ -163,7 +163,7 @@
     - always
 
 - name: Including nova_enable_ksm tasks
-  include_tasks: nova_enable_ksm.yml
+  ansible.builtin.include_tasks: nova_enable_ksm.yml
   when:
     - nova_compute_ksm_enabled | bool
   args:
@@ -174,7 +174,7 @@
     - always
 
 - name: Including nova_compute_kvm_virsh_net_remove tasks
-  include_tasks: nova_compute_kvm_virsh_net_remove.yml
+  ansible.builtin.include_tasks: nova_compute_kvm_virsh_net_remove.yml
   args:
     apply:
       tags:

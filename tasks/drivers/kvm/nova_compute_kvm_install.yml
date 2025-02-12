@@ -14,13 +14,13 @@
 # limitations under the License.
 
 - name: Make sure libvirt is started
-  service:
+  ansible.builtin.service:
     name: "{{ item }}"
     state: "started"
   with_items: "{{ libvirt_service_name }}"
 
 - name: Check the state of the default qemu save directory
-  stat:
+  ansible.builtin.stat:
     path: "/var/lib/libvirt/qemu/save"
   until: _qemu_save_dir.stat.exists | bool
   retries: 5
@@ -29,7 +29,7 @@
   register: _qemu_save_dir
 
 - name: Check if the qemu save directory is empty
-  command: "ls -1A /var/lib/libvirt/qemu/save"
+  ansible.builtin.command: "ls -1A /var/lib/libvirt/qemu/save"
   changed_when: false
   register: _qemu_save_dir_contents
   when:
@@ -37,20 +37,20 @@
     - _qemu_save_dir.stat.isdir | bool
 
 - name: Move the existing save directory to nova_libvirt_save_path
-  command: "mv /var/lib/libvirt/qemu/save {{ nova_libvirt_save_path }}" # noqa: no-changed-when
+  ansible.builtin.command: "mv /var/lib/libvirt/qemu/save {{ nova_libvirt_save_path }}" # noqa: no-changed-when
   when:
     - _qemu_save_dir.stat.isdir is defined
     - _qemu_save_dir.stat.isdir | bool
     - _qemu_save_dir_contents.stdout_lines | length == 0
 
 - name: Create the new save directory
-  file:
+  ansible.builtin.file:
     path: "{{ nova_libvirt_save_path }}"
     state: directory
     mode: "0755"
 
 - name: Symlink qemu save dir to nova_libvirt_save_path
-  file:
+  ansible.builtin.file:
     src: "{{ nova_libvirt_save_path }}"
     dest: "/var/lib/libvirt/qemu/save"
     state: link

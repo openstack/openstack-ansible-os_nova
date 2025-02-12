@@ -14,7 +14,7 @@
 # limitations under the License.
 
 - name: Create the system group
-  group:
+  ansible.builtin.group:
     name: "{{ nova_system_group_name }}"
     gid: "{{ nova_system_group_gid | default(omit) }}"
     state: "present"
@@ -23,7 +23,7 @@
     - nova-group
 
 - name: Create the nova system user
-  user:
+  ansible.builtin.user:
     name: "{{ nova_system_user_name }}"
     uid: "{{ nova_system_user_uid | default(omit) }}"
     group: "{{ nova_system_group_name }}"
@@ -37,7 +37,7 @@
     - nova-key
 
 - name: Create Nova NFS mount point(s)
-  file:
+  ansible.builtin.file:
     path: "{{ item.local_path }}"
     state: directory
     mode: "0755"
@@ -52,12 +52,12 @@
 - name: Source config block
   block:
     - name: Stat config directory
-      stat:
+      ansible.builtin.stat:
         path: "{{ nova_conf_dir }}"
       register: nova_conf_dir_stat
 
     - name: Remove the config directory
-      file:
+      ansible.builtin.file:
         path: "{{ nova_conf_dir }}"
         state: absent
       when:
@@ -67,7 +67,7 @@
     - nova_install_method == 'source'
 
 - name: Create nova dir
-  file:
+  ansible.builtin.file:
     path: "{{ item.path }}"
     state: "{{ item.state | default('directory') }}"
     owner: "{{ item.owner | default(nova_system_user_name) }}"
@@ -98,6 +98,6 @@
     - nova-dirs
 
 - name: Set default nova console for ppc64le
-  set_fact:
+  ansible.builtin.set_fact:
     nova_console_type: "novnc"
   when: ansible_facts['architecture'] == 'ppc64le'

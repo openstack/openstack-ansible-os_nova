@@ -14,7 +14,7 @@
 # limitations under the License.
 
 - name: Ensure ssl cert directory exists
-  file:
+  ansible.builtin.file:
     path: "{{ nova_console_ssl_dir }}"
     state: directory
     owner: "nova"
@@ -22,7 +22,7 @@
     mode: "0755"
 
 - name: Prepare combined nova-console SSL and CA certs
-  command: cat {{ nova_console_user_ssl_cert }} {{ nova_console_user_ssl_ca_cert is defined | ternary(nova_console_user_ssl_ca_cert, '') }}
+  ansible.builtin.command: cat {{ nova_console_user_ssl_cert }} {{ nova_console_user_ssl_ca_cert is defined | ternary(nova_console_user_ssl_ca_cert, '') }}
   changed_when: false
   register: nova_console_user_ssl_combined
   tags:
@@ -30,7 +30,7 @@
   delegate_to: localhost
 
 - name: Drop user provided ssl cert and key
-  copy:
+  ansible.builtin.copy:
     src: "{{ item.src | default(omit) }}"
     content: "{{ item.content | default(omit) }}"
     dest: "{{ item.dest }}"

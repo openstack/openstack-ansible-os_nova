@@ -14,7 +14,7 @@
 # limitations under the License.
 
 - name: Including nova_compute tasks for {{ nova_virt_type }}
-  include_tasks: "drivers/{{ nova_virt_type }}/nova_compute_{{ nova_virt_type }}.yml"
+  ansible.builtin.include_tasks: "drivers/{{ nova_virt_type }}/nova_compute_{{ nova_virt_type }}.yml"
   args:
     apply:
       tags:
@@ -23,7 +23,7 @@
     - always
 
 - name: Create the nova SSH config file
-  template:
+  ansible.builtin.template:
     src: "ssh_config.j2"
     dest: "{{ nova_system_home_folder }}/.ssh/config"
     owner: "{{ nova_system_user_name }}"
@@ -33,7 +33,7 @@
     - nova-key
 
 - name: Create ssh keys and config for cold migrations
-  include_role:
+  ansible.builtin.include_role:
     name: openstack.osa.ssh_keypairs
   args:
     apply:
@@ -50,7 +50,7 @@
     - always
 
 - name: Run the systemd mount role
-  include_role:
+  ansible.builtin.include_role:
     name: systemd_mount
   vars:
     systemd_mounts:

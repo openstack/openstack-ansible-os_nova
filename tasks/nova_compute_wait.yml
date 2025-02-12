@@ -30,7 +30,7 @@
 
   rescue:
     - name: Restart nova-compute service
-      service:
+      ansible.builtin.service:
         name: "{{ nova_services['nova-compute']['service_name'] }}"
         state: restarted
 

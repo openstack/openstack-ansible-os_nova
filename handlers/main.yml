@@ -14,7 +14,7 @@
 # limitations under the License.
 
 - name: Stop libvirt-bin
-  service:
+  ansible.builtin.service:
     name: "{{ item }}"
     enabled: true
     state: "stopped"
@@ -28,7 +28,7 @@
     - nova_virt_type != 'ironic'
 
 - name: Enable sockets when needed
-  service:
+  ansible.builtin.service:
     name: "{{ item.name | default(item) }}"
     state: "{{ item.condition | default(False) | ternary('started', 'stopped') }}"
     enabled: "{{ item.condition | default(False) }}"
@@ -42,7 +42,7 @@
     - Restart libvirt-bin
 
 - name: Start libvirt-bin
-  service:
+  ansible.builtin.service:
     name: "{{ item }}"
     enabled: true
     state: "started"
@@ -56,7 +56,7 @@
     - nova_virt_type != 'ironic'
 
 - name: Symlink nova config directory
-  file:
+  ansible.builtin.file:
     # NOTE(cloudnull): The "src" path is relative. This ensures all files remain
     #                  within the host/container confines when connecting to
     #                  them using the connection plugin or the root filesystem.
@@ -69,7 +69,7 @@
     - "venv changed"
 
 - name: Drop sudoers file
-  template:
+  ansible.builtin.template:
     src: "sudoers.j2"
     dest: "/etc/sudoers.d/{{ nova_system_user_name }}_sudoers"
     mode: "0440"
@@ -80,7 +80,7 @@
     - "venv changed"
 
 - name: Stop services
-  service:
+  ansible.builtin.service:
     name: "{{ item.service_name }}"
     enabled: true
     state: "stopped"
@@ -97,7 +97,7 @@
     - "systemd service changed"
 
 - name: Start services
-  service:
+  ansible.builtin.service:
     name: "{{ item.service_name }}"
     enabled: true
     state: "started"

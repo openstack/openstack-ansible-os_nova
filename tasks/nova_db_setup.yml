@@ -14,7 +14,7 @@
 # limitations under the License.
 
 - name: Synchronize the nova API DB schema
-  command: "{{ nova_bin }}/nova-manage --config-file {{ nova_conf_version_dir }}/nova.conf api_db sync"
+  ansible.builtin.command: "{{ nova_bin }}/nova-manage --config-file {{ nova_conf_version_dir }}/nova.conf api_db sync"
   become: true
   become_user: "{{ nova_system_user_name }}"
   changed_when: false
@@ -22,14 +22,14 @@
 # We need to check for existance of the cell, since nova-manage cell_v2 create_cell
 # might be not idempotent due to the bug https://bugs.launchpad.net/nova/+bug/1923899
 - name: Get UUID of Nova Cells
-  command: "{{ nova_bin }}/nova-manage --config-file {{ nova_conf_version_dir }}/nova.conf cell_v2 list_cells"
+  ansible.builtin.command: "{{ nova_bin }}/nova-manage --config-file {{ nova_conf_version_dir }}/nova.conf cell_v2 list_cells"
   become: true
   become_user: "{{ nova_system_user_name }}"
   changed_when: false
   register: _cell_list
 
 - name: Set cell facts
-  set_fact:
+  ansible.builtin.set_fact:
     _cell0_record: '{{ _cell_list.stdout_lines | select("regex", "[0-]{36}") }}'
     _cell1_record: '{{ _cell_list.stdout_lines | select("regex", " " ~ nova_cell1_name ~ " ") }}'
 
@@ -38,7 +38,7 @@
 # Though since we anyway need to fetch cell records - let's run
 # it conditionally.
 - name: Create the cell0 mapping entry in the nova API DB
-  command: >-
+  ansible.builtin.command: >-
     {{ nova_bin }}/nova-manage --config-file {{ nova_conf_version_dir }}/nova.conf cell_v2 map_cell0
       --database_connection mysql+pymysql://{{ nova_api_galera_user }}:{{ nova_api_container_mysql_password }}@{{ nova_api_galera_address }}/{{
         nova_cell0_database }}?charset=utf8{% if nova_galera_use_ssl | bool %}&ssl_verify_cert=true{%
@@ -50,7 +50,7 @@
     - not _cell0_record
 
 - name: Update the cell0 mapping entry in the nova API DB
-  command: >-
+  ansible.builtin.command: >-
     {{ nova_bin }}/nova-manage --config-file {{ nova_conf_version_dir }}/nova.conf cell_v2 update_cell --cell_uuid 00000000-0000-0000-0000-000000000000
       --database_connection mysql+pymysql://{{ nova_api_galera_user }}:{{ nova_api_container_mysql_password }}@{{ nova_api_galera_address }}/{{
         nova_cell0_database }}?charset=utf8{% if nova_galera_use_ssl | bool %}&ssl_verify_cert=true{%
@@ -66,13 +66,13 @@
       ('ssl_verify_cert' in _cell0_record[0] and not nova_galera_use_ssl)
 
 - name: Synchronize the nova DB schema
-  command: "{{ nova_bin }}/nova-manage --config-file {{ nova_conf_version_dir }}/nova.conf db sync"
+  ansible.builtin.command: "{{ nova_bin }}/nova-manage --config-file {{ nova_conf_version_dir }}/nova.conf db sync"
   become: true
   become_user: "{{ nova_system_user_name }}"
   changed_when: false
 
 - name: Create the cell1 mapping entry in the nova API DB
-  command: >-
+  ansible.builtin.command: >-
     {{ nova_bin }}/nova-manage --config-file {{ nova_conf_version_dir }}/nova.conf cell_v2 create_cell
       --name {{ nova_cell1_name }}
       --database_connection {scheme}://{username}:{password}@{hostname}:{port}/{path}?{query}
@@ -95,7 +95,7 @@
     - not _cell1_record
 
 - name: "Change the template for cell {{ nova_cell1_name }}"
-  command: >-
+  ansible.builtin.command: >-
     {{ nova_bin }}/nova-manage --config-file {{ nova_conf_version_dir }}/nova.conf cell_v2 update_cell
       --cell_uuid {{ _cell1_record[0].split()[3] }}
       --database_connection {scheme}://{username}:{password}@{hostname}:{port}/{path}?{query}
@@ -115,7 +115,7 @@
 # mapping setup and before actual service restart.
 # https://docs.openstack.org/nova/latest/cli/nova-status.html
 - name: Run nova-status upgrade check to validate a healthy configuration
-  command: "{{ nova_bin }}/nova-status --config-file {{ nova_conf_version_dir }}/nova.conf upgrade check"
+  ansible.builtin.command: "{{ nova_bin }}/nova-status --config-file {{ nova_conf_version_dir }}/nova.conf upgrade check"
   become: true
   become_user: "{{ nova_system_user_name }}"
   register: nova_status_upgrade_check

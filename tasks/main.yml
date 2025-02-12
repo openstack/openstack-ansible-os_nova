@@ -14,7 +14,7 @@
 # limitations under the License.
 
 - name: Gather variables for each operating system
-  include_vars: "{{ lookup('first_found', params) }}"
+  ansible.builtin.include_vars: "{{ lookup('first_found', params) }}"
   vars:
     params:
       files:
@@ -29,7 +29,7 @@
     - always
 
 - name: Fail when virt type is unsupported
-  fail:
+  ansible.builtin.fail:
     msg: "Unsupported Virt Type Provided {{ nova_supported_virt_types }}"
   when:
     - nova_virt_type is defined
@@ -38,7 +38,7 @@
     - always
 
 - name: Fail if service was deployed using a different installation method
-  fail:
+  ansible.builtin.fail:
     msg: "Switching installation methods for OpenStack services is not supported"
   when:
     - ansible_local is defined
@@ -48,12 +48,12 @@
     - ansible_local.openstack_ansible.nova.install_method != nova_install_method
 
 - name: Gather variables for installation method
-  include_vars: "{{ nova_install_method }}_install.yml"
+  ansible.builtin.include_vars: "{{ nova_install_method }}_install.yml"
   tags:
     - always
 
 - name: Including osa.db_setup role
-  include_role:
+  ansible.builtin.include_role:
     name: openstack.osa.db_setup
     apply:
       tags:
@@ -83,7 +83,7 @@
     - always
 
 - name: Including osa.mq_setup role
-  include_role:
+  ansible.builtin.include_role:
     name: openstack.osa.mq_setup
     apply:
       tags:
@@ -109,7 +109,7 @@
     - always
 
 - name: Including nova_virt_detect tasks
-  include_tasks: nova_virt_detect.yml
+  ansible.builtin.include_tasks: nova_virt_detect.yml
   args:
     apply:
       tags:
@@ -120,22 +120,22 @@
     - always
 
 - name: Importing nova_mdev_detect tasks
-  import_tasks: nova_mdev_detect.yml
+  ansible.builtin.import_tasks: nova_mdev_detect.yml
   tags:
     - always
 
 - name: Importing nova_pre_install tasks
-  import_tasks: nova_pre_install.yml
+  ansible.builtin.import_tasks: nova_pre_install.yml
   tags:
     - nova-install
 
 - name: Importing nova_install tasks
-  import_tasks: nova_install.yml
+  ansible.builtin.import_tasks: nova_install.yml
   tags:
     - nova-install
 
 - name: Refresh local facts
-  setup:
+  ansible.builtin.setup:
     filter: ansible_local
     gather_subset: "!all"
   tags:
@@ -143,7 +143,7 @@
 
 # Create certs after nova groups have been created but before handlers
 - name: Create and install SSL certificates for API and Consoles
-  include_role:
+  ansible.builtin.include_role:
     name: pki
     tasks_from: main_certs.yml
     apply:
@@ -163,7 +163,7 @@
     - always
 
 - name: Create and install SSL certificates for compute hosts
-  include_role:
+  ansible.builtin.include_role:
     name: pki
     tasks_from: main_certs.yml
     apply:
@@ -185,13 +185,13 @@
     - always
 
 - name: Including nova_post_install tasks
-  import_tasks: nova_post_install.yml
+  ansible.builtin.import_tasks: nova_post_install.yml
   tags:
     - nova-config
     - post-install
 
 - name: Including osa.service_setup tasks
-  include_role:
+  ansible.builtin.include_role:
     name: openstack.osa.service_setup
     apply:
       tags:
@@ -228,7 +228,7 @@
     - always
 
 - name: Including nova_db_setup tasks
-  include_tasks: nova_db_setup.yml
+  ansible.builtin.include_tasks: nova_db_setup.yml
   args:
     apply:
       tags:
@@ -240,7 +240,7 @@
     - always
 
 - name: Import uwsgi role
-  import_role:
+  ansible.builtin.import_role:
     name: uwsgi
   vars:
     uwsgi_services: "{{ uwsgi_nova_services }}"
@@ -252,7 +252,7 @@
     - uwsgi
 
 - name: Run the systemd service role
-  import_role:
+  ansible.builtin.import_role:
     name: systemd_service
   vars:
     systemd_user_name: "{{ nova_system_user_name }}"
@@ -285,7 +285,7 @@
     - systemd-service
 
 - name: Including nova_compute tasks
-  include_tasks: nova_compute.yml
+  ansible.builtin.include_tasks: nova_compute.yml
   args:
     apply:
       tags:
@@ -297,7 +297,7 @@
     - always
 
 - name: Include ceph_client role
-  include_role:
+  ansible.builtin.include_role:
     name: ceph_client
     apply:
       tags:
@@ -313,10 +313,10 @@
     - always
 
 - name: Flush handlers
-  meta: flush_handlers
+  ansible.builtin.meta: flush_handlers
 
 - name: Importing nova_compute_wait tasks
-  import_tasks: nova_compute_wait.yml
+  ansible.builtin.import_tasks: nova_compute_wait.yml
   when:
     - "nova_services['nova-compute']['group'] in group_names"
     - "nova_discover_hosts_in_cells_interval | int < 1"

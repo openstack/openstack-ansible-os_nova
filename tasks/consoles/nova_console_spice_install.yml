@@ -14,7 +14,7 @@
 # limitations under the License.
 
 - name: Remove existing directory if it is not a git repo or it is dirty
-  shell: |
+  ansible.builtin.shell: |
     EXIT_CODE=0
     FOLDER_PATH="/usr/share/spice-html5"
     if [[ -e ${FOLDER_PATH} ]]; then
@@ -40,7 +40,7 @@
     - nova-spice-git
 
 - name: Get package from git
-  git:
+  ansible.builtin.git:
     repo: "{{ nova_spicehtml5_git_repo }}"
     dest: "/usr/share/spice-html5"
     clone: "yes"

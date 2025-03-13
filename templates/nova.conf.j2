@@ -211,7 +211,7 @@ memcache_security_strategy = ENCRYPT
 memcache_secret_key = {{ memcached_encryption_key }}
 {% endif %}
 
-{% if group_names | intersect(nova_services.keys() | difference('nova-compute') | map('extract', nova_services, 'group') | list) | count > 0 %}
+{% if group_names | intersect(nova_services.keys() | difference(['nova-compute']) | map('extract', nova_services, 'group') | list) | count > 0 %}
 [database]
 connection = mysql+pymysql://{{ nova_galera_user }}:{{ nova_container_mysql_password }}@{{ nova_galera_address }}:{{ nova_galera_port }}/{{ nova_galera_database }}?charset=utf8{% if nova_galera_use_ssl | bool %}&ssl_verify_cert=true{% if nova_galera_ssl_ca_cert | length > 0 %}&ssl_ca={{ nova_galera_ssl_ca_cert }}{% endif %}{% endif %}
 

@@ -86,7 +86,7 @@ memcache_servers = {{ nova_cache_servers }}
 
 # Cinder
 [cinder]
-catalog_info = volumev3:cinderv3:internalURL
+catalog_info = block-storage:cinder:internalURL
 os_region_name = {{ nova_service_region }}
 auth_section = keystone_authtoken
 

@@ -151,9 +151,10 @@
         - nova-config
         - pki
   vars:
+    pki_backend: "{{ nova_pki_backend }}"
     pki_setup_host: "{{ nova_pki_setup_host }}"
     pki_dir: "{{ nova_pki_dir }}"
-    pki_create_certificates: "{{ nova_user_ssl_cert is not defined and nova_user_ssl_key is not defined }}"
+    pki_create_certificates: "{{ nova_user_ssl_cert | length == 0 and nova_user_ssl_key | length == 0 }}"
     pki_regen_cert: "{{ nova_pki_regen_cert }}"
     pki_certificates: "{{ nova_pki_certificates + nova_pki_console_certificates }}"
     pki_install_certificates: "{{ nova_pki_install_certificates + nova_pki_console_install_certificates }}"
@@ -171,9 +172,10 @@
         - nova-config
         - pki
   vars:
+    pki_backend: "{{ nova_pki_backend }}"
     pki_setup_host: "{{ nova_pki_setup_host }}"
     pki_dir: "{{ nova_pki_dir }}"
-    pki_create_certificates: "{{ nova_user_ssl_cert is not defined and nova_user_ssl_key is not defined }}"
+    pki_create_certificates: "{{ nova_user_ssl_cert | length == 0 and nova_user_ssl_key | length == 0 }}"
     pki_regen_cert: "{{ nova_pki_regen_cert }}"
     pki_certificates: "{{ nova_pki_compute_certificates }}"
     pki_install_certificates: "{{ nova_pki_compute_install_certificates }}"

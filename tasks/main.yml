@@ -119,8 +119,14 @@
   tags:
     - always
 
-- name: Importing nova_mdev_detect tasks
-  ansible.builtin.import_tasks: nova_mdev_detect.yml
+- name: Including nova_mdev_detect tasks
+  ansible.builtin.include_tasks: nova_mdev_detect.yml
+  args:
+    apply:
+      tags:
+        - always
+  when:
+    - nova_discover_mdev_types | bool
   tags:
     - always
 

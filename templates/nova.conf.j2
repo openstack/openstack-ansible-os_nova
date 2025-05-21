@@ -321,6 +321,7 @@ api_paste_config = {{ nova_conf_dir }}/api-paste.ini
 vendordata_jsonfile_path = {{ nova_conf_dir }}/vendor_data.json
 dhcp_domain = {{ nova_dhcp_domain }}
 
+{% if nova_services['nova-scheduler']['group'] in group_names %}
 [scheduler]
 workers = {{ nova_scheduler_workers | default(nova_api_threads) }}
 max_attempts = {{ nova_scheduler_max_attempts }}
@@ -335,6 +336,7 @@ available_filters = blazarnova.scheduler.filters.blazar_filter.BlazarFilter
 enabled_filters = {{ _nova_scheduler_filters | join(',') }}
 host_subset_size = {{ nova_scheduler_host_subset_size }}
 track_instance_changes = {{ nova_scheduler_tracks_instance_changes }}
+{% endif %}
 
 [upgrade_levels]
 compute=auto

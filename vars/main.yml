@@ -94,7 +94,6 @@ uwsgi_nova_services: |-
          and ('wsgi_app' in value and value['wsgi_app']) %}
   {%     set _ = value.update(
             {
-             'wsgi_path':  nova_bin ~ '/' ~ value.wsgi_name,
              'wsgi_venv': ((nova_install_method == 'source') | ternary(nova_bin | dirname, None)),
              'uwsgi_uid': nova_system_user_name,
              'uwsgi_guid': nova_system_group_name,

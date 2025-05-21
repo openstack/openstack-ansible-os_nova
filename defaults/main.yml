@@ -478,7 +478,7 @@ nova_services:
     uwsgi_bind_address: "{{ nova_metadata_bind_address }}"
     uwsgi_port: "{{ nova_metadata_port }}"
     uwsgi_tls: "{{ nova_backend_ssl | ternary(nova_uwsgi_tls, {}) }}"
-    wsgi_name: nova-metadata-wsgi
+    wsgi: "nova.wsgi.metadata:application"
   nova-api-os-compute:
     group: nova_api_os_compute
     service_name: nova-api-os-compute
@@ -489,7 +489,7 @@ nova_services:
     uwsgi_bind_address: "{{ nova_service_bind_address }}"
     uwsgi_port: "{{ nova_service_port }}"
     uwsgi_tls: "{{ nova_backend_ssl | ternary(nova_uwsgi_tls, {}) }}"
-    wsgi_name: nova-api-wsgi
+    wsgi: "nova.wsgi.osapi_compute:application"
   nova-compute:
     group: nova_compute
     service_name: nova-compute

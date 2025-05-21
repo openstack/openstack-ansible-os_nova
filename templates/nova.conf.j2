@@ -7,7 +7,8 @@ use_journal = True
 state_path = {{ nova_system_home_folder }}
 service_down_time = 120
 
-# Scheduler
+{% if nova_services['nova-compute']['group'] in group_names %}
+# Resource allocation/reservation
 cpu_allocation_ratio = {{ nova_cpu_allocation_ratio }}
 disk_allocation_ratio = {{ nova_disk_allocation_ratio }}
 ram_allocation_ratio = {{ nova_ram_allocation_ratio }}
@@ -18,6 +19,7 @@ reserved_host_memory_mb = {{ nova_reserved_host_memory_mb }}
 compute_driver = {{ nova_compute_driver }}
 instances_path = {{ nova_system_home_folder }}/instances
 allow_resize_to_same_host = True
+{% endif %}
 
 {% if nova_console_user_ssl_cert is defined and nova_console_user_ssl_key is defined and ( nova_services['nova-novncproxy']['group'] in group_names or nova_services['nova-spicehtml5proxy']['group'] in group_names or nova_services['nova-serialconsole-proxy']['group'] in group_names ) %}
 # Console SSL keys

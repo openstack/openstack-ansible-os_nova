@@ -167,3 +167,79 @@ Ansible variables:
    OpenStack-Ansible can cause failures, errors, and general instability. These
    values should only be set once before deploying an OpenStack environment
    and then never changed.
+
+
+Enabling Huge Pages
+~~~~~~~~~~~~~~~~~~~
+
+In order to enable Huge Pages for your kernel, as series of actions must be
+done:
+
+.. note::
+
+  It is suggested to leverage ``group_vars``, as usually you need to enable
+  Huge Pages only on specific set of hosts.
+  For example, you can use `/etc/openstack_deploy/group_vars/compute_hosts.yml`
+  file for defining variables discussed below.
+
+#. In variables define a default size of Huge Pages.
+
+    .. code-block:: yaml
+
+      custom_huge_pages_size_mb: 2
+
+#. Define custom GRUB records to enable Huge Pages
+
+    .. code-block:: yaml
+
+      openstack_host_grub_options:
+        - key: hugepagesz
+          value: "{{ custom_huge_pages_size_mb }}M"
+        - key: hugepages
+          value: "{{ (ansible_facts['memtotal_mb'] - nova_reserved_host_memory_mb) // custom_huge_pages_size_mb }}"
+        - key: transparent_hugepage
+          value: never
+
+#. Define override for the default ``dev-hugepages.mount``:
+
+    .. code-block:: yaml
+
+      openstack_hosts_systemd_mounts:
+        - what: dev-hugepages
+          mount_overrides_only: true
+          type: hugetlbfs
+          escape_name: false
+          config_overrides:
+            Mount:
+              Options: "pagesize={{ custom_huge_pages_size_mb }}M"
+
+#. Rollout changes to hosts
+
+    .. code-block:: shell
+
+      # openstack-ansible openstack.osa.openstack_hosts_setup --limit compute_hosts
+
+#. Define flavors with Huge Pages support
+
+    .. code-block:: yaml
+
+      openstack_user_compute:
+        flavors:
+          - specs:
+              - name: m1.small
+                vcpus: 2
+                ram: 4096
+                disk: 0
+              - name: m1.large
+                vcpus: 8
+                ram: 16384
+                disk: 0
+            extra_specs:
+              hw:mem_page_size: large
+              hw:cpu_policy: dedicated
+
+#. Create defined flavors in region
+
+    .. code-block:: shell
+
+      # openstack-ansible openstack.osa.openstack_resources

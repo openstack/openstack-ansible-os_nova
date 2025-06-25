@@ -40,22 +40,6 @@
       owner: "root"
       group: "root"
 
-- name: Copy nova rootwrap filter config
-  ansible.builtin.copy:
-    src: "{{ item }}"
-    dest: "{{ nova_conf_version_dir }}/rootwrap.d/"
-    owner: "root"
-    group: "root"
-    mode: "0644"
-  with_fileglob:
-    - rootwrap.d/*
-  notify:
-    - Restart nova services
-    - Restart uwsgi services
-  tags:
-    - nova-config
-    - nova-post-install
-
 - name: Generate nova config
   openstack.config_template.config_template:
     src: "{{ item.src }}"

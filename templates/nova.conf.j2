@@ -248,7 +248,7 @@ insecure = {{ keystone_service_adminuri_insecure | bool }}
 
 {% endif %}
 
-{% if nova_virt_type in ['kvm', 'qemu', 'xen', 'lxc', 'uml', 'parallels'] %}
+{% if nova_virt_type in ['kvm', 'qemu', 'lxc', 'parallels'] %}
 
 {% if (neutron_plugin_type | default('') == "ml2.ovs") %}
 [os_vif_ovs]

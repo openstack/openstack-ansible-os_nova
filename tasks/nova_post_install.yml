@@ -26,20 +26,6 @@
     - nova-config
     - nova-post-install
 
-# NOTE(cloudnull): This task is required to copy rootwrap filters that we need
-#                  and nova does not provide by default.
-- name: Create aux nova dir
-  ansible.builtin.file:
-    path: "{{ item.path | default(omit) }}"
-    state: "directory"
-    owner: "{{ item.owner | default(nova_system_user_name) }}"
-    group: "{{ item.group | default(nova_system_group_name) }}"
-    mode: "{{ item.mode | default(omit) }}"
-  with_items:
-    - path: "{{ nova_conf_version_dir }}/rootwrap.d"
-      owner: "root"
-      group: "root"
-
 - name: Generate nova config
   openstack.config_template.config_template:
     src: "{{ item.src }}"

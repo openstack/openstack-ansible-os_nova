@@ -580,6 +580,12 @@ nova_vendor_data_overrides: {}
 nova_api_metadata_uwsgi_ini_overrides: {}
 nova_api_os_compute_uwsgi_ini_overrides: {}
 
+# Attempt to auto-discover available vGPU devices.
+# It is recommended to define them explicitly through ``nova_enabled_mdev_types``.
+# Doing so has precedence over discovered ones and does not require to
+# disable the variable explicitly.
+nova_discover_mdev_types: true
+
 # Enabled vGPU Types - dict defining 'type' and 'address' (optional) of vGPU
 # an address is only required when supporting more than one physical GPU on the host
 # Example 1:

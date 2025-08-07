@@ -44,6 +44,10 @@ instance_usage_audit = True
 instance_usage_audit_period = hour
 {% endif %}
 
+{% if ansible_facts['os_family'] | lower == 'redhat' and ansible_facts['distribution_version'] is version('10', '>=') %}
+mkisofs_cmd = mkisofs
+{% endif %}
+
 # Notifications
 [oslo_messaging_notifications]
 {% set notification_topics = [] %}

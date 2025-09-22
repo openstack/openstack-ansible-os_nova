@@ -156,17 +156,17 @@ By default, Ansible creates the nova user and group without specifying the
 UID or GID. To specify custom values for the UID or GID, set the following
 Ansible variables:
 
-.. code-block:: yaml
-
-    nova_system_user_uid = <specify a UID>
-    nova_system_group_gid = <specify a GID>
-
 .. warning::
 
    Setting this value after deploying an environment with
    OpenStack-Ansible can cause failures, errors, and general instability. These
    values should only be set once before deploying an OpenStack environment
    and then never changed.
+
+.. code-block:: yaml
+
+    nova_system_user_uid = <specify a UID>
+    nova_system_group_gid = <specify a GID>
 
 
 Enabling Huge Pages
@@ -243,3 +243,54 @@ done:
     .. code-block:: shell
 
       # openstack-ansible openstack.osa.openstack_resources
+
+Enabling post-copy for live migrations
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+One of methodologies to ensure successful migration of high-loaded instances
+is to use ``post-copy`` feature of Libvirt/QEMU. When this method is enabled,
+when instance fails to migrate with provided timeout the migration is
+forcefully completed, while remaining (untransferred memory) from the original
+hypervisor are transferred once being an access attempt happens from the
+instance.
+
+For post-copy to work, it is important so satisfy multiple conditions:
+
+* Nova configured to send post-copy to Libvirt while asking for migration:
+  * ``live_migration_timeout_action`` should be set to ``force_complete``
+  instead of default ``abort``
+  * ``live_migration_permit_post_copy`` should be enabled
+  * It is recommended to tune ``live_migration_completion_timeout``, as
+  the default of 800 seconds might take too long before deciding that
+  post-copy must be initiated. Please note, that the value of timeout
+  is multiplied by amount of RAM and disk for the instance.
+  So instance with 16Gb RAM and 50Gb disk may take over 14 hours before
+  enforcing post-copy mechanism.
+* Hypervisor needs to have ``vm.unprivileged_userfaultfd`` enabled to
+  allow post-copy to happen
+* Ensure Open vSwitch is not using ``mlockall`` for startup
+
+
+Below you can find an example configuration for OpenStack-Ansible to
+enable post-copy migration for your instances. For that, place the
+following content into ``/etc/openstack_deploy/group_vars/nova_compute.yml``:
+
+.. code:: yaml
+
+  nova_nova_conf_overrides:
+    libvirt:
+      live_migration_permit_post_copy: true
+      live_migration_timeout_action: force_complete
+      live_migration_completion_timeout: 30
+
+  openstack_user_kernel_options:
+    - key: vm.unprivileged_userfaultfd
+      value: 1
+
+Once configuration is in place, you need to run following playbooks to
+apply changes:
+
+.. code-block:: console
+
+  # openstack-ansible openstack.osa.openstack_hosts_setup --tags openstack_hosts-install --limit nova_compute
+  # openstack-ansible openstack.osa.nova --tags post-install --limit nova_compute

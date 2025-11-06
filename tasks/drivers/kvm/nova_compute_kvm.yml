@@ -134,17 +134,40 @@
     - nova-kvm
     - nova-libvirt
 
-- name: Set apparmor config (Ubuntu/Debian)
+# TODO(noonedeadpunk): Clean up in 2026.2 cycle
+- name: Clean up old apparmor config (Ubuntu/Debian)
   ansible.builtin.lineinfile:
     dest: "/etc/apparmor.d/local/usr.lib.libvirt.virt-aa-helper"
     line: "  {{ nova_system_home_folder }}/instances/_base/* r,"
-    backup: true
     create: true
     owner: "root"
     group: "root"
     mode: "0644"
+    state: absent
   when:
     - ansible_facts['distribution'] == 'Ubuntu' or ansible_facts['distribution'] == 'Debian'
+  notify: Reload apparmor profile
+  tags:
+    - nova-config
+    - nova-kvm
+    - nova-libvirt
+
+- name: Set apparmor overrides (Ubuntu/Debian)
+  ansible.builtin.blockinfile:
+    dest: "/etc/apparmor.d/local/usr.lib.libvirt.virt-aa-helper"
+    block: |
+      # arbitrary path to nova home folder
+        {{ nova_system_home_folder }}/images/** r,
+        {{ nova_system_home_folder }}/instances/_base/** r,
+        {{ nova_system_home_folder }}/instances/snapshots/** r,
+    create: true
+    owner: "root"
+    group: "root"
+    mode: "0644"
+    marker: "# {mark} OPENSTACK-ANSIBLE MANAGED BLOCK"
+  when:
+    - ansible_facts['distribution'] == 'Ubuntu' or ansible_facts['distribution'] == 'Debian'
+    - nova_system_home_folder != '/var/lib/nova'
   notify: Reload apparmor profile
   tags:
     - nova-config

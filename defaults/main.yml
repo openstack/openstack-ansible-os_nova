@@ -309,7 +309,12 @@ nova_libvirt_live_migration_inbound_addr: "{{ _nova_my_ip }}"
 
 ## Nova console
 # Set the console type for the compute host. Presently the only options are ["spice", "novnc", "serialconsole", "disabled"].
-nova_console_type: "{{ (ansible_facts['architecture'] == 'aarch64') | ternary('serialconsole', 'novnc') }}"
+nova_console_type_mapping:
+  x86_64: novnc
+  ppc64le: novnc
+  aarch64: serialconsole
+
+nova_console_type: "{{ nova_console_type_mapping[ansible_facts['architecture']] }}"
 
 ## Nova ironic console
 # Set the console type. Presently the only options are ["serialconsole", "disabled"].
@@ -318,9 +323,7 @@ nova_ironic_used: "{{ _nova_ironic_used }}"
 
 ## Nova console proxies
 # Set the console proxy types.
-nova_console_proxy_types:
-  - "{{ nova_console_type }}"
-  - "{{ nova_ironic_console_type }}"
+nova_console_proxy_types: "{{ _nova_console_proxy_types }}"
 
 # Nova console ssl info, presently only used by novnc console type
 nova_console_ssl_dir: "{{ nova_system_home_folder }}/console_ssl"

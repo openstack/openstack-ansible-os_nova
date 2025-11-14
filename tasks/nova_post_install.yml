@@ -53,16 +53,16 @@
     - nova-config
     - nova-post-install
 
-- name: Implement policy.yaml if there are overrides configured
+- name: Implement policy.yaml file
   openstack.config_template.config_template:
-    content: "{{ nova_policy_overrides }}"
+    content: "{{ (nova_policy_overrides | length > 0) | ternary(nova_policy_overrides, '---') }}"
     dest: "{{ nova_conf_version_dir }}/policy.yaml"
     owner: "root"
     group: "{{ nova_system_group_name }}"
     mode: "0640"
     config_type: yaml
   when:
-    - nova_policy_overrides | length > 0
+    - nova_services['nova-api-os-compute']['group'] in group_names
   tags:
     - nova-config
     - nova-policy-override
@@ -82,16 +82,6 @@
   tags:
     - nova-config
     - nova-provider-override
-
-- name: Remove legacy policy.yaml file
-  ansible.builtin.file:
-    path: "{{ nova_conf_dir }}/policy.yaml"
-    state: absent
-  when:
-    - nova_policy_overrides | length == 0
-  tags:
-    - nova-config
-    - nova-policy-override
 
 # NOTE(cloudnull): This is using "cp" instead of copy with a remote_source
 #                  because we only want to copy the original files once. and we

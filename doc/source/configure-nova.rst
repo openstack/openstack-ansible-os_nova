@@ -192,7 +192,7 @@ done:
 
     .. code-block:: yaml
 
-      openstack_host_grub_options:
+      openstack_host_custom_grub_options:
         - key: hugepagesz
           value: "{{ custom_huge_pages_size_mb }}M"
         - key: hugepages

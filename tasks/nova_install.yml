@@ -75,22 +75,33 @@
         value: "{{ nova_venv_tag }}"
   when: nova_install_method == 'source'
 
-- name: Including nova_console tasks
-  ansible.builtin.include_tasks: "consoles/nova_console_{{ nova_console_type }}_install.yml"
+- name: Including nova_console_novnc tasks
+  ansible.builtin.include_tasks: "consoles/nova_console_novnc_install.yml"
   when:
-    - "nova_services['nova-novncproxy']['group'] in group_names or
-        nova_services['nova-spicehtml5proxy']['group'] in group_names or
-        nova_services['nova-serialconsole-proxy']['group'] in group_names"
-    - "'novnc' in nova_console_proxy_types or
-        'spice' in nova_console_proxy_types"
+    - nova_services['nova-novncproxy']['group'] in group_names
+    - "'novnc' in nova_console_proxy_types"
   args:
     apply:
       tags:
         - nova-install
         - nova-novnc-console
+  tags:
+    - nova-install
+    - nova-novnc-console
+
+- name: Including nova_console_spice tasks
+  ansible.builtin.include_tasks: "consoles/nova_console_spice_install.yml"
+  when:
+    - nova_services['nova-spicehtml5proxy']['group'] in group_names
+    - "'spice' in nova_console_proxy_types"
+  args:
+    apply:
+      tags:
+        - nova-install
         - nova-spice-console
   tags:
-    - always
+    - nova-install
+    - nova-spice-console
 
 # NOTE(jrosser) We do not use the service_facts: module here as it will add
 # a very large quantity of facts for the host. To keep the facts

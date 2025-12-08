@@ -96,8 +96,3 @@
     - path: "{{ nova_system_home_folder }}/instances"
   tags:
     - nova-dirs
-
-- name: Set default nova console for ppc64le
-  ansible.builtin.set_fact:
-    nova_console_type: "novnc"
-  when: ansible_facts['architecture'] == 'ppc64le'

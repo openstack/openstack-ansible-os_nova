@@ -47,7 +47,7 @@ _nova_ironic_used: |-
 
 _nova_console_proxy_types: |-
   {% set _console_types = [ironic_console_type] %}
-  {% set _compute_arch_list = nova_services['nova-compute']['group'] | map(
+  {% set _compute_arch_list = groups[nova_services['nova-compute']['group']] | map(
                                 'extract', hostvars, ['ansible_facts', 'architecture']) | map('default', 'disabled') %}
   {% for arch in _compute_arch_list | unique %}
   {%   set _ = _console_types.append(nova_console_type_mapping[arch]) %}

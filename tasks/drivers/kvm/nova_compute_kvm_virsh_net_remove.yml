@@ -21,8 +21,10 @@
 
 - name: Disable libvirt default network # noqa: no-changed-when
   ansible.builtin.command: "virsh net-autostart default --disable"
-  when: default_net_info.stdout | regex_search('Autostart:\s+yes')
+  when:
+    - default_net_info.stdout | regex_search('Autostart:\s+yes') is not none
 
 - name: Destroy libvirt default network # noqa: no-changed-when
   ansible.builtin.command: "virsh net-destroy default"
-  when: default_net_info.stdout | regex_search('Active:\s+yes')
+  when:
+    - default_net_info.stdout | regex_search('Active:\s+yes') is not none

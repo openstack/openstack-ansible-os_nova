@@ -60,7 +60,7 @@
         - common-db
         - nova-config
   when:
-    - _nova_is_first_play_host
+    - _nova_is_first_play_host | bool
   vars:
     _oslodb_setup_host: "{{ nova_db_setup_host }}"
     _oslodb_ansible_python_interpreter: "{{ nova_db_setup_python_interpreter }}"
@@ -90,7 +90,7 @@
         - common-mq
         - nova-config
   when:
-    - _nova_is_first_play_host
+    - _nova_is_first_play_host | bool
   vars:
     _oslomsg_rpc_setup_host: "{{ nova_oslomsg_rpc_setup_host }}"
     _oslomsg_rpc_userid: "{{ nova_oslomsg_rpc_userid }}"
@@ -229,7 +229,7 @@
         type: "{{ nova_service_type }}"
         description: "{{ nova_service_description }}"
   when:
-    - _nova_is_first_play_host
+    - _nova_is_first_play_host | bool
   tags:
     - always
 
@@ -241,7 +241,7 @@
         - nova-config
         - post-install
   when:
-    - _nova_is_first_play_host
+    - _nova_is_first_play_host | bool
   tags:
     - always
 

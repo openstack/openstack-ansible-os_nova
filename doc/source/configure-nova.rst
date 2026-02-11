@@ -62,7 +62,6 @@ and requires an existing ``cinder`` account for the ``ephemeral-vms`` pool:
       - 172.29.244.152
       - 172.29.244.153
 
-
 If you have a different Ceph username for the pool, use it as:
 
 .. code-block:: console
@@ -73,11 +72,8 @@ If you have a different Ceph username for the pool, use it as:
   these settings.
 * `OpenStack-Ansible and Ceph Working Example`_
 
-
-.. _Ceph documentation for OpenStack: http://docs.ceph.com/docs/master/rbd/rbd-openstack/
+.. _Ceph documentation for OpenStack: https://docs.ceph.com/en/latest/rbd/rbd-openstack/
 .. _OpenStack-Ansible and Ceph Working Example: https://www.openstackfaq.com/openstack-ansible-ceph/
-
-
 
 Config drive
 ~~~~~~~~~~~~
@@ -95,7 +91,7 @@ with every virtual machine:
 
     nova_nova_conf_overrides:
       DEFAULT:
-        force_config_drive: True
+        force_config_drive: true
 
 Certain formats of config drives can prevent instances from migrating properly
 between hypervisors. If you need forced config drives and the ability
@@ -107,7 +103,7 @@ the ``nova_nova_conf_overrides`` variable:
     nova_nova_conf_overrides:
       DEFAULT:
         config_drive_format: vfat
-        force_config_drive: True
+        force_config_drive: true
 
 Libvirtd connectivity and authentication
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -167,7 +163,6 @@ Ansible variables:
 
     nova_system_user_uid = <specify a UID>
     nova_system_group_gid = <specify a GID>
-
 
 Enabling Huge Pages
 ~~~~~~~~~~~~~~~~~~~
@@ -270,7 +265,6 @@ For post-copy to work, it is important so satisfy multiple conditions:
   allow post-copy to happen
 * Ensure Open vSwitch is not using ``mlockall`` for startup
 
-
 Below you can find an example configuration for OpenStack-Ansible to
 enable post-copy migration for your instances. For that, place the
 following content into ``/etc/openstack_deploy/group_vars/nova_compute.yml``:
@@ -294,3 +288,42 @@ apply changes:
 
   # openstack-ansible openstack.osa.openstack_hosts_setup --tags openstack_hosts-install --limit nova_compute
   # openstack-ansible openstack.osa.nova --tags post-install --limit nova_compute
+
+Allow parallel live migrations
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+The number of parallel connections to QEMU during live migration can be
+configured with ``nova_live_migration_parallel_connections``.
+
+Values greater than 1 instruct the hypervisor to use that many parallel
+migration connections.
+
+See also the corresponding Nova libvirt option:
+`live_migration_parallel_connections <https://docs.openstack.org/nova/latest/configuration/config.html#libvirt.live_migration_parallel_connections>`_.
+
+.. note::
+
+   Each connection may utilize up to one CPU core, especially when
+   ``live_migration_with_native_tls`` is enabled. Consider reserving enough CPU
+   capacity on the compute host (e.g. via reserved CPUs / CPU sets) to avoid
+   impacting workloads during migrations.
+
+To configure this option in OpenStack-Ansible, set a configuration override:
+
+.. code-block:: yaml
+
+   nova_nova_conf_overrides:
+     libvirt:
+       live_migration_parallel_connections: N
+
+.. warning::
+
+   Using ``live_migration_parallel_connections`` together with
+   ``live_migration_permit_post_copy`` is supported only with
+   `QEMU>=10.1.0 <https://www.qemu.org/2025/08/26/qemu-10-1-0/>`_.
+
+Apply the change with:
+
+.. code-block:: console
+
+   openstack-ansible openstack.osa.nova --tags nova-config

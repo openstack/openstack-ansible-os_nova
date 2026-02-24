@@ -65,14 +65,14 @@
   tags:
     - always
 
-- name: Set libvirtd config
+- name: Deploy libvirtd configuration file
   ansible.builtin.template:
     src: libvirtd.conf.j2
     dest: /etc/libvirt/libvirtd.conf
     owner: "root"
     group: "root"
     mode: "0644"
-  notify: Restart libvirt-bin
+  notify: Restart libvirtd
   tags:
     - nova-config
     - nova-kvm
@@ -85,7 +85,7 @@
     owner: "root"
     group: "root"
     mode: "0600"
-  notify: Restart libvirt-bin
+  notify: Restart libvirtd
   tags:
     - nova-config
     - nova-kvm
@@ -99,7 +99,7 @@
     backup: "yes"
   when:
     - ansible_facts['pkg_mgr'] == 'apt'
-  notify: Restart libvirt-bin
+  notify: Restart libvirtd
   tags:
     - nova-config
     - nova-kvm
@@ -114,7 +114,7 @@
   when:
     - ansible_facts['pkg_mgr'] == 'dnf'
     - ansible_facts['distribution_version'] is version('9', '<')
-  notify: Restart libvirt-bin
+  notify: Restart libvirtd
   tags:
     - nova-config
     - nova-kvm
@@ -128,7 +128,7 @@
     backup: true
   when:
     - ansible_facts['distribution'] == 'Ubuntu'
-  notify: Restart libvirt-bin
+  notify: Restart libvirtd
   tags:
     - nova-config
     - nova-kvm

@@ -105,21 +105,6 @@
     - nova-kvm
     - nova-libvirt
 
-- name: Unset libvirt runtime options (RPM)
-  ansible.builtin.lineinfile:
-    dest: "/etc/sysconfig/libvirtd"
-    line: 'LIBVIRTD_ARGS=""'
-    regexp: "^(#)?LIBVIRTD_ARGS=*"
-    backup: "yes"
-  when:
-    - ansible_facts['pkg_mgr'] == 'dnf'
-    - ansible_facts['distribution_version'] is version('9', '<')
-  notify: Restart libvirtd
-  tags:
-    - nova-config
-    - nova-kvm
-    - nova-libvirt
-
 - name: Set qemu-kvm KSM config (Ubuntu)
   ansible.builtin.lineinfile:
     dest: "/etc/default/qemu-kvm"

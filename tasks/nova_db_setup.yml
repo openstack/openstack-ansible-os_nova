@@ -47,7 +47,7 @@
   become_user: "{{ nova_system_user_name }}"
   changed_when: false
   when:
-    - not _cell0_record
+    - _cell0_record | length == 0
 
 - name: Update the cell0 mapping entry in the nova API DB
   ansible.builtin.command: >-
@@ -92,7 +92,7 @@
   failed_when: "nova_cell1_create.rc not in [0, 2]"
   changed_when: "nova_cell1_create.rc == 0"
   when:
-    - not _cell1_record
+    - _cell1_record | length == 0
 
 - name: "Change the template for cell {{ nova_cell1_name }}"
   ansible.builtin.command: >-

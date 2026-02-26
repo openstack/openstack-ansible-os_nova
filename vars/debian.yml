@@ -72,6 +72,7 @@ nova_compute_kvm_distro_packages:
   - qemu-block-extra
   - "{{ (ansible_facts['architecture'] == 'x86_64') | ternary('qemu-system-x86', 'qemu-system-arm') }}"
   - "{{ (ansible_facts['architecture'] == 'x86_64') | ternary('ovmf', 'qemu-efi-aarch64') }}"
+  - "{{ ('spice' in nova_console_proxy_types) | ternary('qemu-system-modules-spice', '') }}"
   - qemu-system-misc
   - ipxe-qemu
 

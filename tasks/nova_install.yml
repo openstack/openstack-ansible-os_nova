@@ -38,7 +38,7 @@
 
 - name: Install distro packages
   ansible.builtin.package:
-    name: "{{ nova_package_list }}"
+    name: "{{ nova_package_list | select }}"
     state: "{{ nova_package_state }}"
     update_cache: "{{ (ansible_facts['pkg_mgr'] == 'apt') | ternary('yes', omit) }}"
     cache_valid_time: "{{ (ansible_facts['pkg_mgr'] == 'apt') | ternary(cache_timeout, omit) }}"

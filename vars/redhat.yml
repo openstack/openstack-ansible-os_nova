@@ -73,6 +73,7 @@ nova_compute_kvm_distro_packages:
   - python3-libguestfs
   - qemu-img
   - "{{ (ansible_facts['architecture'] == 'aarch64') | ternary('AAVMF', 'OVMF') }}"
+  - "{{ ('spice' in nova_console_proxy_types) | ternary('qemu-kvm-ui-spice', '') }}"
 
 nova_compute_kvm_packages_to_symlink:
   - python3-libvirt

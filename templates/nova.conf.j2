@@ -65,7 +65,6 @@ transport_url = {{ nova_oslomsg_notify_transport }}://{% for host in nova_osloms
 
 # Messaging
 [oslo_messaging_rabbit]
-heartbeat_in_pthread = {{ nova_oslomsg_heartbeat_in_pthread }}
 rabbit_quorum_queue = {{ nova_oslomsg_rabbit_quorum_queues }}
 rabbit_transient_quorum_queue = {{ nova_oslomsg_rabbit_transient_quorum_queues }}
 rabbit_qos_prefetch_count = {{ nova_oslomsg_rabbit_qos_prefetch_count }}

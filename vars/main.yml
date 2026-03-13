@@ -57,7 +57,8 @@ _nova_console_proxy_types: |-
 nova_venv_packages: |-
   {%- set pkg_list = nova_pip_packages | union(nova_user_pip_packages) %}
   {%- set _virt_types = groups[nova_services['nova-compute']['group']] | map(
-                          'extract', hostvars, 'nova_virt_type') %}
+                          'extract', hostvars, 'nova_virt_type') | map(
+                          'default', 'qemu') %}
   {%- if nova_blazar_enabled | bool %}
   {%-   set _ = pkg_list.extend(nova_blazar_pip_packages) %}
   {%- endif %}

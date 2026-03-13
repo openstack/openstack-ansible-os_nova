@@ -56,3 +56,4 @@
     state: link
     owner: "{{ nova_qemu_user }}"
     group: "{{ nova_qemu_group }}"
+    force: true

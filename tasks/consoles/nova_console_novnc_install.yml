@@ -62,8 +62,8 @@
 - name: Including nova_console_novnc_ssl tasks
   ansible.builtin.include_tasks: nova_console_novnc_ssl.yml
   when:
-    - nova_console_user_ssl_cert is defined
-    - nova_console_user_ssl_key is defined
+    - nova_console_user_ssl_cert | length > 0
+    - nova_console_user_ssl_key | length > 0
   args:
     apply:
       tags:

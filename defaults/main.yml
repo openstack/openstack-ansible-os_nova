@@ -631,19 +631,23 @@ nova_pki_intermediate_cert_name: "{{ openstack_pki_service_intermediate_cert_nam
 nova_pki_intermediate_chain_path: >-
   {{ nova_pki_dir ~ '/roots/' ~ nova_pki_intermediate_cert_name ~ '/certs/' ~ nova_pki_intermediate_cert_name ~ '-chain.crt' }}
 nova_pki_regen_cert: ""
-nova_pki_san: "{{ openstack_pki_san | default('DNS:' ~ ansible_facts['hostname'] ~ ',IP:' ~ management_address) }}"
+nova_pki_backend: "{{ openstack_pki_backend | default('standalone') }}"
+nova_pki_san: "{{ openstack_pki_san | default({'dns': [ansible_facts['hostname']], 'ip': [management_address]}) }}"
 nova_pki_compute_san: >-
   {{
-    'DNS:' ~ ansible_facts['hostname'] ~ ',DNS:' ~ ansible_facts['nodename'] ~ ',IP:' ~ _nova_my_ip ~ (
-      nova_libvirt_live_migration_inbound_addr != nova_management_address) |ternary(',IP:' ~ nova_libvirt_live_migration_inbound_addr, '')
+    {
+      'dns': [ansible_facts['hostname'], ansible_facts['nodename']],
+      'ip': [_nova_my_ip] + ([nova_libvirt_live_migration_inbound_addr] if nova_libvirt_live_migration_inbound_addr != nova_management_address else [])
+    }
   }}
 # Create client and server cert for compute hosts
 # This certiticate is used to secure TLS live migrations and VNC sessions
 nova_pki_compute_certificates:
   - name: "nova_{{ ansible_facts['hostname'] }}"
-    provider: ownca
     cn: "{{ ansible_facts['nodename'] }}"
     san: "{{ nova_pki_compute_san }}"
+    # standalone backend only
+    provider: ownca
     signed_by: "{{ nova_pki_intermediate_cert_name }}"
     key_usage:
       - digitalSignature
@@ -660,84 +664,97 @@ nova_qemu_ssl_dir: /etc/pki/qemu
 
 # Installation details for SSL certificates for compute hosts TLS live migration
 nova_pki_compute_install_certificates:
-  - src: "{{ nova_user_ssl_cert | default(nova_pki_certs_path ~ 'nova_' ~ ansible_facts['hostname'] ~ '-chain.crt') }}"
+  - name: "nova_{{ ansible_facts['hostname'] }}"
+    type: "certificate_chain"
     dest: "{{ nova_libvirt_ssl_dir }}/servercert.pem"
-    owner: "root"
-    group: "root"
-    mode: "0640"
+    # standalone backend only
+    src: "{{ nova_user_ssl_cert }}"
   # Server certificate key used by libvirt for live migrations
-  - src: "{{ nova_user_ssl_key | default(nova_pki_keys_path ~ 'nova_' ~ ansible_facts['hostname'] ~ '.key.pem') }}"
+  - name: "nova_{{ ansible_facts['hostname'] }}"
+    type: "private_key"
     dest: "{{ nova_libvirt_ssl_dir }}/private/serverkey.pem"
-    owner: "root"
-    group: "root"
     mode: "0640"
+    # standalone backend only
+    src: "{{ nova_user_ssl_key }}"
   # Client certificate used by libvirt for live migrations
   # Defaults to using the server certificate which is signed for both clientAuth and serverAuth
-  - src: "{{ nova_user_ssl_cert | default(nova_pki_certs_path ~ 'nova_' ~ ansible_facts['hostname'] ~ '-chain.crt') }}"
+  - name: "nova_{{ ansible_facts['hostname'] }}"
+    type: "certificate_chain"
     dest: "{{ nova_libvirt_ssl_dir }}/clientcert.pem"
-    owner: "root"
-    group: "root"
-    mode: "0640"
+    # standalone backend only
+    src: "{{ nova_user_ssl_cert }}"
   # Client certificate key used by libvirt for live migrations
-  - src: "{{ nova_user_ssl_key | default(nova_pki_keys_path ~ 'nova_' ~ ansible_facts['hostname'] ~ '.key.pem') }}"
+  - name: "nova_{{ ansible_facts['hostname'] }}"
+    type: "private_key"
     dest: "{{ nova_libvirt_ssl_dir }}/private/clientkey.pem"
-    owner: "root"
-    group: "root"
     mode: "0640"
+    # standalone backend only
+    src: "{{ nova_user_ssl_key }}"
   # Server certificate used by QEMU for live migrations
-  - src: "{{ nova_user_ssl_cert | default(nova_pki_certs_path ~ 'nova_' ~ ansible_facts['hostname'] ~ '-chain.crt') }}"
+  - name: "nova_{{ ansible_facts['hostname'] }}"
+    type: "certificate_chain"
     dest: "{{ nova_qemu_ssl_dir }}/server-cert.pem"
-    owner: "root"
     group: "{{ nova_qemu_group }}"
-    mode: "0640"
+    # standalone backend only
+    src: "{{ nova_user_ssl_cert }}"
   # Server certificate key used by QEMU for live migrations
-  - src: "{{ nova_user_ssl_key | default(nova_pki_keys_path ~ 'nova_' ~ ansible_facts['hostname'] ~ '.key.pem') }}"
+  - name: "nova_{{ ansible_facts['hostname'] }}"
+    type: "private_key"
     dest: "{{ nova_qemu_ssl_dir }}/server-key.pem"
-    owner: "root"
     group: "{{ nova_qemu_group }}"
     mode: "0640"
+    # standalone backend only
+    src: "{{ nova_user_ssl_key }}"
   # Client certificate used by QEMU for live migrations
   # Defaults to using the server certificate which is signed for both clientAuth and serverAuth
-  - src: "{{ nova_user_ssl_cert | default(nova_pki_certs_path ~ 'nova_' ~ ansible_facts['hostname'] ~ '-chain.crt') }}"
+  - name: "nova_{{ ansible_facts['hostname'] }}"
+    type: "certificate_chain"
     dest: "{{ nova_qemu_ssl_dir }}/client-cert.pem"
-    owner: "root"
     group: "{{ nova_qemu_group }}"
-    mode: "0640"
+    # standalone backend only
+    src: "{{ nova_user_ssl_cert }}"
   # Client certificate key used by QEMU for live migrations
-  - src: "{{ nova_user_ssl_key | default(nova_pki_keys_path ~ 'nova_' ~ ansible_facts['hostname'] ~ '.key.pem') }}"
+  - name: "nova_{{ ansible_facts['hostname'] }}"
+    type: "private_key"
     dest: "{{ nova_qemu_ssl_dir }}/client-key.pem"
-    owner: "root"
     group: "{{ nova_qemu_group }}"
     mode: "0640"
+    # standalone backend only
+    src: "{{ nova_user_ssl_key }}"
   # Root CA for libvirt
   # libvirt requires that the CA cert file has any intermediate certificates for the server cert,
   # so defaults to using the intermediate chain, which contains the intermediate and Root CA
-  - src: "{{ nova_user_ssl_ca_cert | default(nova_pki_intermediate_chain_path) }}"
+  - name: "nova_{{ ansible_facts['hostname'] }}"
+    type: "ca_bundle"
     dest: "/etc/pki/CA/cacert.pem"
-    owner: "root"
-    group: "root"
-    mode: "0644"
+    # standalone backend only
+    src: "{{ nova_user_ssl_ca_cert }}"
   # Root CA for qemu
-  - src: "{{ nova_user_ssl_ca_cert | default(nova_pki_intermediate_chain_path) }}"
+  - name: "nova_{{ ansible_facts['hostname'] }}"
+    type: "ca_bundle"
     dest: "{{ nova_qemu_ssl_dir }}/ca-cert.pem"
-    owner: "root"
-    group: "root"
-    mode: "0644"
+    # standalone backend only
+    src: "{{ nova_user_ssl_ca_cert }}"
 
 # Define user-provided SSL certificates in:
 # /etc/openstack_deploy/user_variables.yml
-# nova_user_ssl_cert: <path to cert on ansible deployment host>
-# nova_user_ssl_key: <path to cert on ansible deployment host>
-# nova_user_ssl_ca_cert: <path to cert on ansible deployment host>
+nova_user_ssl_cert: ""
+nova_user_ssl_key: ""
+nova_user_ssl_ca_cert: ""
+nova_console_user_ssl_cert: ""
+nova_console_user_ssl_key: ""
+nova_console_user_ssl_ca_cert: ""
 
 # TLS certficates for console hosts
 nova_pki_console_condition: "{{ nova_qemu_vnc_tls == 1 and nova_console_type == 'novnc' and 'nova_console' in group_names }}"
 nova_pki_console_certificates:
-  # Client certificate used by novnv proxy to authenticate with compute hosts using vencrypt
+  # Client certificate used by novnc proxy to authenticate with compute hosts using vencrypt
   - name: "nova_{{ ansible_facts['hostname'] }}-client"
-    provider: ownca
     cn: "{{ ansible_facts['nodename'] }}"
     san: "{{ nova_pki_compute_san }}"
+    condition: "{{ nova_pki_console_condition | bool }}"
+    # standalone backend only
+    provider: ownca
     signed_by: "{{ nova_pki_intermediate_cert_name }}"
     key_usage:
       - digitalSignature
@@ -745,28 +762,30 @@ nova_pki_console_certificates:
       - keyEncipherment
     extended_key_usage:
       - clientAuth
-    condition: "{{ nova_pki_console_condition | bool }}"
 
 # Installation details for SSL certificates for console hosts
 nova_pki_console_install_certificates:
-  - src: "{{ nova_user_ssl_cert | default(nova_pki_certs_path ~ 'nova_' ~ ansible_facts['hostname'] ~ '-client-chain.crt') }}"
+  - name: "nova_{{ ansible_facts['hostname'] }}-client"
+    type: "certificate_chain"
     dest: "{{ nova_vencrypt_client_cert }}"
-    owner: "root"
     group: "{{ nova_system_group_name }}"
-    mode: "0640"
     condition: "{{ nova_pki_console_condition | bool }}"
-  - src: "{{ nova_user_ssl_key | default(nova_pki_keys_path ~ 'nova_' ~ ansible_facts['hostname'] ~ '-client.key.pem') }}"
+    # standalone backend only
+    src: "{{ nova_console_user_ssl_cert }}"
+  - name: "nova_{{ ansible_facts['hostname'] }}-client"
+    type: "private_key"
     dest: "{{ nova_vencrypt_client_key }}"
-    owner: "root"
     group: "{{ nova_system_group_name }}"
-    mode: "0640"
     condition: "{{ nova_pki_console_condition | bool }}"
-  - src: "{{ nova_user_ssl_ca_cert | default(nova_pki_intermediate_chain_path) }}"
+    # standalone backend only
+    src: "{{ nova_console_user_ssl_key }}"
+  - name: "nova_{{ ansible_facts['hostname'] }}-client"
+    type: "ca_bundle"
     dest: "{{ nova_vencrypt_ca_certs }}"
-    owner: "root"
     group: "{{ nova_system_group_name }}"
-    mode: "0640"
     condition: "{{ nova_pki_console_condition | bool }}"
+    # standalone backend only
+    src: "{{ nova_console_user_ssl_ca_cert }}"
 
 # Extra settings which will be applied for `nova` user for offline
 # migrations and resizes. Example:
@@ -824,11 +843,12 @@ nova_pki_certificates_condition: >-
 nova_pki_certificates:
   # Used to encrypt traffic between haproxy and nova backends
   - name: "nova_{{ ansible_facts['hostname'] }}_api"
-    provider: ownca
     cn: "{{ ansible_facts['hostname'] }}"
     san: "{{ nova_pki_san }}"
-    signed_by: "{{ nova_pki_intermediate_cert_name }}"
     condition: "{{ nova_pki_certificates_condition | bool }}"
+    # standalone backend only
+    provider: ownca
+    signed_by: "{{ nova_pki_intermediate_cert_name }}"
 
 # nova destination files for SSL certificates
 nova_ssl_cert: "{{ nova_system_home_folder }}/nova.pem"
@@ -836,18 +856,22 @@ nova_ssl_key: "{{ nova_system_home_folder }}/nova.key"
 
 # Installation details for SSL certificates
 nova_pki_install_certificates:
-  - src: "{{ nova_user_ssl_cert | default(nova_pki_certs_path ~ 'nova_' ~ ansible_facts['hostname'] ~ '_api-chain.crt') }}"
+  - name: "nova_{{ ansible_facts['hostname'] }}_api"
+    type: "certificate_chain"
     dest: "{{ nova_ssl_cert }}"
     owner: "{{ nova_system_user_name }}"
     group: "{{ nova_system_user_name }}"
-    mode: "0644"
     condition: "{{ nova_pki_certificates_condition | bool }}"
-  - src: "{{ nova_user_ssl_key | default(nova_pki_keys_path ~ 'nova_' ~ ansible_facts['hostname'] ~ '_api.key.pem') }}"
+    # standalone backend only
+    src: "{{ nova_user_ssl_cert }}"
+  - name: "nova_{{ ansible_facts['hostname'] }}_api"
+    type: "private_key"
     dest: "{{ nova_ssl_key }}"
     owner: "{{ nova_system_user_name }}"
     group: "{{ nova_system_user_name }}"
-    mode: "0600"
     condition: "{{ nova_pki_certificates_condition | bool }}"
+    # standalone backend only
+    src: "{{ nova_user_ssl_key }}"
 
 # Periodically move records for deleted resources to shadow tables
 nova_archive_deleted: false

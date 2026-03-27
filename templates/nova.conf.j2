@@ -21,7 +21,7 @@ instances_path = {{ nova_system_home_folder }}/instances
 allow_resize_to_same_host = True
 {% endif %}
 
-{% if nova_console_user_ssl_cert is defined and nova_console_user_ssl_key is defined and ( nova_services['nova-novncproxy']['group'] in group_names or nova_services['nova-spicehtml5proxy']['group'] in group_names or nova_services['nova-serialconsole-proxy']['group'] in group_names ) %}
+{% if nova_console_user_ssl_cert | length > 0 and nova_console_user_ssl_key | length > 0 and ( nova_services['nova-novncproxy']['group'] in group_names or nova_services['nova-spicehtml5proxy']['group'] in group_names or nova_services['nova-serialconsole-proxy']['group'] in group_names ) %}
 # Console SSL keys
 ssl_only = true
 cert = {{ nova_console_ssl_cert }}

@@ -6,6 +6,7 @@ Nova role for OpenStack-Ansible
    :maxdepth: 2
 
    configure-nova.rst
+   operational-tips/index
 
 :tags: openstack, nova, cloud, ansible
 :category: \*nix

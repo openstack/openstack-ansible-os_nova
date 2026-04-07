@@ -15,3 +15,4 @@ and cases that may not be fully covered in standard documentation.
    :maxdepth: 1
 
    install-from-iso.rst
+   server-rescue-mode.rst

@@ -16,3 +16,4 @@ and cases that may not be fully covered in standard documentation.
 
    install-from-iso.rst
    server-rescue-mode.rst
+   windows-optimization.rst

@@ -8,15 +8,8 @@ Nova role for OpenStack-Ansible
    configure-nova.rst
    operational-tips/index
 
-:tags: openstack, nova, cloud, ansible
-:category: \*nix
-
-This role will install the following Systemd services:
-    * nova-server
-    * nova-compute
-
 To clone or view the source code for this repository, visit the role repository
-for `os_nova <https://github.com/openstack/openstack-ansible-os_nova>`_.
+for `os_nova <https://opendev.org/openstack/openstack-ansible-os_nova>`_.
 
 Default variables
 ~~~~~~~~~~~~~~~~~
@@ -24,11 +17,6 @@ Default variables
 .. literalinclude:: ../../defaults/main.yml
    :language: yaml
    :start-after: under the License.
-
-Dependencies
-~~~~~~~~~~~~
-
-This role needs pip >= 7.1 installed on the target host.
 
 Example playbook
 ~~~~~~~~~~~~~~~~
@@ -57,7 +45,6 @@ Currently supported CPU architectures:
 
 At this time, ppc64le is only supported for the Compute node type. It can not
 be used to manage the OpenStack-Ansible management nodes.
-
 
 Compute driver compatibility
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~

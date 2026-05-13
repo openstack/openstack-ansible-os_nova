@@ -109,7 +109,7 @@ Installing OS from ISO image in OpenStack
 Boot Instance from Snapshot
 ---------------------------
 
-#. Create a new instance from the snapshot:
+Create a new instance from the snapshot:
 
    .. code-block:: console
 

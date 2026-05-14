@@ -22,10 +22,18 @@ libvirt_service_name:
   - libvirtd.service
 
 # Common apt packages
+_nova_package_names_condition: >-
+  {{
+    (
+      (ansible_facts['distribution'] | lower == 'debian' and ansible_facts['distribution_major_version'] is version('14', '>=')) or
+        (ansible_facts['distribution'] | lower == 'ubuntu' and ansible_facts['distribution_version'] is version('26.04', '>='))
+    )
+  }}
+
 nova_distro_packages:
   - git
   - iptables
-  - libxml2
+  - "{{ _nova_package_names_condition | ternary('libxml2-16', 'libxml2') }}"
 
 nova_devel_distro_packages:
   - libsystemd-dev

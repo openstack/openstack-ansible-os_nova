@@ -731,7 +731,7 @@ nova_pki_compute_install_certificates:
 # nova_user_ssl_ca_cert: <path to cert on ansible deployment host>
 
 # TLS certficates for console hosts
-nova_pki_console_condition: "{{ nova_qemu_vnc_tls == 1 and nova_console_type == 'novnc' and 'nova_console' in group_names }}"
+nova_pki_console_condition: "{{ nova_qemu_vnc_tls == 1 and 'novnc' in nova_console_proxy_types and 'nova_console' in group_names }}"
 nova_pki_console_certificates:
   # Client certificate used by novnv proxy to authenticate with compute hosts using vencrypt
   - name: "nova_{{ ansible_facts['hostname'] }}-client"

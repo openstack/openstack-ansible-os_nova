@@ -5,7 +5,7 @@ Upload Rescue Image
 -------------------
 
 Upload the SystemRescue .iso image (example uses ``systemrescue-13.00``
-you can download any other version on its `website <https://www.system-rescue.org/download/>`_.):
+you can download any other version on its `website <https://www.system-rescue.org/download/>`_):
 
    .. code-block:: console
 

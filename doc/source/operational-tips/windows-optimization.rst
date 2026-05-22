@@ -43,6 +43,6 @@ Using optimized image properties such as ``q35``, ``virtio-scsi``, and
 ``scsi`` disk bus can significantly improve Windows instance performance
 in OpenStack environments, especially for I/O intensive workloads.
 
-In the 2026.1 release cycle, support for enabling I/O threads (iothreads)
-in Nova has been introduced. This can further improve disk I/O performance,
-especially for Windows workloads.
+In the ``2026.1 Gazpacho`` release cycle, support for enabling I/O threads
+(iothreads) in Nova has been introduced. This can further improve
+disk I/O performance, especially for Windows workloads.

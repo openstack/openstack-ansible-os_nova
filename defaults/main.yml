@@ -82,6 +82,10 @@ nova_lock_dir: "{{ openstack_lock_dir | default('/run/lock') }}"
 
 nova_management_address: "127.0.0.1"
 
+## Availability Zone
+# When unset, Nova's default of "nova" is applied.
+nova_default_availability_zone: "{{ openstack_default_availability_zone | default('nova', true) }}"
+
 ## Manually specified nova UID/GID
 # Deployers can specify a UID for the nova user as well as the GID for the
 # nova group if needed. This is commonly used in environments where shared

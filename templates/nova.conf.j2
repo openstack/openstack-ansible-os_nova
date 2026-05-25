@@ -28,7 +28,11 @@ cert = {{ nova_console_ssl_cert }}
 key = {{ nova_console_ssl_key }}
 {% endif %}
 
-# Api's
+# Availability Zone
+
+default_availability_zone = {{ nova_default_availability_zone }}
+
+# Apis
 enabled_apis = {{ nova_enabled_apis }}
 
 # Rpc all

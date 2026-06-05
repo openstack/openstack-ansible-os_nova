@@ -776,6 +776,7 @@ nova_pki_console_install_certificates:
     type: "private_key"
     dest: "{{ nova_vencrypt_client_key }}"
     group: "{{ nova_system_group_name }}"
+    mode: "0640"
     condition: "{{ nova_pki_console_condition | bool }}"
     # standalone backend only
     src: "{{ nova_console_user_ssl_key }}"

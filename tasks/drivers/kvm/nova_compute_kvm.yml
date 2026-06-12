@@ -119,24 +119,6 @@
     - nova-kvm
     - nova-libvirt
 
-# TODO(noonedeadpunk): Clean up in 2026.2 cycle
-- name: Clean up old apparmor config (Ubuntu/Debian)
-  ansible.builtin.lineinfile:
-    dest: "/etc/apparmor.d/local/usr.lib.libvirt.virt-aa-helper"
-    line: "  {{ nova_system_home_folder }}/instances/_base/* r,"
-    create: true
-    owner: "root"
-    group: "root"
-    mode: "0644"
-    state: absent
-  when:
-    - ansible_facts['distribution'] == 'Ubuntu' or ansible_facts['distribution'] == 'Debian'
-  notify: Reload apparmor profile
-  tags:
-    - nova-config
-    - nova-kvm
-    - nova-libvirt
-
 - name: Set apparmor overrides (Ubuntu/Debian)
   ansible.builtin.blockinfile:
     dest: "/etc/apparmor.d/local/usr.lib.libvirt.virt-aa-helper"

@@ -561,6 +561,7 @@ nova_pip_packages:
   - "git+{{ nova_git_repo }}@{{ nova_git_install_branch }}#egg=nova"
   - osprofiler
   - PyMySQL
+  - pyroute2
   - "{{ _nova_cache_backend_package }}"
   - systemd-python
 

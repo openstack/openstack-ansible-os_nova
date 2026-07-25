@@ -1,4 +1,4 @@
-# {{ ansible_managed }}
+# {{ openstack_ansible_managed | default('OpenStack-Ansible Managed') }}
 
 {% if nova_libvirtd_listen_tls == 1 %}
 # Use of TLS requires that x509 certificates be issued. The default is

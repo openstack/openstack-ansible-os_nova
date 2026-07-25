@@ -1,4 +1,4 @@
-# {{ ansible_managed }}
+# {{ openstack_ansible_managed | default('OpenStack-Ansible Managed') }}
 
 Defaults:{{ nova_system_user_name }} !requiretty
 Defaults:{{ nova_system_user_name }} secure_path="{{ nova_bin }}:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin"

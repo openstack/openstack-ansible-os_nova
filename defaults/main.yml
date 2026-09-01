@@ -415,7 +415,7 @@ nova_rbd_inuse: "{{ (nova_libvirt_images_rbd_pool | length > 0) or (nova_cinder_
 # compute the number of api workers to use.
 # nova_scheduler_workers: 16
 
-## Cap the maximun number of threads / workers when a user value is unspecified.
+## Cap the maximum number of threads / workers when a user value is unspecified.
 nova_api_threads_max: 16
 nova_api_threads: >-
   {{ [[(ansible_facts['processor_vcpus'] // ansible_facts['processor_threads_per_core']) | default(1), 1] | max * 2, nova_api_threads_max] | min }}

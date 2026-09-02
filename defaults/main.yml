@@ -558,7 +558,7 @@ nova_compute_ironic_pip_packages:
 
 # Common pip packages
 nova_pip_packages:
-  - "git+{{ nova_git_repo }}@{{ nova_git_install_branch }}#egg=nova"
+  - "nova@git+{{ nova_git_repo }}@{{ nova_git_install_branch }}"
   - osprofiler
   - PyMySQL
   - pyroute2

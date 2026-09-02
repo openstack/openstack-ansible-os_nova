@@ -104,11 +104,15 @@ nova_db_setup_python_interpreter: >-
 nova_galera_address: "{{ galera_address | default('127.0.0.1') }}"
 nova_galera_user: nova
 nova_galera_database: nova
+nova_galera_port: "{{ galera_port | default('3306') }}"
+nova_galera_readonly_address: "{{ nova_galera_address }}"
+nova_galera_readonly_connection_enabled: "{{ openstack_galera_readonly_connection_enabled | default(false) }}"
+nova_galera_readonly_port: "{{ galera_readonly_port | default('3308') }}"
+nova_galera_synchronous_reader: "{{ not nova_galera_readonly_connection_enabled }}"
 nova_db_max_overflow: "{{ openstack_db_max_overflow | default('50') }}"
 nova_db_max_pool_size: "{{ openstack_db_max_pool_size | default('5') }}"
 nova_db_pool_timeout: "{{ openstack_db_pool_timeout | default('30') }}"
 nova_db_connection_recycle_time: "{{ openstack_db_connection_recycle_time | default('600') }}"
-nova_galera_port: "{{ galera_port | default('3306') }}"
 # Toggle whether nova connects via an encrypted connection
 nova_galera_use_ssl: "{{ galera_use_ssl | default(False) }}"
 # The path where to store the database server CA certificate
@@ -119,6 +123,10 @@ nova_api_galera_address: "{{ nova_galera_address }}"
 nova_api_galera_user: nova_api
 nova_api_galera_database: nova_api
 nova_api_galera_port: "{{ galera_port | default('3306') }}"
+nova_api_galera_readonly_address: "{{ nova_api_galera_address }}"
+nova_api_galera_readonly_connection_enabled: "{{ nova_galera_readonly_connection_enabled }}"
+nova_api_galera_readonly_port: "{{ nova_galera_readonly_port }}"
+nova_api_galera_synchronous_reader: "{{ nova_galera_synchronous_reader }}"
 nova_api_db_max_overflow: "{{ openstack_db_max_overflow | default('50') }}"
 nova_api_db_max_pool_size: "{{ openstack_db_max_pool_size | default('5') }}"
 nova_api_db_pool_timeout: "{{ openstack_db_pool_timeout | default('30') }}"

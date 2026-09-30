@@ -421,11 +421,12 @@ nova_api_threads: >-
   {{ [[(ansible_facts['processor_vcpus'] // ansible_facts['processor_threads_per_core']) | default(1), 1] | max * 2, nova_api_threads_max] | min }}
 
 ## Policy vars
-# Provide a list of access controls to update the default policy.json with. These changes will be merged
-# with the access controls in the default policy.json. E.g.
+# Provide a list of access controls to update the default policy.yaml with. These changes will be merged
+# with the access controls in the default policy.yaml. E.g.
 # nova_policy_overrides:
-#   "compute:create": ""
-#   "compute:create:attach_network": ""
+#   create_server: "(role:member and project_id:%(project_id)s) or role:admin"
+#   delete_server: "(role:member and project_id:%)project_id)s) or role:admin"
+nova_policy_overrides: {}
 
 ## Resource provider vars
 # Optionally specify a set of resource providers that a particular compute node exposes
@@ -579,7 +580,6 @@ qemu_conf_dict: {}
 nova_nova_conf_overrides: {}
 nova_rootwrap_conf_overrides: {}
 nova_api_paste_ini_overrides: {}
-nova_policy_overrides: {}
 nova_vendor_data_overrides: {}
 nova_api_metadata_uwsgi_ini_overrides: {}
 nova_api_os_compute_uwsgi_ini_overrides: {}

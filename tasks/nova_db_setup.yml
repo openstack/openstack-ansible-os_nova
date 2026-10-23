@@ -19,7 +19,7 @@
   become_user: "{{ nova_system_user_name }}"
   changed_when: false
 
-# We need to check for existance of the cell, since nova-manage cell_v2 create_cell
+# We need to check for existence of the cell, since nova-manage cell_v2 create_cell
 # might be not idempotent due to the bug https://bugs.launchpad.net/nova/+bug/1923899
 - name: Get UUID of Nova Cells
   ansible.builtin.command: "{{ nova_bin }}/nova-manage --config-file {{ nova_conf_version_dir }}/nova.conf cell_v2 list_cells"

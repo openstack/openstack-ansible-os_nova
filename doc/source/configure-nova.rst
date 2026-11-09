@@ -6,20 +6,21 @@ The Compute service (nova) handles the creation of virtual machines within an
 OpenStack environment. Many of the default options used by OpenStack-Ansible
 are found within ``defaults/main.yml`` within the nova role.
 
-Availability zones
+Availability Zones
 ~~~~~~~~~~~~~~~~~~
 
 Deployers with multiple availability zones can set the
-``nova_nova_conf_overrides.DEFAULT.default_schedule_zone`` Ansible
-variable to specify an availability zone for new requests. This is useful
-in environments with different types of hypervisors, where builds are sent
-to certain hardware types based on their resource requirements.
+``nova_default_availability_zone`` Ansible variable (which follows the common
+``openstack_default_availability_zone`` variable) to define the
+default availability zone. Availability zones provide a way to separate
+hypervisors into logical groups based on their characteristics or deployment
+requirements, for example grouping different hardware types so workloads can
+be directed to the appropriate resources.
 
-For example, if you have servers running on two racks without sharing the PDU.
-These two racks can be grouped into two availability zones.
-When one rack loses power, the other one still works. By spreading
-your containers onto the two racks (availability zones), you will
-improve your service availability.
+The availability zone used for scheduling new requests can be
+configured using the ``nova_nova_conf_overrides.DEFAULT.default_schedule_zone``
+override.
+
 
 Block device tuning for Ceph (RBD)
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~

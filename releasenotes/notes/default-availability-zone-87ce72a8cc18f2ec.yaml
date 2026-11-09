@@ -1,0 +1,6 @@
+---
+features:
+  - |
+    The ``nova_default_availability_zone`` variable has been added to set the
+    ``default_availability_zone`` option in ``nova.conf``. It defaults to
+    ``openstack_default_availability_zone``, which is ``nova``.
